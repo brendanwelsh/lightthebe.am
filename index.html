@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Did the Sacramento Kings light the beam? Live game results and season stats.">
+<title>LIGHT THE BEAM</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%235b2d8e'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-family='Arial' font-weight='900' font-size='36' fill='%23000'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --purple: #5b2d8e;
+    --purple-dark: #3d1a63;
+    --gray: #2a2a2a;
+    --beam-gold: #fdb927;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--purple);
+    color: #000;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow-x: hidden;
+  }
+
+  body.beam-on {
+    background: linear-gradient(180deg, #1a0a2e 0%, var(--purple) 30%, var(--purple) 70%, #1a0a2e 100%);
+  }
+  body.beam-on::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 100vh;
+    background: linear-gradient(180deg,
+      var(--beam-gold) 0%,
+      rgba(253, 185, 39, 0.6) 30%,
+      rgba(253, 185, 39, 0.1) 80%,
+      transparent 100%
+    );
+    filter: blur(40px);
+    animation: pulse 3s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.7; width: 120px; }
+    50% { opacity: 1; width: 180px; }
+  }
+
+  body.beam-off {
+    background: var(--gray);
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    padding: 2rem;
+    max-width: 700px;
+    width: 100%;
+  }
+
+  .team-label {
+    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    margin-bottom: 0.5rem;
+    opacity: 0.7;
+    font-weight: 600;
+  }
+
+  .question {
+    font-size: clamp(1.2rem, 4vw, 1.8rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 1.5rem;
+  }
+
+  .answer {
+    font-size: clamp(6rem, 25vw, 14rem);
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+  }
+
+  body.beam-on .answer {
+    color: #000;
+    text-shadow: 0 0 60px rgba(253, 185, 39, 0.5);
+  }
+  body.beam-off .answer {
+    color: #555;
+  }
+
+  .game-info {
+    font-size: clamp(1rem, 3vw, 1.4rem);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .game-score {
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
+    font-weight: 800;
+    margin-bottom: 2rem;
+    letter-spacing: 0.02em;
+  }
+
+  .divider {
+    width: 80px;
+    height: 3px;
+    background: rgba(0,0,0,0.3);
+    margin: 1.5rem auto;
+    border-radius: 2px;
+  }
+
+  .record-section { margin-top: 1rem; }
+
+  .record-label {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    opacity: 0.6;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+  }
+
+  .record {
+    font-size: clamp(2rem, 7vw, 3.5rem);
+    font-weight: 900;
+    letter-spacing: 0.05em;
+  }
+
+  .next-game {
+    margin-top: 2rem;
+    padding: 1rem 1.5rem;
+    background: rgba(0,0,0,0.15);
+    border-radius: 12px;
+    display: inline-block;
+  }
+
+  .next-game-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    opacity: 0.6;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+  }
+
+  .next-game-info {
+    font-size: clamp(1rem, 3vw, 1.3rem);
+    font-weight: 700;
+  }
+
+  .streak {
+    margin-top: 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    opacity: 0.7;
+  }
+
+  .loading {
+    font-size: 1.2rem;
+    opacity: 0.5;
+    font-weight: 600;
+  }
+
+  .stats-row {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .stat-box { text-align: center; }
+  .stat-value {
+    font-size: clamp(1.3rem, 4vw, 2rem);
+    font-weight: 800;
+  }
+  .stat-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    opacity: 0.5;
+    font-weight: 600;
+  }
+
+  .footer {
+    position: fixed;
+    bottom: 1rem;
+    font-size: 0.7rem;
+    opacity: 0.35;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+  <div class="container" id="app">
+    <p class="loading">LOADING...</p>
+  </div>
+  <div class="footer">SACRAMENTO, CA</div>
+
+<script>
+const KINGS_ESPN_ID = '23';
+const TEAM_API = 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/' + KINGS_ESPN_ID;
+const SCHEDULE_API = TEAM_API + '/schedule';
+
+function el(tag, className, text) {
+  const e = document.createElement(tag);
+  if (className) e.className = className;
+  if (text !== undefined) e.textContent = text;
+  return e;
+}
+
+async function fetchJSON(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return res.json();
+}
+
+function formatDate(dateStr) {
+  return new Date(dateStr).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+}
+
+function formatTime(dateStr) {
+  return new Date(dateStr).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZoneName: 'short' });
+}
+
+function isToday(dateStr) {
+  return new Date(dateStr).toDateString() === new Date().toDateString();
+}
+
+function isYesterday(dateStr) {
+  const y = new Date();
+  y.setDate(y.getDate() - 1);
+  return new Date(dateStr).toDateString() === y.toDateString();
+}
+
+function getCompetitor(competition, isKings) {
+  const comps = competition.competitors || [];
+  return comps.find(function(c) { return isKings ? c.team?.id === KINGS_ESPN_ID : c.team?.id !== KINGS_ESPN_ID; });
+}
+
+function getKingsScore(comp) { return parseInt(getCompetitor(comp, true)?.score, 10) || 0; }
+function getOpponentScore(comp) { return parseInt(getCompetitor(comp, false)?.score, 10) || 0; }
+function getOpponentName(comp) { return getCompetitor(comp, false)?.team?.displayName || 'Unknown'; }
+function isHomeGame(comp) { return getCompetitor(comp, true)?.homeAway === 'home'; }
+
+async function getKingsData() {
+  var teamData = await fetchJSON(TEAM_API);
+  var scheduleData = await fetchJSON(SCHEDULE_API);
+
+  var record = teamData.team.record?.items?.[0]?.summary || '0-0';
+  var standingSummary = teamData.team.standingSummary || '';
+  var events = scheduleData.events || [];
+
+  var lastGame = null;
+  var nextGame = null;
+
+  for (var i = 0; i < events.length; i++) {
+    var status = events[i].competitions?.[0]?.status?.type?.name;
+    if (status === 'STATUS_FINAL') {
+      lastGame = events[i];
+    } else if (status === 'STATUS_SCHEDULED' && !nextGame) {
+      nextGame = events[i];
+    } else if (status === 'STATUS_IN_PROGRESS' || status === 'STATUS_HALFTIME') {
+      lastGame = events[i];
+      lastGame._isLive = true;
+    }
+  }
+
+  // Calculate streak
+  var streak = 0;
+  var streakType = '';
+  for (var j = events.length - 1; j >= 0; j--) {
+    var ev = events[j];
+    var comp = ev.competitions?.[0];
+    if (comp?.status?.type?.name !== 'STATUS_FINAL') continue;
+    var won = getKingsScore(comp) > getOpponentScore(comp);
+    if (streak === 0) {
+      streakType = won ? 'W' : 'L';
+      streak = 1;
+    } else if ((won && streakType === 'W') || (!won && streakType === 'L')) {
+      streak++;
+    } else {
+      break;
+    }
+  }
+
+  return { record: record, standingSummary: standingSummary, lastGame: lastGame, nextGame: nextGame, streak: streak, streakType: streakType };
+}
+
+function render(data) {
+  var app = document.getElementById('app');
+  app.textContent = '';
+
+  if (!data) {
+    app.appendChild(el('p', 'team-label', 'Sacramento Kings'));
+    app.appendChild(el('p', 'question', 'Did they light the beam?'));
+    app.appendChild(el('p', 'answer', '...'));
+    app.appendChild(el('p', 'loading', "Couldn't load game data. Refresh to try again."));
+    return;
+  }
+
+  app.appendChild(el('p', 'team-label', 'Sacramento Kings'));
+  app.appendChild(el('p', 'question', 'Did they light the beam?'));
+
+  var answerEl = el('p', 'answer', '...');
+  app.appendChild(answerEl);
+
+  if (data.lastGame) {
+    var comp = data.lastGame.competitions[0];
+    var ks = getKingsScore(comp);
+    var os = getOpponentScore(comp);
+    var opp = getOpponentName(comp);
+    var home = isHomeGame(comp);
+    var prefix = home ? 'vs' : '@';
+
+    if (data.lastGame._isLive) {
+      answerEl.textContent = '...';
+      app.appendChild(el('p', 'game-info', 'LIVE ' + prefix + ' ' + opp));
+      app.appendChild(el('p', 'game-score', ks + ' - ' + os));
+      document.body.className = 'beam-on';
+    } else {
+      var beamLit = ks > os;
+      answerEl.textContent = beamLit ? 'YES' : 'NO';
+
+      var dateLabel = isToday(data.lastGame.date) ? 'Today' :
+                      isYesterday(data.lastGame.date) ? 'Last Night' :
+                      formatDate(data.lastGame.date);
+
+      app.appendChild(el('p', 'game-info', dateLabel + ' ' + prefix + ' ' + opp));
+      app.appendChild(el('p', 'game-score', ks + ' - ' + os));
+      document.body.className = beamLit ? 'beam-on' : 'beam-off';
+    }
+  }
+
+  app.appendChild(el('div', 'divider'));
+
+  var recordSection = el('div', 'record-section');
+  recordSection.appendChild(el('p', 'record-label', 'Season Record'));
+  recordSection.appendChild(el('p', 'record', data.record));
+  app.appendChild(recordSection);
+
+  // Stats row
+  var parts = data.record.split('-').map(Number);
+  var wins = parts[0] || 0;
+  var losses = parts[1] || 0;
+  var pct = wins + losses > 0 ? (wins / (wins + losses)).toFixed(3).replace(/^0/, '') : '.000';
+
+  var statsRow = el('div', 'stats-row');
+
+  var pctBox = el('div', 'stat-box');
+  pctBox.appendChild(el('p', 'stat-value', pct));
+  pctBox.appendChild(el('p', 'stat-label', 'Win %'));
+  statsRow.appendChild(pctBox);
+
+  var streakBox = el('div', 'stat-box');
+  streakBox.appendChild(el('p', 'stat-value', data.streakType + data.streak));
+  streakBox.appendChild(el('p', 'stat-label', 'Streak'));
+  statsRow.appendChild(streakBox);
+
+  app.appendChild(statsRow);
+
+  // Next game
+  if (data.nextGame) {
+    var nComp = data.nextGame.competitions[0];
+    var nOpp = getOpponentName(nComp);
+    var nHome = isHomeGame(nComp);
+    var nPrefix = nHome ? 'vs' : '@';
+
+    var nextBox = el('div', 'next-game');
+    nextBox.appendChild(el('p', 'next-game-label', 'Next Game'));
+    nextBox.appendChild(el('p', 'next-game-info', nPrefix + ' ' + nOpp));
+    nextBox.appendChild(el('p', 'next-game-info', formatDate(data.nextGame.date) + ' \u00B7 ' + formatTime(data.nextGame.date)));
+    app.appendChild(nextBox);
+  }
+
+  if (data.standingSummary) {
+    app.appendChild(el('p', 'streak', data.standingSummary));
+  }
+}
+
+getKingsData().then(render).catch(function() { render(null); });
+setInterval(function() { getKingsData().then(render).catch(function() {}); }, 60000);
+</script>
+</body>
+</html>
