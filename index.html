@@ -1,4 +1,4 @@
-<!-- v16 --><!DOCTYPE html>
+<!-- v17 --><!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -119,20 +119,28 @@ a.gm-row:hover{background:rgba(255,255,255,.03)}
 <div class="season-bar" id="seasonBar"></div>
 <div class="hero" id="app"><p class="loading">LOADING...</p></div>
 <div class="cards-section" id="cards"></div>
-<div class="about-section" id="aboutSection" style="display:none">
-  <div style="max-width:500px;margin:0 auto;padding:2rem 1rem">
-    <img src="bibby.png" alt="Brendan with Mike Bibby" style="width:100%;max-width:350px;border-radius:16px;margin:0 auto 1.5rem;display:block">
-    <h2 style="font-size:1.4rem;font-weight:800;margin-bottom:.75rem">About Light the Beam</h2>
-    <p style="font-size:.85rem;line-height:1.6;opacity:.7;margin-bottom:1rem">
-      The beam is a purple light that shoots into the Sacramento sky from the roof of Golden 1 Center after every Kings home win. It started during the 2022-23 season and quickly became one of the most iconic celebrations in the NBA.
-    </p>
-    <p style="font-size:.85rem;line-height:1.6;opacity:.7;margin-bottom:1rem">
-      This site tracks whether the beam was lit, every game result, team rankings, and how the Kings stack up against the rest of the NBA. All data is pulled live from ESPN.
-    </p>
-    <p style="font-size:.85rem;line-height:1.6;opacity:.7;margin-bottom:1rem">
-      Built by <a href="https://x.com/BrendanWelsh" target="_blank" rel="noopener" style="color:var(--beam);text-decoration:none;font-weight:700">@BrendanWelsh</a> &mdash; lifelong Kings fan, born and raised in Sacramento. Grew up sitting in the nosebleeds at Arco Arena watching Bibby, Webber, Peja, and the greatest team to never win a championship.
-    </p>
-    <p style="font-size:.7rem;opacity:.3;margin-top:1.5rem">Tap the Kings logo 5 times to light the beam yourself.</p>
+<div class="about-section" id="aboutSection" style="display:none;position:relative;z-index:1;padding:1rem">
+  <div style="max-width:500px;margin:0 auto;text-align:center">
+    <img src="kings-classic.png" alt="Classic Sacramento Kings Logo" style="width:120px;margin:0 auto 1rem;display:block;opacity:.8">
+    <h2 style="font-size:1.6rem;font-weight:900;margin-bottom:.5rem;letter-spacing:.05em">LIGHT THE BEAM</h2>
+    <p style="font-size:.75rem;text-transform:uppercase;letter-spacing:.2em;opacity:.3;margin-bottom:1.5rem">Sacramento, California</p>
+    <img src="bibby.png" alt="Brendan with Mike Bibby at Arco Arena" style="width:100%;max-width:300px;border-radius:14px;margin:0 auto 1rem;display:block;border:2px solid rgba(255,255,255,.06)">
+    <p style="font-size:.65rem;opacity:.25;margin-bottom:1.5rem">Brendan with Mike Bibby, Arco Arena circa 2002</p>
+    <div style="text-align:left">
+      <h3 style="font-size:.7rem;text-transform:uppercase;letter-spacing:.15em;opacity:.35;margin-bottom:.5rem">What is the Beam?</h3>
+      <p style="font-size:.85rem;line-height:1.7;opacity:.65;margin-bottom:1.25rem">
+        The beam is a purple light that shoots into the Sacramento sky from the roof of Golden 1 Center after every Kings home win. It started during the 2022-23 season and quickly became the most iconic celebration in the NBA. When the Kings win at home, the beam lights up and the whole city knows.
+      </p>
+      <h3 style="font-size:.7rem;text-transform:uppercase;letter-spacing:.15em;opacity:.35;margin-bottom:.5rem">About This Site</h3>
+      <p style="font-size:.85rem;line-height:1.7;opacity:.65;margin-bottom:1.25rem">
+        This site tracks whether the beam was lit, every game result, team rankings, and how the Kings stack up against the rest of the NBA. All data is pulled live from ESPN and updates every 30 seconds during games. Season archives go back to the beam's debut in 2022-23.
+      </p>
+      <h3 style="font-size:.7rem;text-transform:uppercase;letter-spacing:.15em;opacity:.35;margin-bottom:.5rem">Built By</h3>
+      <p style="font-size:.85rem;line-height:1.7;opacity:.65;margin-bottom:1.25rem">
+        <a href="https://x.com/BrendanWelsh" target="_blank" rel="noopener" style="color:var(--beam);text-decoration:none;font-weight:700">@BrendanWelsh</a> &mdash; lifelong Kings fan, born and raised in Sacramento. Grew up sitting in the nosebleeds at Arco Arena watching Bibby, Webber, Peja, Vlade, and the greatest team to never win a championship. Still waiting. Still watching. Still lighting the beam.
+      </p>
+    </div>
+    <p style="font-size:.65rem;opacity:.2;margin-top:1.5rem;font-style:italic">Tap the Kings logo 5 times to light the beam yourself &mdash; since the Kings won't do it for us.</p>
   </div>
 </div>
 <div class="footer">
@@ -291,6 +299,7 @@ function render(d){
   if(!d){app.appendChild($('p','question','Is the beam lit?'));app.appendChild($('p','answer','...'));app.appendChild($('p','loading',"Couldn't load. Refresh."));return}
 
   var isCurrent=currentSeason===autoCurrentSeason;
+  var origBeam=false;
 
   var logo=document.createElement('img');logo.src=KLOGO;logo.alt='Sacramento Kings';logo.className='logo';app.appendChild(logo);
   app.appendChild($('p','question','Is the beam lit?'));
@@ -305,12 +314,12 @@ function render(d){
       var extra=null;
       if(d.wp!==null){extra=$('div','win-prob');extra.textContent=(d.wp*100).toFixed(1)+'% Kings win probability'}
       boxes.appendChild(mkGameLink(c.status?.type?.shortDetail||'LIVE',k,o,ks,os,h,d.live.id,extra,false));
-      document.body.className='beam-on';
+      document.body.className='beam-on';origBeam=true;
     }else if(d.last){
       live=false;var c=d.last.competitions[0],k=fk(c.competitors),o=fo(c.competitors),ks=sc(k),os=sc(o),h=k?.homeAway==='home',bl=ks>os;
       ans.textContent=bl?'YES':'NO';
       boxes.appendChild(mkGameLink('Last Game',k,o,ks,os,h,d.last.id,null,bl));
-      document.body.className=bl?'beam-on':'beam-off';
+      document.body.className=bl?'beam-on':'beam-off';origBeam=bl;
     }
 
     if(d.next&&!d.live){boxes.appendChild(mkNextLink(d.next.competitions[0],d.next.date,d.next.id))}
@@ -344,7 +353,7 @@ function render(d){
     beamMsg.textContent='We lit the beam '+d.beams+' time'+(d.beams!==1?'s':'')+' that season';
     beamMsg.style.marginBottom='1rem';
     app.appendChild(beamMsg);
-    document.body.className=d.beams>0?'beam-on':'beam-off';
+    document.body.className='beam-off';origBeam=false;
     if(d.last){
       var c=d.last.competitions[0],k=fk(c.competitors),o=fo(c.competitors),ks=sc(k),os=sc(o),h=k?.homeAway==='home',bl=ks>os;
       boxes.appendChild(mkGameLink('Final Game',k,o,ks,os,h,d.last.id,null,bl));
@@ -378,6 +387,8 @@ function render(d){
     row.appendChild($('span','gm-opp',(gh?'vs ':'@ ')+oa));
     row.appendChild($('span','gm-res '+(gw?'w':'l'),gks+'-'+gos));
     row.appendChild($('span','gm-wl '+(gw?'w':'l'),gw?'W':'L'));
+    // Hover over wins lights the beam
+    if(gw){row.addEventListener('mouseenter',function(){document.body.classList.add('beam-on')});row.addEventListener('mouseleave',function(){if(!origBeam)document.body.classList.remove('beam-on')})}
     c2.appendChild(row);
   });
   if(d.sched.length>0)c2.appendChild($('div','st-sep','--- UPCOMING ---'));
@@ -405,20 +416,41 @@ function render(d){
   [[ppg,'PPG'],[oppg,'Opp PPG'],[(Number(diff)>0?'+':'')+diff,'Point Diff'],[w+l>0?Math.round(parseFloat(ppg)*(w+l)).toLocaleString():'--','Season Points'],[pct(w,l),'Win %']].forEach(function(p){
     var r=$('div','cs');r.appendChild($('span','cs-l',p[1]));r.appendChild($('span','cs-v',p[0]));c3.appendChild(r)});
 
-  // Team Rankings
-  var trKeys=Object.keys(d.teamRanks);
-  if(trKeys.length>0){
+  // Team Rankings (only current season - API doesn't have historical rankings)
+  if(isCurrent){
+    var trKeys=Object.keys(d.teamRanks);
+    if(trKeys.length>0){
+      c3.appendChild($('div','cs-divider'));
+      c3.appendChild($('div','big-card-title','Team Rankings (out of 30)'));
+      trKeys.forEach(function(k){
+        var t=d.teamRanks[k];
+        var r=$('div','cs');
+        r.appendChild($('span','cs-v',String(t.value)));
+        r.appendChild($('span','cs-l',t.label));
+        r.appendChild($('span','cs-rank',ord(t.rank)));
+        c3.appendChild(r);
+      });
+    }
+  }
+
+  // Past season extras
+  if(!isCurrent){
     c3.appendChild($('div','cs-divider'));
-    c3.appendChild($('div','big-card-title','Team Rankings (out of 30)'));
-    trKeys.forEach(function(k){
-      var t=d.teamRanks[k];
-      var r=$('div','cs');
-      var vSpan=$('span','cs-v',String(t.value));
-      var lSpan=$('span','cs-l',t.label);
-      var rankSpan=$('span','cs-rank',ord(t.rank));
-      r.appendChild(vSpan);r.appendChild(lSpan);r.appendChild(rankSpan);
-      c3.appendChild(r);
-    });
+    // 2022-23 Kings made the playoffs (first time since 2006!)
+    if(currentSeason===2023){
+      c3.appendChild($('div','big-card-title','Postseason'));
+      var r=$('div','cs');r.appendChild($('span','cs-l','Playoffs'));r.appendChild($('span','cs-v','First Round'));c3.appendChild(r);
+      var r2=$('div','cs');r2.appendChild($('span','cs-l','Result'));r2.appendChild($('span','cs-v','Lost to GSW 4-3'));c3.appendChild(r2);
+      var r3=$('div','cs');r3.appendChild($('span','cs-l','Note'));r3.appendChild($('span','cs-v','First playoff appearance since 2006'));c3.appendChild(r3);
+    } else {
+      c3.appendChild($('div','big-card-title','Postseason'));
+      var r=$('div','cs');r.appendChild($('span','cs-l','Playoffs'));r.appendChild($('span','cs-v','Did not qualify'));c3.appendChild(r);
+    }
+    // Link to season roster on ESPN
+    var rLink=document.createElement('a');rLink.href='https://www.espn.com/nba/team/roster/_/name/sac/season/'+currentSeason;rLink.target='_blank';rLink.rel='noopener';
+    rLink.className='upcoming-tix';rLink.style.display='inline-block';rLink.style.marginTop='.5rem';
+    rLink.textContent=(currentSeason-1)+'-'+String(currentSeason).slice(2)+' Roster';
+    c3.appendChild(rLink);
   }
 
   // Division
@@ -439,13 +471,13 @@ function render(d){
 function schedRefresh(){if(ref)clearInterval(ref);ref=setInterval(function(){getData().then(render).catch(function(){})},live?30000:120000)}
 
 var tc=0,tt=null;
-function egg(){var f=$('div','beam-flash');document.body.appendChild(f);setTimeout(function(){f.remove()},500);document.body.className='beam-on';var a=document.querySelector('.answer');if(a){a.textContent='YES';a.style.transition='transform .3s';a.style.transform='scale(1.15)';setTimeout(function(){a.style.transform='scale(1)'},300)}}
+function egg(){var f=$('div','beam-flash');document.body.appendChild(f);setTimeout(function(){f.remove()},500);document.body.className='beam-on';var a=document.querySelector('.answer');if(a){a.textContent='YES';a.style.transition='transform .3s';a.style.transform='scale(1.15)';setTimeout(function(){a.style.transform='scale(1)'},300)}var q=document.querySelector('.question');if(q)q.textContent="Since the Kings won't do it..."}
 document.getElementById('app').addEventListener('click',function(e){var l=e.target.closest('.logo');if(!l)return;tc++;l.classList.remove('shake');void l.offsetWidth;l.classList.add('shake');clearTimeout(tt);tt=setTimeout(function(){tc=0},1500);if(tc>=5){tc=0;clearTimeout(tt);egg()}});
 
 function buildSeasonBar(){
   var bar=document.getElementById('seasonBar');
   bar.textContent='';
-  for(var y=autoCurrentSeason;y>=2020;y--){
+  for(var y=autoCurrentSeason;y>=2023;y--){
     var pill=$('div','season-pill'+(y===currentSeason?' active':''));
     pill.textContent=(y-1)+'-'+String(y).slice(2);
     pill.dataset.year=y;
