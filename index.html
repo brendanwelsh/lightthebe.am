@@ -128,12 +128,21 @@ a.gm-row:hover{background:rgba(255,255,255,.03)}
     <p style="font-size:.65rem;opacity:.25;margin-bottom:1.5rem">Brendan with Mike Bibby, Arco Arena circa 2002</p>
     <div style="text-align:left">
       <h3 style="font-size:.7rem;text-transform:uppercase;letter-spacing:.15em;opacity:.35;margin-bottom:.5rem">What is the Beam?</h3>
+      <p style="font-size:.85rem;line-height:1.7;opacity:.65;margin-bottom:.75rem">
+        The beam is a massive purple searchlight mounted on the roof of Golden 1 Center in downtown Sacramento. After every Kings home win, the beam fires straight up into the night sky &mdash; a column of purple light visible from miles away across the Sacramento Valley.
+      </p>
+      <p style="font-size:.85rem;line-height:1.7;opacity:.65;margin-bottom:.75rem">
+        Technically, it's a high-powered Xenon sky tracker light with a purple gel filter, similar to the type used at Hollywood premieres. The beam sits on a custom mount on the arena's rooftop and is aimed directly upward. On a clear night, the beam can be seen from up to 10 miles away. It activates within minutes of the final buzzer and stays lit for several hours.
+      </p>
+      <p style="font-size:.85rem;line-height:1.7;opacity:.65;margin-bottom:.75rem">
+        The tradition started during the 2022-23 season &mdash; the year the Kings ended a 16-year playoff drought, the longest in NBA history. The beam quickly became the most iconic post-game celebration in the league. Fans flood social media with "LIGHT THE BEAM" after every home win, and opposing teams' fans have started dreading the phrase.
+      </p>
       <p style="font-size:.85rem;line-height:1.7;opacity:.65;margin-bottom:1.25rem">
-        The beam is a purple light that shoots into the Sacramento sky from the roof of Golden 1 Center after every Kings home win. It started during the 2022-23 season and quickly became the most iconic celebration in the NBA. When the Kings win at home, the beam lights up and the whole city knows.
+        The beam only activates for home wins. Road wins don't count. There is no beam for losses. You either light the beam or you don't.
       </p>
       <h3 style="font-size:.7rem;text-transform:uppercase;letter-spacing:.15em;opacity:.35;margin-bottom:.5rem">About This Site</h3>
       <p style="font-size:.85rem;line-height:1.7;opacity:.65;margin-bottom:1.25rem">
-        This site tracks whether the beam was lit, every game result, team rankings, and how the Kings stack up against the rest of the NBA. All data is pulled live from ESPN and updates every 30 seconds during games. Season archives go back to the beam's debut in 2022-23.
+        This site tracks every beam lighting since the tradition began. All data is pulled live from ESPN's API and updates every 30 seconds during games. You can browse every season since the beam's debut, see game-by-game results, team rankings, and how the Kings stack up against the rest of the NBA. Hover over any winning game to light the beam yourself.
       </p>
       <h3 style="font-size:.7rem;text-transform:uppercase;letter-spacing:.15em;opacity:.35;margin-bottom:.5rem">Built By</h3>
       <p style="font-size:.85rem;line-height:1.7;opacity:.65;margin-bottom:1.25rem">
@@ -301,13 +310,20 @@ function render(d){
   var isCurrent=currentSeason===autoCurrentSeason;
   var origBeam=false;
 
+  var pts=d.rec?d.rec.split('-').map(Number):[0,0],w=pts[0]||0,l=pts[1]||0;
+
   var logo=document.createElement('img');logo.src=KLOGO;logo.alt='Sacramento Kings';logo.className='logo';app.appendChild(logo);
-  app.appendChild($('p','question','Is the beam lit?'));
-  var ans=$('p','answer','...');app.appendChild(ans);
 
   var boxes=$('div','game-boxes');
 
   if(isCurrent){
+    app.appendChild($('p','question','Is the beam lit?'));
+    var ans=$('p','answer','...');app.appendChild(ans);
+    // Beam count for current season
+    var bcLine=$('p','game-box-sub');bcLine.textContent='The Kings have lit the beam '+d.beams+' time'+(d.beams!==1?'s':'')+' this season';
+    bcLine.style.marginBottom='1.5rem';bcLine.style.opacity='.35';
+    app.appendChild(bcLine);
+
     if(d.live){
       live=true;var c=d.live.competitions[0],k=fk(c.competitors),o=fo(c.competitors),ks=sc(k),os=sc(o),h=k?.homeAway==='home';
       ans.textContent='...';
@@ -335,7 +351,7 @@ function render(d){
         row.appendChild($('span','upcoming-opp',(gh?'vs ':'@ ')+oa));
         row.appendChild($('span','upcoming-date',fsd(g.date)));
         var tix=gc.tickets?.[0]?.links?.[0]?.href;
-        if(tix){var tb=document.createElement('a');tb.href=tix;tb.target='_blank';tb.rel='noopener';tb.className='upcoming-tix';tb.textContent=gh?'Home Tix':'Away Tix';row.appendChild(tb)}
+        if(tix){var tb=document.createElement('a');tb.href=tix;tb.target='_blank';tb.rel='noopener';tb.className='upcoming-tix';tb.textContent=gh?'@ G1C':'Tickets';row.appendChild(tb)}
         ul.appendChild(row);
       });
       boxes.appendChild(ul);
@@ -343,28 +359,51 @@ function render(d){
   }else{
     // Past season
     live=false;
-    app.removeChild(app.querySelector('.question'));
-    app.removeChild(app.querySelector('.answer'));
-    app.appendChild($('p','question','The '+(currentSeason-1)+'-'+String(currentSeason).slice(2)+' Season'));
-    var ans2=$('p','answer',d.rec||'--');
-    ans2.style.fontSize='clamp(4rem,15vw,8rem)';
-    app.appendChild(ans2);
-    var beamMsg=$('p','game-box-sub');
-    beamMsg.textContent='We lit the beam '+d.beams+' time'+(d.beams!==1?'s':'')+' that season';
-    beamMsg.style.marginBottom='1rem';
-    app.appendChild(beamMsg);
+    // Past season — same layout position as current
+    app.appendChild($('p','question',(currentSeason-1)+'-'+String(currentSeason).slice(2)+' Season'));
+    // BEAM COUNT is the hero number
+    var beamNum=$('p','answer',String(d.beams));
+    app.appendChild(beamNum);
+    var beamLabel=$('p','game-box-sub');
+    beamLabel.textContent='beam'+(d.beams!==1?'s':'')+' lit';
+    beamLabel.style.fontSize='1.2rem';beamLabel.style.opacity='.5';beamLabel.style.marginBottom='.5rem';beamLabel.style.textTransform='uppercase';beamLabel.style.letterSpacing='.15em';
+    app.appendChild(beamLabel);
+    // Record + hint
+    var recLine=$('p','game-box-sub');recLine.textContent=d.rec+' \u00B7 '+pct(w,l)+' \u00B7 Hover a win to light it';
+    recLine.style.opacity='.3';recLine.style.marginBottom='1.5rem';
+    app.appendChild(recLine);
     document.body.className='beam-off';origBeam=false;
-    if(d.last){
-      var c=d.last.competitions[0],k=fk(c.competitors),o=fo(c.competitors),ks=sc(k),os=sc(o),h=k?.homeAway==='home',bl=ks>os;
-      boxes.appendChild(mkGameLink('Final Game',k,o,ks,os,h,d.last.id,null,bl));
+    // Postseason info in hero area
+    var postDiv=$('div','');postDiv.style.marginTop='1rem';
+    if(currentSeason===2023){
+      var pBox=$('div','game-box');pBox.style.borderColor='var(--beam)';pBox.style.background='rgba(91,45,142,.08)';
+      pBox.appendChild($('div','game-box-label','Postseason'));
+      pBox.appendChild($('div','game-box-sub','First Round: Lost to Golden State 4-3'));
+      pBox.appendChild($('div','game-box-sub','First playoff appearance since 2006'));
+      postDiv.appendChild(pBox);
+    } else if(currentSeason===2024){
+      var pBox=$('div','game-box');
+      pBox.appendChild($('div','game-box-label','Postseason'));
+      pBox.appendChild($('div','game-box-sub','Play-In: Lost to New Orleans'));
+      postDiv.appendChild(pBox);
+    } else {
+      var pBox=$('div','game-box');
+      pBox.appendChild($('div','game-box-label','Postseason'));
+      pBox.appendChild($('div','game-box-sub','Did not qualify'));
+      postDiv.appendChild(pBox);
     }
+    boxes.appendChild(postDiv);
+    // Link to roster
+    var rLink=document.createElement('a');rLink.href='https://www.espn.com/nba/team/roster/_/name/sac/season/'+currentSeason;rLink.target='_blank';rLink.rel='noopener';
+    rLink.className='upcoming-tix';rLink.style.display='inline-block';rLink.style.marginTop='.5rem';
+    rLink.textContent=(currentSeason-1)+'-'+String(currentSeason).slice(2)+' Roster';
+    boxes.appendChild(rLink);
   }
 
   app.appendChild(boxes);
 
   // === CARDS ===
   var bc=$('div','big-cards');
-  var pts=d.rec.split('-').map(Number),w=pts[0]||0,l=pts[1]||0;
 
   // CARD 1: Full NBA Standings
   var c1=$('div','big-card');c1.appendChild($('div','big-card-title','NBA Standings'));
@@ -433,24 +472,13 @@ function render(d){
     }
   }
 
-  // Past season extras
+  // Past season: roster link only (postseason is in hero area now)
   if(!isCurrent){
     c3.appendChild($('div','cs-divider'));
-    // 2022-23 Kings made the playoffs (first time since 2006!)
-    if(currentSeason===2023){
-      c3.appendChild($('div','big-card-title','Postseason'));
-      var r=$('div','cs');r.appendChild($('span','cs-l','Playoffs'));r.appendChild($('span','cs-v','First Round'));c3.appendChild(r);
-      var r2=$('div','cs');r2.appendChild($('span','cs-l','Result'));r2.appendChild($('span','cs-v','Lost to GSW 4-3'));c3.appendChild(r2);
-      var r3=$('div','cs');r3.appendChild($('span','cs-l','Note'));r3.appendChild($('span','cs-v','First playoff appearance since 2006'));c3.appendChild(r3);
-    } else {
-      c3.appendChild($('div','big-card-title','Postseason'));
-      var r=$('div','cs');r.appendChild($('span','cs-l','Playoffs'));r.appendChild($('span','cs-v','Did not qualify'));c3.appendChild(r);
-    }
-    // Link to season roster on ESPN
-    var rLink=document.createElement('a');rLink.href='https://www.espn.com/nba/team/roster/_/name/sac/season/'+currentSeason;rLink.target='_blank';rLink.rel='noopener';
-    rLink.className='upcoming-tix';rLink.style.display='inline-block';rLink.style.marginTop='.5rem';
-    rLink.textContent=(currentSeason-1)+'-'+String(currentSeason).slice(2)+' Roster';
-    c3.appendChild(rLink);
+    var rLink2=document.createElement('a');rLink2.href='https://www.espn.com/nba/team/roster/_/name/sac/season/'+currentSeason;rLink2.target='_blank';rLink2.rel='noopener';
+    rLink2.className='upcoming-tix';rLink2.style.display='inline-block';rLink2.style.marginTop='.25rem';
+    rLink2.textContent='View '+(currentSeason-1)+'-'+String(currentSeason).slice(2)+' Roster';
+    c3.appendChild(rLink2);
   }
 
   // Division
