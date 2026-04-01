@@ -1,4 +1,4 @@
-<!-- v19 --><!DOCTYPE html>
+<!-- v20 --><!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -11,7 +11,6 @@
 :root{--purple:#5b2d8e;--black:#0a0a0a;--beam:#9b4dca;--win:#9b4dca;--loss:rgba(255,255,255,0.25)}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--black);color:#fff;min-height:100dvh;display:flex;flex-direction:column;align-items:center;text-align:center;overflow-x:hidden;scroll-behavior:smooth}
 
-/* Beam turns ON — fixed full-height, fades in */
 body.beam-on::before{content:'';position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:6px;height:100vh;background:linear-gradient(0deg,var(--beam) 0%,rgba(155,77,202,.8) 30%,rgba(155,77,202,.4) 70%,rgba(155,77,202,.1) 100%);box-shadow:0 0 40px 12px rgba(155,77,202,.4),0 0 100px 40px rgba(91,45,142,.2);pointer-events:none;z-index:0;opacity:0;animation:beamOn .6s ease-out forwards}
 body.beam-on::after{content:'';position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:250px;height:100vh;background:radial-gradient(ellipse at center bottom,rgba(155,77,202,.5) 0%,rgba(91,45,142,.3) 30%,rgba(91,45,142,.1) 60%,transparent 80%);filter:blur(30px);pointer-events:none;z-index:0;opacity:0;animation:beamOn .6s ease-out .15s forwards}
 @keyframes beamOn{0%{opacity:0}100%{opacity:1}}
@@ -23,8 +22,6 @@ body.beam-on::after{content:'';position:fixed;bottom:0;left:50%;transform:transl
 @keyframes ls{0%,100%{transform:rotate(0)}25%{transform:rotate(-5deg) scale(1.1)}75%{transform:rotate(5deg) scale(1.1)}}
 .beam-flash{position:fixed;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at center bottom,rgba(155,77,202,.9) 0%,rgba(91,45,142,.5) 30%,transparent 70%);pointer-events:none;z-index:100;animation:fi .5s ease-out forwards}
 @keyframes fi{0%{opacity:0}40%{opacity:1}100%{opacity:0}}
-.bouncy-ball{position:fixed;font-size:2rem;z-index:200;pointer-events:none;animation:ballBounce 2.5s ease-in forwards}
-@keyframes ballBounce{0%{opacity:1;transform:translateY(0) rotate(0deg)}20%{transform:translateY(-200px) rotate(180deg)}40%{transform:translateY(-50px) rotate(360deg)}60%{transform:translateY(-120px) rotate(540deg)}80%{transform:translateY(-20px) rotate(720deg)}100%{opacity:0;transform:translateY(100vh) rotate(900deg)}}
 .beam-count{font-size:clamp(1rem,3vw,1.5rem);font-weight:800;letter-spacing:.05em;margin-bottom:.75rem;color:rgba(255,255,255,.55)}
 .beam-count span{color:var(--beam);font-size:clamp(1.5rem,4vw,2.2rem)}
 
@@ -42,20 +39,14 @@ body.beam-on .game-bar-label{color:#fff;opacity:.6}
 body.beam-on .game-bar-abbrev{color:#fff}
 body.beam-on .game-bar-meta{opacity:.5}
 body.beam-on .game-bar-at{opacity:.4}
-body.beam-on .upcoming-label{opacity:.4}
-body.beam-on .upcoming-row-opp{color:#fff}
-body.beam-on .upcoming-row-date{opacity:.4}
 body.beam-off .answer{color:#1a1a1a}
 
-/* Game tile rows — 3-column layout */
-/* No text selection on hero */
 .question,.answer{user-select:none;-webkit-user-select:none}
 
 .tiles-section{position:relative;z-index:1;width:100%;padding:0 1rem 1.5rem}
 .game-tiles{display:flex;flex-direction:column;gap:.4rem;width:100%;max-width:700px;margin:0 auto}
 
-/* All game bars — same structure */
-.game-bar,.game-bar:visited{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:.6rem 1rem;text-decoration:none;color:inherit;transition:all .15s;gap:.5rem}
+.game-bar,.game-bar:visited{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:.6rem 1rem;text-decoration:none;color:inherit;transition:all .15s;gap:.5rem;position:relative}
 .game-bar:hover{background:rgba(255,255,255,.05)}
 .game-bar.lit{border-color:var(--beam);background:rgba(91,45,142,.06)}
 .game-bar.lit:hover{background:rgba(91,45,142,.12)}
@@ -64,50 +55,41 @@ body.beam-off .answer{color:#1a1a1a}
 .game-bar.live-bar .game-bar-label{color:var(--beam);opacity:1}
 .game-bar-center{display:flex;align-items:center;justify-content:center;gap:.4rem}
 .game-bar-center img{width:24px;height:24px;flex-shrink:0}
-.game-bar-abbrev{font-size:.85rem;font-weight:700}
-.game-bar-score{font-size:1.15rem;font-weight:900;min-width:1.8rem;text-align:center}
+.game-bar-abbrev{font-size:.9rem;font-weight:700}
+.game-bar-score{font-size:1.2rem;font-weight:900;min-width:2rem;text-align:center}
 .game-bar-score.w{color:#fff}.game-bar-score.l{opacity:.3}
-.game-bar-at{font-size:.5rem;opacity:.2}
+.game-bar-at{font-size:.7rem;opacity:.3;margin:0 .2rem}
 .game-bar-meta{font-size:.5rem;opacity:.3;text-align:right;display:flex;align-items:center;gap:.4rem;justify-self:end}
+.live-bar .game-bar-meta{font-size:.75rem;font-weight:700}
 .game-bar-tix,.game-bar-tix:visited{font-size:.5rem;color:var(--beam);text-decoration:none;border:1px solid var(--beam);border-radius:4px;padding:.15rem .4rem;transition:all .15s;font-weight:700}
 .game-bar-tix:hover{background:var(--beam);color:#fff}
 
-/* Upcoming — simple rows matching bar style */
-.upcoming-section{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);border-radius:10px;padding:.5rem 0;overflow:hidden}
-.upcoming-label{font-size:.5rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;opacity:.2;padding:0 1rem .3rem;text-align:left}
-.upcoming-row,.upcoming-row:visited{display:grid;grid-template-columns:5rem 1fr auto;align-items:center;padding:.35rem 1rem;text-decoration:none;color:inherit;transition:background .1s;gap:.5rem;border-top:1px solid rgba(255,255,255,.03)}
-.upcoming-row:hover{background:rgba(255,255,255,.03)}
-.upcoming-row:first-of-type{border-top:none}
-.upcoming-row-opp{display:flex;align-items:center;gap:.35rem;font-size:.75rem;font-weight:600}
-.upcoming-row-opp img{width:20px;height:20px;flex-shrink:0}
-.upcoming-row-date{font-size:.5rem;opacity:.3}
-.upcoming-row-meta{font-size:.5rem;opacity:.3;text-align:right;display:flex;align-items:center;gap:.4rem}
+.demo-stamp{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-15deg);font-size:1.5rem;font-weight:900;color:rgba(255,0,0,.6);text-transform:uppercase;letter-spacing:.2em;pointer-events:none;z-index:5}
+.gm-active{background:rgba(155,77,202,.15)!important;box-shadow:0 0 8px rgba(155,77,202,.2)}
+.beam-dot.gm-active{transform:scale(1.6);box-shadow:0 0 10px rgba(155,77,202,.8)}
+#explosionCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:400;pointer-events:none}
 
-/* Beam calendar */
-.beam-cal{display:flex;flex-direction:column;gap:.25rem;max-width:420px;margin:0 auto .5rem;width:100%}
+.beam-cal{display:flex;flex-direction:column;gap:.25rem;max-width:700px;margin:0 auto 1rem;width:100%}
 .beam-month{display:flex;align-items:center;gap:.3rem}
 .beam-month-label{font-size:.45rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;opacity:.2;width:2rem;text-align:right;flex-shrink:0}
 .beam-month-dots{display:flex;gap:3px;flex-wrap:wrap}
-.beam-dot{width:11px;height:11px;border-radius:3px;background:rgba(255,255,255,.06);transition:all .15s;cursor:pointer;text-decoration:none}
+.beam-dot{width:13px;height:13px;border-radius:3px;background:rgba(255,255,255,.06);transition:all .15s;cursor:pointer;text-decoration:none}
 .beam-dot:hover{transform:scale(1.4);z-index:1}
 .beam-dot.lit{background:var(--beam);box-shadow:0 0 4px rgba(155,77,202,.3)}
 .beam-dot.lit:hover{box-shadow:0 0 10px rgba(155,77,202,.6)}
 .beam-cal-label{font-size:.5rem;opacity:.2;margin-bottom:1.5rem;text-align:center}
 
-/* Live game elements */
 .live-prob{font-size:.85rem;font-weight:800;color:var(--beam)}
 .win-prob{font-size:.85rem;font-weight:700;color:var(--beam)}
 
-@media(max-width:500px){.game-bar{grid-template-columns:1fr;text-align:center;padding:.5rem .75rem;gap:.2rem}.game-bar-label{text-align:center}.game-bar-meta{justify-content:center}.upcoming-row{grid-template-columns:1fr;text-align:center;gap:.15rem}.upcoming-row-opp{justify-content:center}.upcoming-row-meta{justify-content:center}}
+@media(max-width:500px){.game-bar{grid-template-columns:1fr;text-align:center;padding:.5rem .75rem;gap:.2rem}.game-bar-label{text-align:center}.game-bar-meta{justify-content:center}}
 .game-box-sub{font-size:.8rem;font-weight:600;opacity:.5;margin-top:.3rem;text-align:center}
-/* Beam emitter */
 .beam-emitter{width:40px;height:22px;background:linear-gradient(180deg,#888 0%,#555 40%,#333 100%);border-radius:4px 4px 6px 6px;position:relative;box-shadow:0 2px 8px rgba(0,0,0,.5)}
 .beam-emitter-lens{width:10px;height:10px;background:rgba(155,77,202,.15);border:2px solid #666;border-radius:50%;position:absolute;top:3px;left:50%;transform:translateX(-50%);transition:all .3s}
 body.beam-on .beam-emitter-lens{background:var(--beam);border-color:var(--beam);box-shadow:0 0 12px var(--beam)}
 .beam-ray{width:2px;height:0;background:linear-gradient(0deg,var(--beam),transparent);transition:height .5s,opacity .5s;opacity:0}
 body.beam-on .beam-ray{height:60px;opacity:.6}
 
-/* Cards */
 .cards-section{position:relative;z-index:1;width:100%;padding:1.5rem 1rem 1rem;background:linear-gradient(180deg,transparent 0%,rgba(255,255,255,.015) 100%);border-top:1px solid rgba(255,255,255,.04);overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.08) transparent}
 .cards-section::-webkit-scrollbar{height:3px}
 .cards-section::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:2px}
@@ -132,25 +114,14 @@ a.st-row:hover{background:rgba(255,255,255,.03)}
 
 .gm-row,a.gm-row{display:flex;align-items:center;gap:.4rem;padding:.2rem .3rem;border-bottom:1px solid rgba(255,255,255,.025);text-decoration:none;color:inherit;transition:background .15s;border-radius:4px}
 a.gm-row:hover{background:rgba(255,255,255,.03)}
-.gm-row.w{border-left:3px solid var(--win)}.gm-row.l{border-left:3px solid var(--loss)}
-.gm-row.upcoming{border-left:3px solid rgba(255,255,255,.06);opacity:.5}
 .gm-date{font-size:.55rem;font-weight:600;opacity:.3;width:2.5rem;flex-shrink:0}
 .gm-logo{width:24px;height:24px;flex-shrink:0}
-.gm-opp{font-size:.75rem;font-weight:700;flex:1;text-align:left}
-.gm-res{font-size:.7rem;font-weight:800;flex-shrink:0}
+.gm-opp{font-size:.8rem;font-weight:700;flex:1;text-align:left}
+.gm-res{font-size:.75rem;font-weight:800;flex-shrink:0}
 .gm-res.w{color:var(--win)}.gm-res.l{color:var(--loss)}
 .gm-wl{font-size:.6rem;font-weight:800;width:1rem;text-align:center;flex-shrink:0}
 .gm-wl.w{color:var(--win)}.gm-wl.l{color:var(--loss)}
 .gm-row{position:relative}
-.gm-tooltip{display:none;position:absolute;left:0;right:0;top:100%;z-index:10;background:rgba(15,15,15,.97);border:1px solid rgba(155,77,202,.3);border-radius:10px;padding:.75rem;margin-top:.2rem;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.5)}
-.gm-row:hover .gm-tooltip{display:block}
-.gm-tooltip-date{font-size:.6rem;opacity:.4;margin-bottom:.3rem}
-.gm-tooltip-matchup{display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.3rem}
-.gm-tooltip-matchup img{width:36px;height:36px}
-.gm-tooltip-score{font-size:1.2rem;font-weight:900}
-.gm-tooltip-beam{font-size:.75rem;font-weight:800;margin-top:.3rem;text-transform:uppercase;letter-spacing:.1em}
-.gm-tooltip-beam.yes{color:var(--beam)}
-.gm-tooltip-beam.no{opacity:.3}
 
 .cs{display:flex;justify-content:space-between;align-items:baseline;padding:.2rem 0}
 .cs-l{font-size:.55rem;text-transform:uppercase;letter-spacing:.08em;opacity:.25;font-weight:600}
@@ -171,12 +142,10 @@ a.gm-row:hover{background:rgba(255,255,255,.03)}
 .season-pill:hover{background:rgba(255,255,255,.08);color:rgba(255,255,255,.6)}
 .season-pill.active{background:var(--beam);border-color:var(--beam);color:#fff}
 
-.upcoming-tix,.upcoming-tix:visited{font-size:.4rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--beam);text-decoration:none;padding:.1rem .3rem;border:1px solid var(--beam);border-radius:3px;transition:all .15s;display:inline-block;margin-top:.2rem}
-.upcoming-tix:hover{background:var(--beam);color:#fff}
 @media(max-width:700px){
   .big-cards{flex-direction:column;min-width:0;padding:0 .5rem}
   .big-card{flex:none;width:100%}
-  .gm-tooltip{position:fixed;left:1rem;right:1rem;top:auto;bottom:1rem;margin-top:0;border-radius:14px}
+  .beam-dot{width:16px;height:16px;border-radius:4px}
 }
 </style>
 </head>
@@ -187,17 +156,15 @@ a.gm-row:hover{background:rgba(255,255,255,.03)}
 <div class="cards-section" id="cards"></div>
 <div class="about-section" id="aboutSection" style="display:none;position:relative;z-index:1;padding:1rem">
   <div style="max-width:520px;margin:0 auto;text-align:center">
-    <img src="kings-classic.png" alt="Classic Sacramento Kings Logo" id="aboutLogo" style="width:180px;margin:0 auto .75rem;display:block;opacity:.7;cursor:pointer;transition:transform .15s" title="Click me...">
-    <h2 style="font-size:1.4rem;font-weight:900;margin-bottom:.3rem;letter-spacing:.05em">HOOP DREAMS, BABY</h2>
-    <p style="font-size:.55rem;text-transform:uppercase;letter-spacing:.3em;opacity:.25;margin-bottom:.4rem">Sacramento, California</p>
-    <p style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.2em;color:var(--beam);margin-bottom:1.25rem">FYBA Legend</p>
+    <img src="kings-classic.png" alt="Classic Sacramento Kings Logo" id="aboutLogo" style="width:180px;margin:0 auto .75rem;display:block;opacity:.7;cursor:pointer;transition:transform .15s">
+    <h2 style="font-size:1.4rem;font-weight:900;margin-bottom:1rem;letter-spacing:.05em">LIGHT THE BEAM</h2>
+    <button id="beamButton" style="display:block;margin:0 auto 2rem;padding:1rem 2.5rem;font-size:1.1rem;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:#fff;background:linear-gradient(180deg,var(--beam) 0%,var(--purple) 100%);border:none;border-radius:50px;cursor:pointer;box-shadow:0 6px 20px rgba(155,77,202,.4),0 2px 4px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.2);transition:transform .1s,box-shadow .1s,filter .3s;position:relative;overflow:hidden">LIGHT THE BEAM</button>
     <div style="text-align:left">
+      <h3 style="font-size:.7rem;text-transform:uppercase;letter-spacing:.2em;opacity:.3;margin-bottom:.75rem">About This Site</h3>
       <p style="font-size:.85rem;line-height:1.7;opacity:.5;margin-bottom:1.25rem">
-        After every Kings win, the beam is lit. The physical beam shoots from Golden 1 Center into the Sacramento sky after home wins, but for Kings fans everywhere, the beam is a state of mind. Win a game, light the beam. The tradition started in 2022-23 when the Kings ended a 16-year playoff drought.
+        After every Kings win, the beam is lit. The physical beam shoots from Golden 1 Center into the Sacramento sky after home wins, but for Kings fans everywhere, the beam is a state of mind. All data is pulled from ESPN's public API. Scores update every 30 seconds during live games. Season archives go back to 2022-23 when the beam tradition began.
       </p>
-      <p style="font-size:.75rem;line-height:1.6;opacity:.35;margin-bottom:1.25rem">
-        All data is pulled from ESPN's public API. Scores update every 30 seconds during live games, every 2 minutes otherwise. Win probability is pulled from ESPN's game summary. Season archives go back to 2022-23 when the beam tradition began. The site auto-rolls to the new season each October.
-      </p>
+      <h3 style="font-size:.7rem;text-transform:uppercase;letter-spacing:.2em;opacity:.3;margin-bottom:.75rem">About the Author</h3>
     </div>
     <img src="bibby-full.png" alt="Brendan and his brother with Mike Bibby at Food Source" style="width:100%;max-width:500px;border-radius:12px;margin:0 auto .4rem;display:block;border:1px solid rgba(255,255,255,.06)">
     <p style="font-size:.55rem;opacity:.2;margin-bottom:1rem">Getting Bibby's autograph at Food Source, 2002</p>
@@ -206,16 +173,20 @@ a.gm-row:hover{background:rgba(255,255,255,.03)}
       <img src="beam-house.png" alt="Purple beam lights on the house" style="width:100%;border-radius:10px;border:1px solid rgba(255,255,255,.06);object-fit:cover;aspect-ratio:4/3">
     </div>
     <p style="font-size:.55rem;opacity:.2;margin-bottom:1.25rem">Game nights at the house. The beam doesn't just stay at the arena.</p>
-    <!-- Light the Beam button -->
-    <button id="beamButton" style="display:block;margin:1.5rem auto;padding:1rem 2.5rem;font-size:1.1rem;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:#fff;background:linear-gradient(180deg,var(--beam) 0%,var(--purple) 100%);border:none;border-radius:50px;cursor:pointer;box-shadow:0 6px 20px rgba(155,77,202,.4),0 2px 4px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.2);transition:transform .1s,box-shadow .1s;position:relative;overflow:hidden">LIGHT THE BEAM</button>
     <div style="text-align:left">
-      <p style="font-size:.85rem;line-height:1.7;opacity:.65;margin-bottom:.75rem">
-        Built by <a href="https://x.com/BrendanWelsh" target="_blank" rel="noopener" style="color:var(--beam);text-decoration:none;font-weight:700">@BrendanWelsh</a>. Parents raised him to be a Kings fan. Grew up playing youth basketball in Sacramento, played on the court at Arco Arena. Sat in the nosebleeds watching Webber, Peja, Vlade, Doug Christie, and the greatest team to never win a championship. Skipped school in 4th grade to go get Carl's Jr Kings bobbleheads. Hoop dreams, baby.
+      <p style="font-size:.85rem;line-height:1.7;opacity:.65;margin-bottom:1.25rem">
+        Built by <a href="https://x.com/BrendanWelsh" target="_blank" rel="noopener" style="color:var(--beam);text-decoration:none;font-weight:700">@BrendanWelsh</a>, FYBA Legend, known as BulldogsRock25 on AIM. Born and raised in Sacramento. Grew up playing youth basketball, played on the court at Arco Arena. Sat in the nosebleeds watching Webber, Peja, Vlade, Doug Christie, and the greatest team to never win a championship. Skipped school in 4th grade to get Carl's Jr Kings bobbleheads. Recently got $15 tickets to a game and $16 hot dogs.
       </p>
     </div>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem">
+      <a href="https://www.nba.com/kings" target="_blank" rel="noopener" style="color:var(--beam);text-decoration:none;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;border:1px solid var(--beam);border-radius:20px;padding:.3rem .8rem">NBA.com/Kings</a>
+      <a href="https://twitter.com/SacramentoKings" target="_blank" rel="noopener" style="color:var(--beam);text-decoration:none;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;border:1px solid var(--beam);border-radius:20px;padding:.3rem .8rem">@SacramentoKings</a>
+      <a href="https://shop.kings.com" target="_blank" rel="noopener" style="color:var(--beam);text-decoration:none;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;border:1px solid var(--beam);border-radius:20px;padding:.3rem .8rem">Kings Store</a>
+    </div>
+    <p style="font-size:.55rem;opacity:.2;margin-bottom:1.5rem">Not affiliated with the Sacramento Kings. Made by a fan, for fans.</p>
+    <p style="font-size:1.1rem;font-weight:900;font-style:italic;opacity:.6;letter-spacing:.05em">Hoop Dreams, Baby.</p>
   </div>
 </div>
-<!-- Beam emitter -->
 <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;padding:2rem 0 0">
   <div class="beam-ray"></div>
   <div class="beam-emitter">
@@ -241,7 +212,6 @@ ref=null,live=false,lastData=null,mockLive=false,mockWp=0.67,mockKs=89,mockOs=78
 
 function schedUrl(yr){return 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/'+KID+'/schedule?season='+yr}
 
-// Magic 8-ball style answers based on win probability during live games
 function beamPhrase(wp){
   if(wp===null)return'...';
   var p=wp*100;
@@ -271,35 +241,6 @@ function td(d){return new Date(d).toDateString()===new Date().toDateString()}
 function yd(d){var y=new Date();y.setDate(y.getDate()-1);return new Date(d).toDateString()===y.toDateString()}
 function fk(cs){return cs.find(function(c){return String(c.team?.id||c.id)===KID})}
 function fo(cs){return cs.find(function(c){return String(c.team?.id||c.id)!==KID})}
-function buildBeamCal(games,origBeam){
-  var cal=$('div','beam-cal');
-  var months={};
-  games.forEach(function(g){
-    var d=new Date(g.date);
-    var key=d.toLocaleDateString('en-US',{month:'short'});
-    if(!months[key])months[key]=[];
-    months[key].push(g);
-  });
-  Object.keys(months).forEach(function(mon){
-    var row=$('div','beam-month');
-    row.appendChild($('span','beam-month-label',mon));
-    var dots=$('div','beam-month-dots');
-    months[mon].forEach(function(g){
-      var c=g.competitions[0],k=fk(c.competitors),o=fo(c.competitors);
-      var won=sc(k)>sc(o);
-      var dot=document.createElement('a');dot.className='beam-dot'+(won?' lit':'');dot.href=gu(g.id);dot.target='_blank';dot.rel='noopener';
-      dot.title=(won?'W':'L')+' vs '+(o.team?.abbreviation||'???')+' '+sc(k)+'-'+sc(o)+' ('+fs(g.date)+')';
-      var dotCtx='vs '+(o.team?.abbreviation||'???')+' \u00B7 '+sc(k)+'-'+sc(o)+' \u00B7 '+fs(g.date);
-      if(won){(function(ctx){dot.addEventListener('mouseenter',function(){showCtx(ctx);document.body.className='beam-on'});dot.addEventListener('mouseleave',function(){hideCtx();if(!origBeam)document.body.className='beam-off'})})(dotCtx)}
-      dots.appendChild(dot);
-    });
-    row.appendChild(dots);
-    cal.appendChild(row);
-  });
-  return cal;
-}
-function showCtx(txt){var h=document.getElementById('hoverCtx');if(h){h.textContent=txt;h.classList.add('show')}}
-function hideCtx(){var h=document.getElementById('hoverCtx');if(h){h.textContent='';h.classList.remove('show')}}
 function ord(n){var s=['th','st','nd','rd'],v=n%100;return n+(s[(v-20)%10]||s[v]||s[0])}
 function pct(w,l){return w+l>0?(w/(w+l)).toFixed(3).replace(/^0/,''):'.000'}
 
@@ -317,7 +258,162 @@ var TEAM_NAMES={
   SAS:'San Antonio Spurs',TOR:'Toronto Raptors',UTAH:'Utah Jazz',UTA:'Utah Jazz',
   WSH:'Washington Wizards',WAS:'Washington Wizards'
 };
-function tn(abbr){return TEAM_NAMES[abbr]||TEAM_NAMES[abbr.toUpperCase()]||abbr}
+function tn(abbr){return TEAM_NAMES[abbr]||TEAM_NAMES[(abbr||'').toUpperCase()]||abbr}
+
+var cowbellAudio=new Audio('cowbell.mp3');
+cowbellAudio.onerror=function(){cowbellAudio=new Audio()};
+function playCowbell(){try{cowbellAudio.currentTime=0;cowbellAudio.play().catch(function(){})}catch(e){}}
+
+var selectedGame=null;
+function tapPreview(el,previewFn,clearFn){
+  el.addEventListener('click',function(e){
+    if('ontouchstart' in window||navigator.maxTouchPoints>0){
+      if(selectedGame===el){
+        selectedGame=null;return;
+      }
+      e.preventDefault();
+      if(selectedGame){selectedGame.classList.remove('gm-active');clearFn()}
+      selectedGame=el;el.classList.add('gm-active');
+      previewFn();
+    }
+  });
+}
+document.addEventListener('click',function(e){
+  if(selectedGame&&!selectedGame.contains(e.target)){
+    selectedGame.classList.remove('gm-active');
+    selectedGame=null;
+    hideCtx();
+    var q=document.querySelector('.question');var a=document.querySelector('.answer');
+    if(q&&q.dataset.orig)q.textContent=q.dataset.orig;
+    if(a&&a.dataset.orig)a.textContent=a.dataset.orig;
+    if(lastData){var ld=lastData.last;if(ld){var c=ld.competitions[0],k=fk(c.competitors),o=fo(c.competitors);if(sc(k)>sc(o))document.body.className='beam-on';else document.body.className='beam-off'}else document.body.className='beam-off'}
+  }
+});
+
+function buildGameBar(label,oA,gh,ks,os,dateStr,isWin,gameId,showScores){
+  var h=gh;var aA=h?oA:'SAC',hA=h?'SAC':oA,aS=h?os:ks,hS=h?ks:os;
+  var bar=gameId?document.createElement('a'):$('div','game-bar');
+  bar.className='game-bar'+(isWin?' lit':'');
+  if(gameId){bar.href=gu(gameId);bar.target='_blank';bar.rel='noopener'}
+  bar.appendChild($('div','game-bar-label',label));
+  var ctr=$('div','game-bar-center');
+  var ai=document.createElement('img');ai.src=h?tl(oA):KLOGO;ai.alt=aA;ctr.appendChild(ai);
+  ctr.appendChild($('span','game-bar-abbrev',aA));
+  if(showScores){
+    ctr.appendChild($('span','game-bar-score '+(aS>hS?'w':'l'),String(aS)));
+  }else{
+    ctr.appendChild($('span','game-bar-score',''));
+  }
+  ctr.appendChild($('span','game-bar-at','\u00B7'));
+  if(showScores){
+    ctr.appendChild($('span','game-bar-score '+(hS>aS?'w':'l'),String(hS)));
+  }else{
+    ctr.appendChild($('span','game-bar-score',''));
+  }
+  var hi=document.createElement('img');hi.src=h?KLOGO:tl(oA);hi.alt=hA;ctr.appendChild(hi);
+  ctr.appendChild($('span','game-bar-abbrev',hA));
+  bar.appendChild(ctr);
+  bar.appendChild($('span','game-bar-meta',dateStr));
+  return bar;
+}
+
+function buildBeamCal(games,origBeam){
+  var cal=$('div','beam-cal');
+  var months={};var monthOrder=[];
+  games.forEach(function(g,idx){
+    var d=new Date(g.date);
+    var key=d.toLocaleDateString('en-US',{month:'short'});
+    if(!months[key]){months[key]=[];monthOrder.push(key)}
+    months[key].push({game:g,idx:idx});
+  });
+  monthOrder.forEach(function(mon){
+    var row=$('div','beam-month');
+    row.appendChild($('span','beam-month-label',mon));
+    var dots=$('div','beam-month-dots');
+    months[mon].forEach(function(item){
+      var g=item.game,idx=item.idx;
+      var c=g.competitions[0],k=fk(c.competitors),o=fo(c.competitors);
+      var won=sc(k)>sc(o);var oa=o.team?.abbreviation||'???';
+      var gh=k?.homeAway==='home';
+      var dot=document.createElement('a');dot.className='beam-dot'+(won?' lit':'');dot.href=gu(g.id);dot.target='_blank';dot.rel='noopener';
+      dot.dataset.gameIdx=String(idx);
+      dot.title=(won?'W':'L')+' vs '+oa+' '+sc(k)+'-'+sc(o)+' ('+fs(g.date)+')';
+      (function(oaC,ghC,ksC,osC,dateC,wonC,gameIdx){
+        dot.addEventListener('mouseenter',function(e){
+          e.preventDefault();
+          showCtx(tn(oaC)+' on '+fd(dateC));
+          var q=document.querySelector('.question');var a=document.querySelector('.answer');
+          if(q)q.dataset.orig=q.dataset.orig||q.textContent;
+          if(a)a.dataset.orig=a.dataset.orig||a.textContent;
+          if(q)q.textContent='Was the beam lit?';
+          if(a)a.textContent=wonC?'YES':'NO';
+          if(wonC)document.body.className='beam-on';
+          else document.body.className='beam-off';
+          var gmRow=document.querySelector('.gm-row[data-game-idx="'+gameIdx+'"]');
+          if(gmRow){gmRow.classList.add('gm-active');gmRow.scrollIntoView({block:'nearest',behavior:'smooth'})}
+        });
+        dot.addEventListener('mouseleave',function(){
+          hideCtx();
+          if(!origBeam)document.body.className='beam-off';
+          var q=document.querySelector('.question');var a=document.querySelector('.answer');
+          if(q&&q.dataset.orig)q.textContent=q.dataset.orig;
+          if(a&&a.dataset.orig)a.textContent=a.dataset.orig;
+          var gmRow=document.querySelector('.gm-row.gm-active');
+          if(gmRow)gmRow.classList.remove('gm-active');
+        });
+        tapPreview(dot,function(){
+          showCtx(tn(oaC)+' on '+fd(dateC));
+          var q=document.querySelector('.question');var a=document.querySelector('.answer');
+          if(q)q.dataset.orig=q.dataset.orig||q.textContent;
+          if(a)a.dataset.orig=a.dataset.orig||a.textContent;
+          if(q)q.textContent='Was the beam lit?';
+          if(a)a.textContent=wonC?'YES':'NO';
+          if(wonC)document.body.className='beam-on';
+          else document.body.className='beam-off';
+          var gmRow=document.querySelector('.gm-row[data-game-idx="'+gameIdx+'"]');
+          if(gmRow){gmRow.classList.add('gm-active');gmRow.scrollIntoView({block:'nearest',behavior:'smooth'})}
+        },function(){
+          hideCtx();
+          if(!origBeam)document.body.className='beam-off';
+          var q=document.querySelector('.question');var a=document.querySelector('.answer');
+          if(q&&q.dataset.orig)q.textContent=q.dataset.orig;
+          if(a&&a.dataset.orig)a.textContent=a.dataset.orig;
+          var gmRow=document.querySelector('.gm-row.gm-active');
+          if(gmRow)gmRow.classList.remove('gm-active');
+        });
+      })(oa,gh,sc(k),sc(o),g.date,won,idx);
+      dots.appendChild(dot);
+    });
+    row.appendChild(dots);
+    cal.appendChild(row);
+  });
+  return cal;
+}
+function showCtx(txt){var h=document.getElementById('hoverCtx');if(h){h.textContent=txt;h.classList.add('show')}}
+function hideCtx(){var h=document.getElementById('hoverCtx');if(h){h.textContent='';h.classList.remove('show')}}
+
+function buildLiveBar(d){
+  var lc=d.live?d.live.competitions[0]:null;
+  var lk=lc?fk(lc.competitors):null;
+  var lo=lc?fo(lc.competitors):null;
+  var lks=lc?sc(lk):mockKs;
+  var los=lc?sc(lo):mockOs;
+  var loA=lo?.team?.abbreviation||mockOpp;
+  var lh=lk?lk.homeAway==='home':true;
+  var status=lc?.status?.type?.shortDetail||(mockQtr+' '+mockTime);
+  var bar=buildGameBar('Live',loA,lh,lks,los,status,false,null,true);
+  bar.classList.add('live-bar');
+  if(d.wp!==null||mockLive){
+    var prob=d.wp!==null?(d.wp*100).toFixed(1):(mockWp*100).toFixed(1);
+    var meta=bar.querySelector('.game-bar-meta');
+    meta.appendChild($('span','live-prob',' \u00B7 '+prob+'% SAC'));
+  }
+  if(mockLive){
+    var demo=$('span','demo-stamp');demo.textContent='DEMO';
+    bar.appendChild(demo);
+  }
+  return bar;
+}
 
 async function getData(){
   var sd=await fj(schedUrl(currentSeason)),stSum=sd.team?.standingSummary||'',ev=sd.events||[];
@@ -334,43 +430,36 @@ async function getData(){
   var wp=null;
   if(isCur&&lid){try{var sum=await fj('https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event='+lid);var wpa=sum.winprobability||[];if(wpa.length>0){var hw=wpa[wpa.length-1].homeWinPercentage;var kl=fk(lg.competitions[0].competitors);wp=(kl&&kl.homeAway==='home')?hw:1-hw}}catch(e){}}
 
-  // Streaks
   var str=0,stt='',bStr=0,bStt='',cs=0,ct='';
   for(var j=done.length-1;j>=0;j--){var c=done[j].competitions[0],w=sc(fk(c.competitors))>sc(fo(c.competitors));if(str===0){stt=w?'W':'L';str=1}else if((w&&stt==='W')||(!w&&stt==='L'))str++;else break}
   for(var j=0;j<done.length;j++){var c=done[j].competitions[0],w=sc(fk(c.competitors))>sc(fo(c.competitors));if(cs===0){ct=w?'W':'L';cs=1}else if((w&&ct==='W')||(!w&&ct==='L')){cs++;if(cs>bStr){bStr=cs;bStt=ct}}else{if(cs>bStr){bStr=cs;bStt=ct}cs=1;ct=w?'W':'L'}}
   if(cs>bStr){bStr=cs;bStt=ct}
 
-  // Best WIN streak specifically
   var bWin=0,cWin=0;
   for(var j=0;j<done.length;j++){var c=done[j].competitions[0],w=sc(fk(c.competitors))>sc(fo(c.competitors));if(w){cWin++;if(cWin>bWin)bWin=cWin}else cWin=0}
 
   var beams=0;
   for(var b=0;b<done.length;b++){var c=done[b].competitions[0],k=fk(c.competitors);if(sc(k)>sc(fo(c.competitors)))beams++}
 
-  // Standings + rankings (current season only)
   var divT=[],allT=[],kSt={},teamRanks={};
   if(isCur){
   try{var st=await fj(STAND);(st.children||[]).forEach(function(cf){(cf.standings?.entries||[]).forEach(function(e){var id=String(e.team?.id),ws=0,ls=0,sm={};(e.stats||[]).forEach(function(s){if(s.name==='wins')ws=s.value;if(s.name==='losses')ls=s.value;sm[s.name]=s});allT.push({id:id,name:e.team?.displayName||'',abbrev:e.team?.abbreviation||'???',wins:ws,losses:ls,stats:sm});if(id===KID)kSt={id:id,abbrev:'SAC',wins:ws,losses:ls,stats:sm}})});
   allT.sort(function(a,b){return(b.wins/(b.wins+b.losses||1))-(a.wins/(a.wins+a.losses||1))});
   var pac=['SAC','GSW','LAC','LAL','PHX'];divT=allT.filter(function(t){return pac.indexOf(t.abbrev)!==-1});divT.sort(function(a,b){return(b.wins/(b.wins+b.losses||1))-(a.wins/(a.wins+a.losses||1))})}catch(e){}
 
-  // Team stat rankings — fetch Kings stats then rank among all teams
   try{
     var kStats=await fj(STATS_URL.replace('{id}',KID));
     var kCats=kStats.results?.stats?.categories||[];
     var statVals={};
     kCats.forEach(function(c){(c.stats||[]).forEach(function(s){statVals[s.name]=parseFloat(s.displayValue)||0})});
 
-    // Fetch a few key competitors to compute ranks
     var allTeamStats=[];
     var teamIds=allT.map(function(t){return t.id});
-    // Fetch all 30 in parallel
     var fetches=teamIds.map(function(id){return fj(STATS_URL.replace('{id}',id)).then(function(d){
       var vals={id:id};(d.results?.stats?.categories||[]).forEach(function(c){(c.stats||[]).forEach(function(s){vals[s.name]=parseFloat(s.displayValue)||0})});return vals
     }).catch(function(){return{id:id}})});
     allTeamStats=await Promise.all(fetches);
 
-    // Compute ranks for key stats (higher is better for offense, lower for defense)
     var rankKeys=[
       {key:'avgPoints',label:'PPG',higher:true},
       {key:'avgRebounds',label:'RPG',higher:true},
@@ -393,68 +482,9 @@ async function getData(){
       }
     });
   }catch(e){}
-  } // end isCur standings/rankings block
+  }
 
   return{rec:rec,stSum:stSum,last:last,live:lg,next:next,done:done,sched:sched,str:str,stt:stt,bStr:bStr,bStt:bStt,bWin:bWin,wp:wp,beams:beams,divT:divT,allT:allT,kSt:kSt,gLeft:sched.length,teamRanks:teamRanks}
-}
-
-function fillHoverBar(oa,gh,ks,os,dateStr,won){
-  var hb=document.getElementById('hoverGameBar');
-  if(!hb)return;
-  hb.textContent='';
-  var h=gh;var aA=h?oa:'SAC',hA=h?'SAC':oa,aS=h?os:ks,hS=h?ks:os;
-  hb.appendChild($('div','game-bar-label',won?'Beam Lit':'No Beam'));
-  var ctr=$('div','game-bar-center');
-  var ai=document.createElement('img');ai.src=h?tl(oa):KLOGO;ai.alt=aA;ctr.appendChild(ai);
-  ctr.appendChild($('span','game-bar-abbrev',aA));
-  ctr.appendChild($('span','game-bar-score '+(aS>hS?'w':'l'),String(aS)));
-  ctr.appendChild($('span','game-bar-at','@'));
-  ctr.appendChild($('span','game-bar-score '+(hS>aS?'w':'l'),String(hS)));
-  var hi=document.createElement('img');hi.src=h?KLOGO:tl(oa);hi.alt=hA;ctr.appendChild(hi);
-  ctr.appendChild($('span','game-bar-abbrev',hA));
-  hb.appendChild(ctr);
-  hb.appendChild($('span','game-bar-meta',dateStr));
-  hb.className='game-bar'+(won?' lit':'');
-  hb.style.visibility='visible';hb.style.opacity='1';
-}
-function clearHoverBar(){
-  var hb=document.getElementById('hoverGameBar');
-  if(!hb)return;
-  hb.style.opacity='0';
-  setTimeout(function(){if(hb.style.opacity==='0')hb.style.visibility='hidden'},150);
-}
-
-function buildLiveBar(d){
-  // Live game as a simple bar matching the other bars
-  var lc=d.live?d.live.competitions[0]:null;
-  var lk=lc?fk(lc.competitors):null;
-  var lo=lc?fo(lc.competitors):null;
-  var lks=lc?sc(lk):mockKs;
-  var los=lc?sc(lo):mockOs;
-  var loA=lo?.team?.abbreviation||mockOpp;
-  var lh=lk?lk.homeAway==='home':true;
-  var status=lc?.status?.type?.shortDetail||(mockQtr+' '+mockTime);
-  var aA=lh?loA:'SAC',hA=lh?'SAC':loA,aS=lh?los:lks,hS=lh?lks:los;
-
-  var bar=$('div','game-bar live-bar');
-  bar.appendChild($('div','game-bar-label','Live'));
-  var ctr=$('div','game-bar-center');
-  var ai=document.createElement('img');ai.src=lh?tl(loA):KLOGO;ai.alt=aA;ctr.appendChild(ai);
-  ctr.appendChild($('span','game-bar-abbrev',aA));
-  ctr.appendChild($('span','game-bar-score '+(aS>hS?'w':'l'),String(aS)));
-  ctr.appendChild($('span','game-bar-at','@'));
-  ctr.appendChild($('span','game-bar-score '+(hS>aS?'w':'l'),String(hS)));
-  var hi=document.createElement('img');hi.src=lh?KLOGO:tl(loA);hi.alt=hA;ctr.appendChild(hi);
-  ctr.appendChild($('span','game-bar-abbrev',hA));
-  bar.appendChild(ctr);
-  var meta=$('div','game-bar-meta');
-  meta.appendChild($('span','',status));
-  if(d.wp!==null||mockLive){
-    var prob=d.wp!==null?(d.wp*100).toFixed(1):(mockWp*100).toFixed(1);
-    meta.appendChild($('span','live-prob',prob+'% SAC'));
-  }
-  bar.appendChild(meta);
-  return bar;
 }
 
 function render(d){
@@ -468,7 +498,6 @@ function render(d){
   var pts=d.rec?d.rec.split('-').map(Number):[0,0],w=pts[0]||0,l=pts[1]||0;
 
   var logo=document.createElement('img');logo.src=KLOGO;logo.alt='Sacramento Kings';logo.className='logo';app.appendChild(logo);
-  // Hover context line — shows game info when hovering a game
   var hoverCtx=$('div','hover-ctx');hoverCtx.id='hoverCtx';
   app.appendChild(hoverCtx);
 
@@ -476,20 +505,14 @@ function render(d){
     var questionEl=$('p','question','Is the beam lit?');
     questionEl.addEventListener('click',function(e){
       this.classList.remove('shake');void this.offsetWidth;this.classList.add('shake');
-      if(e.detail===3){
-        mockLive=!mockLive;
-        render(lastData);
-      }
     });
     app.appendChild(questionEl);
     var ans=$('p','answer','...');app.appendChild(ans);
-    // Beam count for current season
     var bcLine=$('div','beam-count');
     var bcNum=document.createElement('span');bcNum.textContent=d.beams;
     bcLine.appendChild(bcNum);
     bcLine.appendChild(document.createTextNode(' beam'+(d.beams!==1?'s':'')+' lit this season'));
     app.appendChild(bcLine);
-    // Beam calendar for current season
     if(d.done.length>0){
       app.appendChild(buildBeamCal(d.done,origBeam));
       app.appendChild($('div','beam-cal-label',d.done.length+' games \u00B7 '+d.beams+' beams lit'));
@@ -501,7 +524,6 @@ function render(d){
         var c=d.live.competitions[0],k=fk(c.competitors),o=fo(c.competitors),ks=sc(k),os=sc(o);
         ans.textContent=beamPhrase(d.wp);
       }else{
-        // Randomize mock data each render
         mockWp=Math.random();
         mockKs=Math.floor(Math.random()*40)+70;
         mockOs=Math.floor(Math.random()*40)+70;
@@ -510,9 +532,6 @@ function render(d){
         mockQtr=['1st Qtr','2nd Qtr','3rd Qtr','4th Qtr'][Math.floor(Math.random()*4)];
         mockTime=Math.floor(Math.random()*12)+':'+String(Math.floor(Math.random()*60)).padStart(2,'0');
         ans.textContent=beamPhrase(mockWp);
-        // Show mock badge
-        var badge=$('div','');badge.style.cssText='font-size:.5rem;opacity:.3;text-transform:uppercase;letter-spacing:.15em;margin-top:.5rem';badge.textContent='Mock Game \u00B7 Triple-click to exit';
-        app.appendChild(badge);
       }
       ans.style.whiteSpace='pre-line';
       questionEl.textContent='Will the beam be lit?';
@@ -521,118 +540,71 @@ function render(d){
       live=false;var c=d.last.competitions[0],k=fk(c.competitors),o=fo(c.competitors),ks=sc(k),os=sc(o),h=k?.homeAway==='home',bl=ks>os;
       ans.textContent=bl?'YES':'NO';
       document.body.className=bl?'beam-on':'beam-off';origBeam=bl;
-      if(bl)setTimeout(bounceBalls,500);
     }
 
-    // Horizontal scoreboard bars
     var tiles=$('div','game-tiles');
 
-    // Reserved hover game bar — always present, populated on All Games hover
-    var hoverBar=$('div','game-bar');hoverBar.id='hoverGameBar';
-    hoverBar.style.cssText='visibility:hidden;opacity:0;transition:opacity .15s';
-    hoverBar.appendChild($('div','game-bar-label','\u00A0'));
-    var hctr=$('div','game-bar-center');hctr.appendChild(document.createTextNode('\u00A0'));hoverBar.appendChild(hctr);
-    hoverBar.appendChild($('div','game-bar-meta','\u00A0'));
-    tiles.appendChild(hoverBar);
-
-    // LIVE GAME bar (if live or mock)
     if(d.live||mockLive){tiles.appendChild(buildLiveBar(d))}
 
-    // LAST GAME bar
     if(d.last){
       var c=d.last.competitions[0],k=fk(c.competitors),o=fo(c.competitors),ks=sc(k),os=sc(o),h=k?.homeAway==='home',bl=ks>os;
       var oA=o.team?.abbreviation||'???';
-      var aA=h?oA:'SAC',hA=h?'SAC':oA,aS=h?os:ks,hS=h?ks:os;
-      var bar=document.createElement('a');bar.className='game-bar'+(bl?' lit':'');bar.href=gu(d.last.id);bar.target='_blank';bar.rel='noopener';
-      // Hover beam on wins
+      var lastBar=buildGameBar('Last Game',oA,h,ks,os,fs(d.last.date),bl,d.last.id,true);
       var barCtx=(h?'vs ':'@ ')+oA+' \u00B7 '+ks+'-'+os+' \u00B7 '+fs(d.last.date);
-      if(bl){bar.addEventListener('mouseenter',function(){showCtx(barCtx);document.body.className='beam-on';var q=document.querySelector('.question');var a=document.querySelector('.answer');if(q)q.dataset.orig=q.dataset.orig||q.textContent;if(a)a.dataset.orig=a.dataset.orig||a.textContent;if(q)q.textContent='Was the beam lit?';if(a)a.textContent='YES'});bar.addEventListener('mouseleave',function(){hideCtx();eggOn=false;if(!origBeam)document.body.className='beam-off';var q=document.querySelector('.question');var a=document.querySelector('.answer');if(q&&q.dataset.orig)q.textContent=q.dataset.orig;if(a&&a.dataset.orig)a.textContent=a.dataset.orig})}
-      bar.appendChild($('div','game-bar-label','Last Game'));
-      var ctr=$('div','game-bar-center');
-      var ai=document.createElement('img');ai.src=h?tl(oA):KLOGO;ai.alt=aA;ctr.appendChild(ai);
-      ctr.appendChild($('span','game-bar-abbrev',aA));
-      ctr.appendChild($('span','game-bar-score '+(aS>hS?'w':'l'),String(aS)));
-      ctr.appendChild($('span','game-bar-at','@'));
-      ctr.appendChild($('span','game-bar-score '+(hS>aS?'w':'l'),String(hS)));
-      var hi2=document.createElement('img');hi2.src=h?KLOGO:tl(oA);hi2.alt=hA;ctr.appendChild(hi2);
-      ctr.appendChild($('span','game-bar-abbrev',hA));
-      bar.appendChild(ctr);
-      bar.appendChild($('span','game-bar-meta',fs(d.last.date)));
-      tiles.appendChild(bar);
+      (function(ctx,wasWin){
+        lastBar.addEventListener('mouseenter',function(){
+          showCtx(ctx);
+          if(wasWin)document.body.className='beam-on';
+          var q=document.querySelector('.question');var a=document.querySelector('.answer');
+          if(q)q.dataset.orig=q.dataset.orig||q.textContent;
+          if(a)a.dataset.orig=a.dataset.orig||a.textContent;
+          if(q)q.textContent='Was the beam lit?';
+          if(a)a.textContent=wasWin?'YES':'NO';
+        });
+        lastBar.addEventListener('mouseleave',function(){
+          hideCtx();
+          if(!origBeam)document.body.className='beam-off';
+          var q=document.querySelector('.question');var a=document.querySelector('.answer');
+          if(q&&q.dataset.orig)q.textContent=q.dataset.orig;
+          if(a&&a.dataset.orig)a.textContent=a.dataset.orig;
+        });
+      })(barCtx,bl);
+      tiles.appendChild(lastBar);
     }
 
-    // NEXT GAME bar
     if(d.next){
       var nc=d.next.competitions[0],no=fo(nc.competitors),nh=fk(nc.competitors)?.homeAway==='home';
       var noA=no?.team?.abbreviation||'???';
-      var naA=nh?noA:'SAC',nhA=nh?'SAC':noA;
-      var nbar=document.createElement('a');nbar.className='game-bar';nbar.href=gu(d.next.id);nbar.target='_blank';nbar.rel='noopener';
-      nbar.appendChild($('div','game-bar-label','Next Game'));
-      var nctr=$('div','game-bar-center');
-      var nai=document.createElement('img');nai.src=nh?tl(noA):KLOGO;nai.alt=naA;nctr.appendChild(nai);
-      nctr.appendChild($('span','game-bar-abbrev',naA));
-      nctr.appendChild($('span','game-bar-at','@'));
-      var nhi=document.createElement('img');nhi.src=nh?KLOGO:tl(noA);nhi.alt=nhA;nctr.appendChild(nhi);
-      nctr.appendChild($('span','game-bar-abbrev',nhA));
-      nbar.appendChild(nctr);
-      var nmeta=$('div','game-bar-meta');
-      nmeta.textContent=fsd(d.next.date)+' \u00B7 '+ft(d.next.date);
+      var nextBar=buildGameBar('Next Game',noA,nh,0,0,fsd(d.next.date)+' \u00B7 '+ft(d.next.date),false,d.next.id,false);
       var ntix=nc.tickets?.[0]?.links?.[0]?.href;
-      if(ntix){var tb=document.createElement('a');tb.href=ntix;tb.target='_blank';tb.rel='noopener';tb.className='game-bar-tix';tb.textContent='Tickets';nmeta.appendChild(tb)}
-      nbar.appendChild(nmeta);
-      tiles.appendChild(nbar);
-    }
-
-    // UPCOMING — rows matching bar grid layout
-    var schedList=d.next?d.sched.slice(1):d.sched;
-    if(schedList.length>0){
-      var uSec=$('div','upcoming-section');
-      uSec.appendChild($('div','upcoming-label','Upcoming'));
-      schedList.forEach(function(g){
-        var gc=g.competitions[0],go=fo(gc.competitors),gh=fk(gc.competitors)?.homeAway==='home',oa=go?.team?.abbreviation||'???';
-        var row=document.createElement('a');row.className='upcoming-row';row.href=gu(g.id);row.target='_blank';row.rel='noopener';
-        row.appendChild($('span','upcoming-row-date',fsd(g.date)));
-        var opp=$('div','upcoming-row-opp');
-        var ol=document.createElement('img');ol.src=tl(oa);ol.alt=oa;opp.appendChild(ol);
-        opp.appendChild(document.createTextNode((gh?'vs ':'@ ')+tn(oa)));
-        row.appendChild(opp);
-        var meta=$('div','upcoming-row-meta');
-        var tix=gc.tickets?.[0]?.links?.[0]?.href;
-        if(tix){var tb=document.createElement('a');tb.href=tix;tb.target='_blank';tb.rel='noopener';tb.className='game-bar-tix';tb.textContent='Tickets';meta.appendChild(tb)}
-        row.appendChild(meta);
-        uSec.appendChild(row);
-      });
-      tiles.appendChild(uSec);
+      if(ntix){var meta=nextBar.querySelector('.game-bar-meta');var tb=document.createElement('a');tb.href=ntix;tb.target='_blank';tb.rel='noopener';tb.className='game-bar-tix';tb.textContent='Tickets';meta.appendChild(tb)}
+      tiles.appendChild(nextBar);
     }
 
     tilesEl.appendChild(tiles);
   }else{
-    // Past season — same text positions as current season
     live=false;
-    var pastQ=$('p','question',(currentSeason-1)+'-'+String(currentSeason).slice(2)+' Season');
-    pastQ.addEventListener('click',function(){this.classList.remove('shake');void this.offsetWidth;this.classList.add('shake')});
-    app.appendChild(pastQ);
+    var storyLine=$('p','question');
+    storyLine.textContent='In the '+(currentSeason-1)+'-'+String(currentSeason).slice(2)+' season';
+    storyLine.addEventListener('click',function(){this.classList.remove('shake');void this.offsetWidth;this.classList.add('shake')});
+    app.appendChild(storyLine);
     var beamNum=$('p','answer',String(d.beams));
     app.appendChild(beamNum);
     var beamLabel=$('div','beam-count');
-    beamLabel.textContent='beam'+(d.beams!==1?'s':'')+' lit';
-    beamLabel.style.fontSize='1.2rem';beamLabel.style.textTransform='uppercase';beamLabel.style.letterSpacing='.15em';
+    var bcSpan=document.createElement('span');bcSpan.textContent='beams lit';
+    beamLabel.appendChild(bcSpan);
     app.appendChild(beamLabel);
-    var recLine=$('p','game-box-sub');recLine.textContent=d.rec+' \u00B7 '+pct(w,l)+' \u00B7 Hover a win to light it';
-    recLine.style.opacity='.3';recLine.style.marginBottom='1rem';
+    var recLine=$('p','game-box-sub');recLine.textContent=d.rec+' \u00B7 '+pct(w,l);
+    recLine.style.opacity='.4';recLine.style.marginBottom='1rem';
     app.appendChild(recLine);
-    // Beam calendar
     if(d.done.length>0){
       app.appendChild(buildBeamCal(d.done,origBeam));
-      app.appendChild($('div','beam-cal-label',d.done.length+' games \u00B7 '+d.beams+' beams lit'));
     }
     document.body.className='beam-off';origBeam=false;
   }
 
-  // === CARDS ===
   var bc=$('div','big-cards');
 
-  // CARD 1: Full NBA Standings (current season only)
   if(isCurrent&&d.allT.length>0){
     var c1=$('div','big-card');c1.appendChild($('div','big-card-title','NBA Standings'));
     d.allT.forEach(function(t,i){
@@ -645,54 +617,66 @@ function render(d){
     bc.appendChild(c1);
   }
 
-  // CARD 2: All Games (completed only — upcoming is in the section above)
   var c2=$('div','big-card');c2.appendChild($('div','big-card-title','All Games'));
-  d.done.slice().reverse().forEach(function(g){
+  d.done.slice().reverse().forEach(function(g,idx){
     var gc=g.competitions[0],gk=fk(gc.competitors),go=fo(gc.competitors),gks=sc(gk),gos=sc(go),gw=gks>gos,gh=gk?.homeAway==='home',oa=go?.team?.abbreviation||'???';
-    var row=document.createElement('a');row.className='gm-row '+(gw?'w':'l');row.href=gu(g.id);row.target='_blank';row.rel='noopener';
+    var row=document.createElement('a');row.className='gm-row';row.href=gu(g.id);row.target='_blank';row.rel='noopener';
+    row.dataset.gameIdx=String(d.done.length-1-idx);
     row.appendChild($('span','gm-date',fs(g.date)));
-    var ol=document.createElement('img');ol.src=tl(oa);ol.alt=oa;ol.className='gm-logo';row.appendChild(ol);
-    row.appendChild($('span','gm-opp',(gh?'vs ':'@ ')+oa));
-    row.appendChild($('span','gm-res '+(gw?'w':'l'),gks+'-'+gos));
+    var awayA=gh?oa:'SAC';var homeA=gh?'SAC':oa;
+    var al=document.createElement('img');al.src=gh?tl(oa):KLOGO;al.alt=awayA;al.className='gm-logo';row.appendChild(al);
+    row.appendChild($('span','gm-opp',awayA));
+    row.appendChild($('span','gm-res '+(gw?'w':'l'),gks+' \u00B7 '+gos));
+    row.appendChild($('span','gm-opp',homeA));
+    var hl=document.createElement('img');hl.src=gh?KLOGO:tl(oa);hl.alt=homeA;hl.className='gm-logo';row.appendChild(hl);
     row.appendChild($('span','gm-wl '+(gw?'w':'l'),gw?'W':'L'));
-    // Rich hover tooltip
-    var tip=$('div','gm-tooltip');
-    tip.appendChild($('div','gm-tooltip-date','Kings '+(gh?'vs':'@')+' '+tn(oa)+' \u00B7 '+fd(g.date)));
-    var matchup=$('div','gm-tooltip-matchup');
-    var kImg=document.createElement('img');kImg.src=KLOGO;kImg.alt='SAC';matchup.appendChild(kImg);
-    matchup.appendChild($('span','gm-tooltip-score',gks+' - '+gos));
-    var oImg=document.createElement('img');oImg.src=tl(oa);oImg.alt=oa;matchup.appendChild(oImg);
-    tip.appendChild(matchup);
-    var beamLit=gw&&gh;
-    var beamEl=$('div','gm-tooltip-beam '+(beamLit?'yes':(gw?'no':'no')));
-    beamEl.textContent=beamLit?'Beam was lit!':gw?'W \u00B7 Away game':'No beam';
-    tip.appendChild(beamEl);
-    row.appendChild(tip);
-    // Hover: populate game bar above Last Game + change hero text
-    (function(oaC,ghC,gksC,gosC,dateC,gwC){
+    (function(oaC,ghC,gksC,gosC,dateC,gwC,gameIdx){
       row.addEventListener('mouseenter',function(){
-        fillHoverBar(oaC,ghC,gksC,gosC,fd(dateC),gwC);
-        showCtx((ghC?'vs ':'@ ')+oaC+' \u00B7 '+gksC+'-'+gosC+' \u00B7 '+fs(dateC));
+        showCtx(tn(oaC)+' on '+fd(dateC));
         var q=document.querySelector('.question');var a=document.querySelector('.answer');
         if(q)q.dataset.orig=q.dataset.orig||q.textContent;
         if(a)a.dataset.orig=a.dataset.orig||a.textContent;
         if(q)q.textContent='Was the beam lit?';
         if(a)a.textContent=gwC?'YES':'NO';
         if(gwC)document.body.className='beam-on';
+        else document.body.className='beam-off';
+        var dot=document.querySelector('.beam-dot[data-game-idx="'+gameIdx+'"]');
+        if(dot)dot.classList.add('gm-active');
       });
       row.addEventListener('mouseleave',function(){
-        clearHoverBar();hideCtx();eggOn=false;
+        hideCtx();
         if(!origBeam)document.body.className='beam-off';
         var q=document.querySelector('.question');var a=document.querySelector('.answer');
         if(q&&q.dataset.orig)q.textContent=q.dataset.orig;
         if(a&&a.dataset.orig)a.textContent=a.dataset.orig;
+        var dot=document.querySelector('.beam-dot.gm-active');
+        if(dot)dot.classList.remove('gm-active');
       });
-    })(oa,gh,gks,gos,g.date,gw);
+      tapPreview(row,function(){
+        showCtx(tn(oaC)+' on '+fd(dateC));
+        var q=document.querySelector('.question');var a=document.querySelector('.answer');
+        if(q)q.dataset.orig=q.dataset.orig||q.textContent;
+        if(a)a.dataset.orig=a.dataset.orig||a.textContent;
+        if(q)q.textContent='Was the beam lit?';
+        if(a)a.textContent=gwC?'YES':'NO';
+        if(gwC)document.body.className='beam-on';
+        else document.body.className='beam-off';
+        var dot=document.querySelector('.beam-dot[data-game-idx="'+gameIdx+'"]');
+        if(dot)dot.classList.add('gm-active');
+      },function(){
+        hideCtx();
+        if(!origBeam)document.body.className='beam-off';
+        var q=document.querySelector('.question');var a=document.querySelector('.answer');
+        if(q&&q.dataset.orig)q.textContent=q.dataset.orig;
+        if(a&&a.dataset.orig)a.textContent=a.dataset.orig;
+        var dot=document.querySelector('.beam-dot.gm-active');
+        if(dot)dot.classList.remove('gm-active');
+      });
+    })(oa,gh,gks,gos,g.date,gw,d.done.length-1-idx);
     c2.appendChild(row);
   });
   bc.appendChild(c2);
 
-  // CARD 3: Stats + Rankings + Division (current season only)
   if(isCurrent){
   var c3=$('div','big-card');c3.appendChild($('div','big-card-title','Season Stats'));
   var ks=d.kSt.stats||{};
@@ -701,114 +685,120 @@ function render(d){
   var oppg=ks.avgPointsAgainst?.displayValue||(ks.pointsAgainst?(ks.pointsAgainst.value/(w+l)).toFixed(1):'--');
   var diff=ppg!=='--'&&oppg!=='--'?(parseFloat(ppg)-parseFloat(oppg)).toFixed(1):'--';
 
-  // Stats rows — different for current vs past
-  if(isCurrent){
-    [[d.rec,'Record'],[home,'Home'],[away,'Away'],[l10,'Last 10'],[d.stt+d.str,'Current Streak'],['W'+d.bWin,'Best Win Streak'],[d.bStt+d.bStr,'Worst Streak'],[String(d.gLeft),'Games Left'],[String(d.beams),'Beams Lit']].forEach(function(p){
-      var r=$('div','cs');r.appendChild($('span','cs-l',p[1]));r.appendChild($('span','cs-v',p[0]));c3.appendChild(r)});
-  }else{
-    [[d.rec,'Record'],[home,'Home'],[away,'Away'],['W'+d.bWin,'Best Win Streak'],[d.bStt+d.bStr,'Worst Streak'],[String(d.beams),'Beams Lit'],[pct(w,l),'Win %']].forEach(function(p){
-      var r=$('div','cs');r.appendChild($('span','cs-l',p[1]));r.appendChild($('span','cs-v',p[0]));c3.appendChild(r)});
-  }
+  [[d.rec,'Record'],[home,'Home'],[away,'Away'],[l10,'Last 10'],[d.stt+d.str,'Current Streak'],['W'+d.bWin,'Best Win Streak'],[d.bStt+d.bStr,'Worst Streak'],[String(d.gLeft),'Games Left'],[String(d.beams),'Beams Lit']].forEach(function(p){
+    var r=$('div','cs');r.appendChild($('span','cs-l',p[1]));r.appendChild($('span','cs-v',p[0]));c3.appendChild(r)});
   c3.appendChild($('div','cs-divider'));
   [[ppg,'PPG'],[oppg,'Opp PPG'],[(Number(diff)>0?'+':'')+diff,'Point Diff'],[w+l>0?Math.round(parseFloat(ppg)*(w+l)).toLocaleString():'--','Season Points']].forEach(function(p){
     var r=$('div','cs');r.appendChild($('span','cs-l',p[1]));r.appendChild($('span','cs-v',p[0]));c3.appendChild(r)});
 
-  // Team Rankings + Division (current season only)
-  if(isCurrent){
-    var trKeys=Object.keys(d.teamRanks);
-    if(trKeys.length>0){
-      c3.appendChild($('div','cs-divider'));
-      c3.appendChild($('div','big-card-title','Team Rankings (out of 30)'));
-      trKeys.forEach(function(k){
-        var t=d.teamRanks[k];
-        var r=$('div','cs');
-        r.appendChild($('span','cs-v',String(t.value)));
-        r.appendChild($('span','cs-l',t.label));
-        r.appendChild($('span','cs-rank',ord(t.rank)));
-        c3.appendChild(r);
-      });
-    }
+  var trKeys=Object.keys(d.teamRanks);
+  if(trKeys.length>0){
     c3.appendChild($('div','cs-divider'));
-    c3.appendChild($('div','big-card-title','Pacific Division'));
-    d.divT.forEach(function(t,i){
-      var row=document.createElement('a');row.className='st-row'+(t.id===KID?' is-kings':'');row.href=eu(t.abbrev);row.target='_blank';row.rel='noopener';
-      row.appendChild($('span','st-rank',String(i+1)));
-      var lg=document.createElement('img');lg.src=tl(t.abbrev);lg.alt=t.abbrev;lg.className='st-logo';row.appendChild(lg);
-      row.appendChild($('span','st-name',t.name));row.appendChild($('span','st-rec',t.wins+'-'+t.losses));row.appendChild($('span','st-pct',pct(t.wins,t.losses)));
-      c3.appendChild(row);
+    c3.appendChild($('div','big-card-title','Team Rankings (out of 30)'));
+    trKeys.forEach(function(k){
+      var t=d.teamRanks[k];
+      var r=$('div','cs');
+      r.appendChild($('span','cs-v',String(t.value)));
+      r.appendChild($('span','cs-l',t.label));
+      r.appendChild($('span','cs-rank',ord(t.rank)));
+      c3.appendChild(r);
     });
   }
+  c3.appendChild($('div','cs-divider'));
+  c3.appendChild($('div','big-card-title','Pacific Division'));
+  d.divT.forEach(function(t,i){
+    var row=document.createElement('a');row.className='st-row'+(t.id===KID?' is-kings':'');row.href=eu(t.abbrev);row.target='_blank';row.rel='noopener';
+    row.appendChild($('span','st-rank',String(i+1)));
+    var lg=document.createElement('img');lg.src=tl(t.abbrev);lg.alt=t.abbrev;lg.className='st-logo';row.appendChild(lg);
+    row.appendChild($('span','st-name',t.name));row.appendChild($('span','st-rec',t.wins+'-'+t.losses));row.appendChild($('span','st-pct',pct(t.wins,t.losses)));
+    c3.appendChild(row);
+  });
   bc.appendChild(c3);
-  } // end isCurrent card 3
+  }
   cards.appendChild(bc);
   schedRefresh();
 }
 
 function schedRefresh(){if(ref)clearInterval(ref);ref=setInterval(function(){getData().then(function(d){lastData=d;render(d)}).catch(function(){})},live?30000:120000)}
 
-// Bouncing basketballs celebration
-function bounceBalls(){
-  for(var i=0;i<12;i++){
-    (function(idx){
-      setTimeout(function(){
-        var ball=document.createElement('div');
-        ball.className='bouncy-ball';
-        ball.textContent='\uD83C\uDFC0';
-        ball.style.left=Math.random()*90+5+'%';
-        ball.style.top=Math.random()*60+20+'%';
-        ball.style.animationDuration=(2+Math.random()*2)+'s';
-        ball.style.fontSize=(1.5+Math.random()*1.5)+'rem';
-        document.body.appendChild(ball);
-        setTimeout(function(){ball.remove()},5000);
-      },idx*150);
-    })(i);
+function explode(){
+  playCowbell();
+  var canvas=document.createElement('canvas');canvas.id='explosionCanvas';
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+  document.body.appendChild(canvas);
+  var ctx=canvas.getContext('2d');
+  var particles=[];
+  var colors=['#5b2d8e','#9b4dca','#FDB927','#fff','#7B3FA0'];
+  for(var i=0;i<150;i++){
+    var angle=Math.random()*Math.PI*2;
+    var speed=2+Math.random()*8;
+    particles.push({
+      x:canvas.width/2,y:canvas.height/2,
+      vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,
+      size:2+Math.random()*4,
+      color:colors[Math.floor(Math.random()*colors.length)],
+      life:1,decay:0.008+Math.random()*0.015,
+      gravity:0.05+Math.random()*0.05
+    });
   }
+  var flash=document.createElement('div');
+  flash.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:#fff;z-index:399;opacity:0;transition:opacity .1s';
+  document.body.appendChild(flash);
+  requestAnimationFrame(function(){flash.style.opacity='1'});
+  setTimeout(function(){flash.style.opacity='0';setTimeout(function(){flash.remove()},300)},150);
+
+  function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    var alive=false;
+    for(var i=0;i<particles.length;i++){
+      var p=particles[i];
+      if(p.life<=0)continue;
+      alive=true;
+      p.x+=p.vx;p.y+=p.vy;p.vy+=p.gravity;
+      p.life-=p.decay;
+      ctx.globalAlpha=p.life;
+      ctx.fillStyle=p.color;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+      ctx.fill();
+    }
+    if(alive)requestAnimationFrame(animate);
+    else{canvas.remove()}
+  }
+  animate();
+  document.body.style.transition='transform 0.05s';
+  var shakeCount=0;
+  var shakeInt=setInterval(function(){
+    var x=(Math.random()-0.5)*20;var y=(Math.random()-0.5)*20;
+    document.body.style.transform='translate('+x+'px,'+y+'px)';
+    shakeCount++;
+    if(shakeCount>30){clearInterval(shakeInt);document.body.style.transform=''}
+  },50);
 }
 
-// Grant Napier quotes — AUDIO via Web Speech API
-var NAPIER_QUOTES=[
-  "If you don't like that, you don't like NBA basketball!",
-  "OH WHAT A PLAY!",
-  "SLAM DUNK!",
-  "Light the beam, baby!",
-  "This team is SPECIAL!",
-  "ARE YOU KIDDING ME?!",
-  "Sacramento Kings basketball!",
-  "HE IS ON FIRE!"
-];
-var lastQuote=-1;
-function showQuote(){
-  var idx;do{idx=Math.floor(Math.random()*NAPIER_QUOTES.length)}while(idx===lastQuote&&NAPIER_QUOTES.length>1);
-  lastQuote=idx;
-  // Speak it aloud
-  if('speechSynthesis' in window){
-    window.speechSynthesis.cancel();
-    var u=new SpeechSynthesisUtterance(NAPIER_QUOTES[idx]);
-    u.rate=1.1;u.pitch=1.2;u.volume=1;
-    window.speechSynthesis.speak(u);
-  }
-  // Flash + beam
-  var f=$('div','beam-flash');document.body.appendChild(f);setTimeout(function(){f.remove()},500);
-  document.body.classList.add('beam-on');
-  setTimeout(function(){document.body.classList.remove('beam-on')},3000);
-}
-
-// Logo click — 5 taps triggers Grant Napier quote
 var tc=0,tt=null;
-var eggOn=false;
-document.getElementById('app').addEventListener('click',function(e){var l=e.target.closest('.logo');if(!l)return;tc++;l.classList.remove('shake');void l.offsetWidth;l.classList.add('shake');clearTimeout(tt);tt=setTimeout(function(){tc=0},1500);if(tc>=5){tc=0;clearTimeout(tt);showQuote()}});
+document.getElementById('app').addEventListener('click',function(e){
+  var l=e.target.closest('.logo');if(!l)return;
+  tc++;l.classList.remove('shake');void l.offsetWidth;l.classList.add('shake');
+  clearTimeout(tt);tt=setTimeout(function(){tc=0},1500);
+  if(tc>=5){
+    tc=0;clearTimeout(tt);
+    mockLive=!mockLive;
+    playCowbell();
+    render(lastData);
+  }
+});
 
 function buildSeasonBar(){
   var bar=document.getElementById('seasonBar');
   bar.textContent='';
-  // Next season pill (grayed out, ready for when it starts)
   var nextYr=autoCurrentSeason+1;
   var nextPill=$('div','season-pill');nextPill.textContent=nextYr-1+'-'+String(nextYr).slice(2);
   nextPill.style.opacity='.25';nextPill.style.cursor='default';nextPill.title='Coming October '+(nextYr-1);
   bar.appendChild(nextPill);
   for(var y=autoCurrentSeason;y>=2023;y--){
     var pill=$('div','season-pill'+(y===currentSeason?' active':''));
-    pill.textContent=(y-1)+'-'+String(y).slice(2);
+    pill.textContent=y===autoCurrentSeason?'Current':((y-1)+'-'+String(y).slice(2));
     pill.dataset.year=y;
     pill.addEventListener('click',function(){
       var yr=parseInt(this.dataset.year);
@@ -840,21 +830,62 @@ buildSeasonBar();
 
 getData().then(function(d){lastData=d;render(d)}).catch(function(){render(null)});
 
-// Beam button on about page
-document.getElementById('beamButton').addEventListener('mousedown',function(){this.style.transform='scale(.95)';this.style.boxShadow='0 2px 8px rgba(155,77,202,.3),0 1px 2px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.2)'});
-document.getElementById('beamButton').addEventListener('mouseup',function(){this.style.transform='scale(1)';this.style.boxShadow='0 6px 20px rgba(155,77,202,.4),0 2px 4px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.2)'});
-document.getElementById('beamButton').addEventListener('click',function(){
-  var f=$('div','beam-flash');document.body.appendChild(f);setTimeout(function(){f.remove()},500);
+var chargeTimer=null,chargeStart=0,chargeInterval=null;
+var bb=document.getElementById('beamButton');
+function startCharge(e){
+  e.preventDefault();
+  chargeStart=Date.now();
   document.body.classList.add('beam-on');
-  setTimeout(function(){document.body.classList.remove('beam-on')},3000);
-});
+  bb.style.filter='brightness(1)';
+  chargeInterval=setInterval(function(){
+    var elapsed=(Date.now()-chargeStart)/1000;
+    var brightness=1+elapsed*0.15;
+    bb.style.filter='brightness('+brightness+')';
+    bb.style.transform='scale('+(1+elapsed*0.01)+')';
+    if(elapsed>5){
+      var x=(Math.random()-0.5)*elapsed*0.5;
+      var y=(Math.random()-0.5)*elapsed*0.5;
+      document.body.style.transform='translate('+x+'px,'+y+'px)';
+    }
+    if(elapsed>=10){
+      clearInterval(chargeInterval);chargeInterval=null;
+      bb.style.filter='';bb.style.transform='';
+      document.body.style.transform='';
+      explode();
+      setTimeout(function(){document.body.classList.remove('beam-on')},3000);
+    }
+  },50);
+}
+function stopCharge(){
+  if(chargeInterval){clearInterval(chargeInterval);chargeInterval=null}
+  bb.style.filter='';bb.style.transform='';
+  document.body.style.transform='';
+  if((Date.now()-chargeStart)<500){
+    var f=$('div','beam-flash');document.body.appendChild(f);setTimeout(function(){f.remove()},500);
+    document.body.classList.add('beam-on');
+    setTimeout(function(){document.body.classList.remove('beam-on')},1500);
+  }else{
+    document.body.classList.remove('beam-on');
+  }
+}
+bb.addEventListener('mousedown',startCharge);
+bb.addEventListener('mouseup',stopCharge);
+bb.addEventListener('mouseleave',stopCharge);
+bb.addEventListener('touchstart',startCharge,{passive:false});
+bb.addEventListener('touchend',stopCharge);
 
-// About page logo — 5 clicks triggers quotes too
 var atc=0,att=null;
 document.getElementById('aboutLogo').addEventListener('click',function(){
   atc++;this.style.transform='scale(.9)';var self=this;setTimeout(function(){self.style.transform='scale(1)'},150);
   clearTimeout(att);att=setTimeout(function(){atc=0},1500);
-  if(atc>=5){atc=0;clearTimeout(att);showQuote()}
+  if(atc>=5){atc=0;clearTimeout(att);mockLive=!mockLive;playCowbell();
+    document.getElementById('app').style.display='';
+    document.getElementById('tilesSection').style.display='';
+    document.getElementById('cards').style.display='';
+    document.getElementById('aboutSection').style.display='none';
+    buildSeasonBar();currentSeason=autoCurrentSeason;
+    render(lastData);
+  }
 });
 </script>
 </body>
