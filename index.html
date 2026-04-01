@@ -64,12 +64,14 @@ body.beam-off .answer{color:#1a1a1a}
 .game-bar-tix,.game-bar-tix:visited{font-size:.5rem;color:var(--beam);text-decoration:none;border:1px solid var(--beam);border-radius:4px;padding:.15rem .4rem;transition:all .15s;font-weight:700}
 .game-bar-tix:hover{background:var(--beam);color:#fff}
 
-.demo-stamp{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-15deg);font-size:1.5rem;font-weight:900;color:rgba(255,0,0,.6);text-transform:uppercase;letter-spacing:.2em;pointer-events:none;z-index:5}
+.demo-stamp{font-size:.55rem;font-weight:900;color:rgba(255,0,0,.7);text-transform:uppercase;letter-spacing:.1em;background:rgba(255,0,0,.1);border:1px solid rgba(255,0,0,.3);border-radius:4px;padding:.1rem .3rem;margin-left:.5rem}
 .gm-active{background:rgba(155,77,202,.15)!important;box-shadow:0 0 8px rgba(155,77,202,.2)}
 .beam-dot.gm-active{transform:scale(1.6);box-shadow:0 0 10px rgba(155,77,202,.8)}
 #explosionCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:400;pointer-events:none}
 
-.beam-cal{display:flex;flex-direction:column;gap:.25rem;max-width:700px;margin:0 auto 1rem;width:100%}
+.history-box{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:.75rem 1rem;width:100%}
+.history-title{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;opacity:.35;margin-bottom:.5rem;text-align:center}
+.beam-cal{display:flex;flex-direction:column;gap:.25rem;max-width:700px;margin:0 auto;width:100%}
 .beam-month{display:flex;align-items:center;gap:.3rem}
 .beam-month-label{font-size:.45rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;opacity:.2;width:2rem;text-align:right;flex-shrink:0}
 .beam-month-dots{display:flex;gap:3px;flex-wrap:wrap}
@@ -77,7 +79,7 @@ body.beam-off .answer{color:#1a1a1a}
 .beam-dot:hover{transform:scale(1.4);z-index:1}
 .beam-dot.lit{background:var(--beam);box-shadow:0 0 4px rgba(155,77,202,.3)}
 .beam-dot.lit:hover{box-shadow:0 0 10px rgba(155,77,202,.6)}
-.beam-cal-label{font-size:.6rem;opacity:.3;margin-bottom:1rem;text-align:center}
+.beam-cal-label{font-size:.6rem;opacity:.3;margin-bottom:.5rem;text-align:center}
 
 .live-prob{font-size:.85rem;font-weight:800;color:var(--beam)}
 .win-prob{font-size:.85rem;font-weight:700;color:var(--beam)}
@@ -132,7 +134,7 @@ a.gm-row:hover{background:rgba(255,255,255,.03)}
 
 .footer{position:relative;z-index:1;width:100%;padding:.75rem 1rem 1rem;display:flex;flex-direction:column;align-items:center;gap:.25rem}
 .footer-links{display:flex;gap:1rem;align-items:center}
-.footer a{color:rgba(255,255,255,.18);text-decoration:none;font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;transition:color .2s}
+.footer a{color:rgba(255,255,255,.18);text-decoration:none;font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;transition:color .2s}
 .footer a:hover{color:rgba(255,255,255,.45)}
 .footer .dot{color:rgba(255,255,255,.08);font-size:.5rem}
 .footer .credit{font-size:.5rem;color:rgba(255,255,255,.1);letter-spacing:.06em}
@@ -157,7 +159,7 @@ a.gm-row:hover{background:rgba(255,255,255,.03)}
 <div class="cards-section" id="cards"></div>
 <div class="about-section" id="aboutSection" style="display:none;position:relative;z-index:1;padding:1rem">
   <div style="max-width:520px;margin:0 auto;text-align:center">
-    <img src="kings-classic.png" alt="Classic Sacramento Kings Logo" id="aboutLogo" style="width:180px;margin:0 auto .75rem;display:block;opacity:.8;cursor:pointer;transition:transform .15s;border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:8px">
+    <img src="kings-classic.png" alt="Classic Sacramento Kings Logo" id="aboutLogo" style="width:180px;margin:0 auto .75rem;display:block;opacity:.8;cursor:pointer;transition:transform .15s">
     <button id="beamButton" style="display:block;margin:0 auto 2rem;padding:.8rem 2rem;font-size:.85rem;font-weight:800;text-transform:uppercase;letter-spacing:.15em;color:var(--beam);background:transparent;border:2px solid var(--beam);border-radius:8px;cursor:pointer;transition:all .15s;position:relative;overflow:hidden">Light the Beam</button>
     <div style="text-align:left">
       <h3 style="font-size:.7rem;text-transform:uppercase;letter-spacing:.2em;opacity:.3;margin-bottom:.75rem">About This Site</h3>
@@ -178,22 +180,20 @@ a.gm-row:hover{background:rgba(255,255,255,.03)}
         Built by <a href="https://x.com/BrendanWelsh" target="_blank" rel="noopener" style="color:var(--beam);text-decoration:none;font-weight:700">@BrendanWelsh</a>, FYBA Legend, known as BulldogsRock25 on AIM. Born and raised in Sacramento. Grew up playing youth basketball, played on the court at Arco Arena. Sat in the nosebleeds watching Webber, Peja, Vlade, Doug Christie, and the greatest team to never win a championship. Skipped school in 4th grade to get Carl's Jr Kings bobbleheads. Recently got $15 tickets to a game and $16 hot dogs.
       </p>
     </div>
-    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem">
-      <a href="https://www.nba.com/kings" target="_blank" rel="noopener" style="color:var(--beam);text-decoration:none;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;border:1px solid var(--beam);border-radius:20px;padding:.3rem .8rem">NBA.com/Kings</a>
-      <a href="https://twitter.com/SacramentoKings" target="_blank" rel="noopener" style="color:var(--beam);text-decoration:none;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;border:1px solid var(--beam);border-radius:20px;padding:.3rem .8rem">@SacramentoKings</a>
-      <a href="https://shop.kings.com" target="_blank" rel="noopener" style="color:var(--beam);text-decoration:none;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;border:1px solid var(--beam);border-radius:20px;padding:.3rem .8rem">Kings Store</a>
-    </div>
-    <p style="font-size:.55rem;opacity:.2;margin-bottom:1.5rem">Not affiliated with the Sacramento Kings. Made by a fan, for fans.</p>
+    <p style="font-size:.6rem;opacity:.25;margin-bottom:1.5rem">Not affiliated with the Sacramento Kings. Made by a fan, for fans.</p>
     <p style="font-size:1.1rem;font-weight:900;font-style:italic;opacity:.6;letter-spacing:.05em">Hoop Dreams, Baby.</p>
   </div>
 </div>
 <div class="footer">
   <div class="footer-links">
-    <a href="https://www.nba.com/kings" target="_blank" rel="noopener">Sacramento Kings</a>
+    <a href="https://www.nba.com/kings" target="_blank" rel="noopener" title="NBA.com/Kings">&#127936;</a>
+    <a href="https://twitter.com/SacramentoKings" target="_blank" rel="noopener" title="@SacramentoKings">&#120143;</a>
+    <a href="https://www.instagram.com/sacramentokings" target="_blank" rel="noopener" title="Instagram">&#128247;</a>
+    <a href="https://shop.kings.com" target="_blank" rel="noopener" title="Kings Store">&#128722;</a>
     <span class="dot">|</span>
-    <a href="https://x.com/BrendanWelsh" target="_blank" rel="noopener">Made by @BrendanWelsh</a>
+    <a href="https://x.com/BrendanWelsh" target="_blank" rel="noopener">@BrendanWelsh</a>
   </div>
-  <span class="credit">Data via ESPN. Win a game, light the beam.</span>
+  <span class="credit">Data via ESPN. Not affiliated with the Sacramento Kings.</span>
 </div>
 <div style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);z-index:1;display:flex;flex-direction:column;align-items:center">
   <div class="beam-ray"></div>
@@ -415,8 +415,9 @@ function buildLiveBar(d){
     meta.appendChild($('span','live-prob',' \u00B7 '+prob+'% SAC'));
   }
   if(mockLive){
+    var lbl=bar.querySelector('.game-bar-label');
     var demo=$('span','demo-stamp');demo.textContent='DEMO';
-    bar.appendChild(demo);
+    if(lbl)lbl.appendChild(demo);
   }
   return bar;
 }
@@ -514,15 +515,7 @@ function render(d){
     });
     app.appendChild(questionEl);
     var ans=$('p','answer','...');app.appendChild(ans);
-    var bcLine=$('div','beam-count');
-    var bcNum=document.createElement('span');bcNum.textContent=d.beams;
-    bcLine.appendChild(bcNum);
-    bcLine.appendChild(document.createTextNode(' beam'+(d.beams!==1?'s':'')+' lit this season'));
-    app.appendChild(bcLine);
-    if(d.done.length>0){
-      app.appendChild(buildBeamCal(d.done,origBeam));
-      app.appendChild($('div','beam-cal-label',d.done.length+' games \u00B7 '+d.beams+' beams lit'));
-    }
+    // beam count + calendar moved to tiles section below
 
     if(d.live||mockLive){
       live=true;
@@ -592,6 +585,16 @@ function render(d){
       tiles.appendChild(nextBar);
     }
 
+    // Season History box — beam count + calendar
+    if(d.done.length>0){
+      var histBox=$('div','history-box');
+      var histTitle=$('div','history-title');
+      histTitle.textContent=d.beams+' beam'+(d.beams!==1?'s':'')+' lit this season \u00B7 '+d.done.length+' games played';
+      histBox.appendChild(histTitle);
+      histBox.appendChild(buildBeamCal(d.done,origBeam));
+      tiles.appendChild(histBox);
+    }
+
     tilesEl.appendChild(tiles);
   }else{
     live=false;
@@ -601,21 +604,22 @@ function render(d){
     app.appendChild(storyLine);
     var beamNum=$('p','answer',String(d.beams));
     app.appendChild(beamNum);
-    var beamLabel=$('div','beam-count');
-    var bcSpan=document.createElement('span');bcSpan.textContent='beams lit';
-    beamLabel.appendChild(bcSpan);
-    app.appendChild(beamLabel);
-    var recLine=$('p','game-box-sub');recLine.textContent=d.rec+' \u00B7 '+pct(w,l);
-    recLine.style.opacity='.4';recLine.style.marginBottom='1rem';
-    app.appendChild(recLine);
-    if(d.done.length>0){
-      app.appendChild(buildBeamCal(d.done,origBeam));
-    }
-    // Preview bar for past seasons too
+    var beamSub=$('p','game-box-sub');beamSub.textContent='beams lit \u00B7 '+d.rec+' \u00B7 '+pct(w,l);
+    beamSub.style.opacity='.4';beamSub.style.marginBottom='1.5rem';
+    app.appendChild(beamSub);
+    // Past season tiles: preview bar + history box
     var pastTiles=$('div','game-tiles');
     var pastPreview=$('div','game-bar');pastPreview.id='previewBar';
     pastPreview.style.cssText='visibility:hidden;min-height:3rem';
     pastTiles.appendChild(pastPreview);
+    if(d.done.length>0){
+      var histBox=$('div','history-box');
+      var histTitle=$('div','history-title');
+      histTitle.textContent=d.beams+' beam'+(d.beams!==1?'s':'')+' lit \u00B7 '+d.done.length+' games';
+      histBox.appendChild(histTitle);
+      histBox.appendChild(buildBeamCal(d.done,origBeam));
+      pastTiles.appendChild(histBox);
+    }
     tilesEl.appendChild(pastTiles);
     document.body.className='beam-off';origBeam=false;
   }
@@ -677,7 +681,23 @@ function render(d){
   bc.appendChild(c2);
 
   if(isCurrent){
-  var c3=$('div','big-card');c3.appendChild($('div','big-card-title','Season Stats'));
+  var c3=$('div','big-card');
+  // Team Rankings first
+  var trKeys=Object.keys(d.teamRanks);
+  if(trKeys.length>0){
+    c3.appendChild($('div','big-card-title','Team Rankings (out of 30)'));
+    trKeys.forEach(function(k){
+      var t=d.teamRanks[k];
+      var r=$('div','cs');
+      r.appendChild($('span','cs-v',String(t.value)));
+      r.appendChild($('span','cs-l',t.label));
+      r.appendChild($('span','cs-rank',ord(t.rank)));
+      c3.appendChild(r);
+    });
+    c3.appendChild($('div','cs-divider'));
+  }
+  // Season Stats
+  c3.appendChild($('div','big-card-title','Season Stats'));
   var ks=d.kSt.stats||{};
   var home=ks.Home?.displayValue||'--',away=ks.Road?.displayValue||'--',l10=ks['Last Ten Games']?.displayValue||'--';
   var ppg=ks.avgPointsFor?.displayValue||(ks.pointsFor?(ks.pointsFor.value/(w+l)).toFixed(1):'--');
@@ -689,20 +709,6 @@ function render(d){
   c3.appendChild($('div','cs-divider'));
   [[ppg,'PPG'],[oppg,'Opp PPG'],[(Number(diff)>0?'+':'')+diff,'Point Diff'],[w+l>0?Math.round(parseFloat(ppg)*(w+l)).toLocaleString():'--','Season Points']].forEach(function(p){
     var r=$('div','cs');r.appendChild($('span','cs-l',p[1]));r.appendChild($('span','cs-v',p[0]));c3.appendChild(r)});
-
-  var trKeys=Object.keys(d.teamRanks);
-  if(trKeys.length>0){
-    c3.appendChild($('div','cs-divider'));
-    c3.appendChild($('div','big-card-title','Team Rankings (out of 30)'));
-    trKeys.forEach(function(k){
-      var t=d.teamRanks[k];
-      var r=$('div','cs');
-      r.appendChild($('span','cs-v',String(t.value)));
-      r.appendChild($('span','cs-l',t.label));
-      r.appendChild($('span','cs-rank',ord(t.rank)));
-      c3.appendChild(r);
-    });
-  }
   c3.appendChild($('div','cs-divider'));
   c3.appendChild($('div','big-card-title','Pacific Division'));
   d.divT.forEach(function(t,i){
