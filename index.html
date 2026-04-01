@@ -70,7 +70,7 @@ body.beam-off .answer{color:#1a1a1a}
 #explosionCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:400;pointer-events:none}
 
 .history-box{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:.75rem 1rem;width:100%}
-.history-status{font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;text-align:center;height:1.2rem;margin-top:.4rem;transition:opacity .15s}
+.history-status{font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;text-align:center;min-height:1.2rem;margin-top:.4rem;transition:opacity .15s}
 .history-status.lit{color:var(--beam)}
 .history-status.dark{opacity:.3}
 .history-title{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;opacity:.35;margin-bottom:.5rem;text-align:center}
@@ -267,6 +267,7 @@ var cowbellAudio=new Audio('cowbell.mp3');
 cowbellAudio.onerror=function(){cowbellAudio=new Audio()};
 function playCowbell(){try{cowbellAudio.currentTime=0;cowbellAudio.play().catch(function(){})}catch(e){}}
 
+function isMobile(){return window.innerWidth<=700}
 var selectedGame=null;
 function tapPreview(el,previewFn,clearFn){
   el.addEventListener('click',function(e){
@@ -285,11 +286,14 @@ document.addEventListener('click',function(e){
   if(selectedGame&&!selectedGame.contains(e.target)){
     selectedGame.classList.remove('gm-active');
     selectedGame=null;
-    hideCtx();
-    var q=document.querySelector('.question');var a=document.querySelector('.answer');
-    if(q&&q.dataset.orig)q.textContent=q.dataset.orig;
-    if(a&&a.dataset.orig)a.textContent=a.dataset.orig;
-    if(lastData){var ld=lastData.last;if(ld){var c=ld.competitions[0],k=fk(c.competitors),o=fo(c.competitors);if(sc(k)>sc(o))document.body.className='beam-on';else document.body.className='beam-off'}else document.body.className='beam-off'}
+    clearPreview();
+    if(!isMobile()){
+      hideCtx();
+      var q=document.querySelector('.question');var a=document.querySelector('.answer');
+      if(q&&q.dataset.orig)q.textContent=q.dataset.orig;
+      if(a&&a.dataset.orig)a.textContent=a.dataset.orig;
+      if(lastData){var ld=lastData.last;if(ld){var c=ld.competitions[0],k=fk(c.competitors),o=fo(c.competitors);if(sc(k)>sc(o))document.body.className='beam-on';else document.body.className='beam-off'}else document.body.className='beam-off'}
+    }
   }
 });
 
@@ -344,24 +348,29 @@ function buildBeamCal(games,origBeam){
       (function(oaC,ghC,ksC,osC,dateC,wonC,gameIdx){
         var dotEnter=function(){
           fillPreview(oaC,ghC,ksC,osC,fd(dateC),wonC);
-          showCtx('Against the '+tn(oaC)+' on '+fd(dateC));
-          var q=document.querySelector('.question');var a=document.querySelector('.answer');
-          if(q)q.dataset.orig=q.dataset.orig||q.textContent;
-          if(a)a.dataset.orig=a.dataset.orig||a.textContent;
-          if(q)q.textContent='Was the beam lit?';
-          if(a)a.textContent=wonC?'YES':'NO';
-          if(wonC)document.body.className='beam-on';
-          else document.body.className='beam-off';
+          if(!isMobile()){
+            showCtx('Against the '+tn(oaC)+' on '+fd(dateC));
+            var q=document.querySelector('.question');var a=document.querySelector('.answer');
+            if(q)q.dataset.orig=q.dataset.orig||q.textContent;
+            if(a)a.dataset.orig=a.dataset.orig||a.textContent;
+            if(q)q.textContent='Was the beam lit?';
+            if(a)a.textContent=wonC?'YES':'NO';
+            if(wonC)document.body.className='beam-on';
+            else document.body.className='beam-off';
+          }
           var gmRow=document.querySelector('.gm-row[data-game-idx="'+gameIdx+'"]');
-          if(gmRow){gmRow.classList.add('gm-active');gmRow.scrollIntoView({block:'nearest',behavior:'smooth'})}
+          if(gmRow){gmRow.classList.add('gm-active');if(!isMobile())gmRow.scrollIntoView({block:'nearest',behavior:'smooth'})}
         };
         var dotLeave=function(){
-          clearPreview();hideCtx();
-          if(!origBeam)document.body.className='beam-off';
-          else document.body.className='beam-on';
-          var q=document.querySelector('.question');var a=document.querySelector('.answer');
-          if(q&&q.dataset.orig)q.textContent=q.dataset.orig;
-          if(a&&a.dataset.orig)a.textContent=a.dataset.orig;
+          clearPreview();
+          if(!isMobile()){
+            hideCtx();
+            if(!origBeam)document.body.className='beam-off';
+            else document.body.className='beam-on';
+            var q=document.querySelector('.question');var a=document.querySelector('.answer');
+            if(q&&q.dataset.orig)q.textContent=q.dataset.orig;
+            if(a&&a.dataset.orig)a.textContent=a.dataset.orig;
+          }
           var gmRow=document.querySelector('.gm-row.gm-active');
           if(gmRow)gmRow.classList.remove('gm-active');
         };
@@ -377,6 +386,12 @@ function buildBeamCal(games,origBeam){
   return cal;
 }
 function fillPreview(oA,gh,ks,os,dateStr,won){
+  // History status always updates (visible on both mobile + desktop)
+  var hs=document.getElementById('historyStatus');
+  if(hs){hs.textContent=(won?'Beam was lit':'No beam')+' \u00B7 '+ks+'-'+os;hs.className='history-status '+(won?'lit':'dark')}
+  var bs=document.getElementById('beamSub');if(bs)bs.style.opacity='0';
+  // On mobile: skip preview bar + hero changes (user can't see them)
+  if(isMobile())return;
   var pb=document.getElementById('previewBar');if(!pb)return;
   pb.textContent='';
   var h=gh;var aA=h?oA:'SAC',hA=h?'SAC':oA,aS=h?os:ks,hS=h?ks:os;
@@ -394,18 +409,15 @@ function fillPreview(oA,gh,ks,os,dateStr,won){
   pb.appendChild($('span','game-bar-meta',dateStr));
   pb.style.display='';
   var pw=document.getElementById('previewWrap');if(pw)pw.style.height=pb.offsetHeight+'px';
-  // Update beam status under history + hide beamSub
-  var hs=document.getElementById('historyStatus');
-  if(hs){hs.textContent=won?'Beam was lit':'No beam';hs.className='history-status '+(won?'lit':'dark')}
-  var bs=document.getElementById('beamSub');if(bs)bs.style.opacity='0';
 }
 function clearPreview(){
-  var pb=document.getElementById('previewBar');if(!pb)return;
-  pb.textContent='';pb.className='game-bar';pb.style.display='none';
-  var pw=document.getElementById('previewWrap');if(pw)pw.style.height='0';
   var hs=document.getElementById('historyStatus');
   if(hs){hs.textContent='';hs.className='history-status'}
   var bs=document.getElementById('beamSub');if(bs)bs.style.opacity='';
+  if(isMobile())return;
+  var pb=document.getElementById('previewBar');if(!pb)return;
+  pb.textContent='';pb.className='game-bar';pb.style.display='none';
+  var pw=document.getElementById('previewWrap');if(pw)pw.style.height='0';
 }
 function showCtx(txt){var h=document.getElementById('hoverCtx');if(h){h.textContent=txt;h.classList.add('show')}}
 function hideCtx(){var h=document.getElementById('hoverCtx');if(h){h.textContent='';h.classList.remove('show')}}
@@ -679,24 +691,29 @@ function render(d){
     (function(oaC,ghC,gksC,gosC,dateC,gwC,gameIdx){
       var enterFn=function(){
         fillPreview(oaC,ghC,gksC,gosC,fd(dateC),gwC);
-        showCtx('Against the '+tn(oaC)+' on '+fd(dateC));
-        var q=document.querySelector('.question');var a=document.querySelector('.answer');
-        if(q)q.dataset.orig=q.dataset.orig||q.textContent;
-        if(a)a.dataset.orig=a.dataset.orig||a.textContent;
-        if(q)q.textContent='Was the beam lit?';
-        if(a)a.textContent=gwC?'YES':'NO';
-        if(gwC)document.body.className='beam-on';
-        else document.body.className='beam-off';
+        if(!isMobile()){
+          showCtx('Against the '+tn(oaC)+' on '+fd(dateC));
+          var q=document.querySelector('.question');var a=document.querySelector('.answer');
+          if(q)q.dataset.orig=q.dataset.orig||q.textContent;
+          if(a)a.dataset.orig=a.dataset.orig||a.textContent;
+          if(q)q.textContent='Was the beam lit?';
+          if(a)a.textContent=gwC?'YES':'NO';
+          if(gwC)document.body.className='beam-on';
+          else document.body.className='beam-off';
+        }
         var dot=document.querySelector('.beam-dot[data-game-idx="'+gameIdx+'"]');
         if(dot)dot.classList.add('gm-active');
       };
       var leaveFn=function(){
-        clearPreview();hideCtx();
-        if(!origBeam)document.body.className='beam-off';
-        else document.body.className='beam-on';
-        var q=document.querySelector('.question');var a=document.querySelector('.answer');
-        if(q&&q.dataset.orig)q.textContent=q.dataset.orig;
-        if(a&&a.dataset.orig)a.textContent=a.dataset.orig;
+        clearPreview();
+        if(!isMobile()){
+          hideCtx();
+          if(!origBeam)document.body.className='beam-off';
+          else document.body.className='beam-on';
+          var q=document.querySelector('.question');var a=document.querySelector('.answer');
+          if(q&&q.dataset.orig)q.textContent=q.dataset.orig;
+          if(a&&a.dataset.orig)a.textContent=a.dataset.orig;
+        }
         var dot=document.querySelector('.beam-dot.gm-active');
         if(dot)dot.classList.remove('gm-active');
       };
