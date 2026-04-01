@@ -50,7 +50,7 @@ body.beam-off .answer{color:#1a1a1a}
 .game-bar:hover{background:rgba(255,255,255,.05)}
 .game-bar.lit{border-color:var(--beam);background:rgba(91,45,142,.06)}
 .game-bar.lit:hover{background:rgba(91,45,142,.12)}
-.game-bar.live-bar{border-color:var(--beam);background:rgba(91,45,142,.06)}
+.game-bar.live-bar{border-color:var(--beam);background:rgba(91,45,142,.06);padding:.8rem 1rem}
 .game-bar-label{font-size:.5rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;opacity:.3;justify-self:start}
 .game-bar.live-bar .game-bar-label{color:var(--beam);opacity:1}
 .game-bar-center{display:flex;align-items:center;justify-content:center;gap:.4rem}
@@ -83,6 +83,8 @@ body.beam-off .answer{color:#1a1a1a}
 .beam-dot.lit{background:var(--beam);box-shadow:0 0 4px rgba(155,77,202,.3)}
 .beam-dot.lit:hover{box-shadow:0 0 10px rgba(155,77,202,.6)}
 .beam-cal-label{font-size:.6rem;opacity:.3;margin-bottom:.5rem;text-align:center}
+.beam-btn:hover{transform:translateY(-2px);box-shadow:0 6px 0 var(--purple),0 12px 24px rgba(0,0,0,.3)}
+.beam-btn:active{transform:translateY(2px);box-shadow:0 2px 0 var(--purple),0 4px 12px rgba(0,0,0,.3)}
 
 .live-prob{font-size:.85rem;font-weight:800;color:var(--beam)}
 .win-prob{font-size:.85rem;font-weight:700;color:var(--beam)}
@@ -129,10 +131,10 @@ a.gm-row:hover{background:rgba(255,255,255,.03)}
 .gm-wl.w{color:var(--win)}.gm-wl.l{color:var(--loss)}
 .gm-row{position:relative}
 
-.cs{display:flex;justify-content:space-between;align-items:baseline;padding:.2rem 0}
-.cs-l{font-size:.55rem;text-transform:uppercase;letter-spacing:.08em;opacity:.25;font-weight:600}
-.cs-v{font-size:.8rem;font-weight:800}
-.cs-rank{font-size:.8rem;font-weight:800;color:var(--beam);flex-shrink:0}
+.cs{display:grid;grid-template-columns:3rem 1fr 3rem;align-items:baseline;padding:.25rem 0}
+.cs-l{font-size:.55rem;text-transform:uppercase;letter-spacing:.08em;opacity:.25;font-weight:600;text-align:center}
+.cs-v{font-size:.8rem;font-weight:800;text-align:left}
+.cs-rank{font-size:.8rem;font-weight:800;color:var(--beam);text-align:right}
 .cs-divider{margin:.4rem 0;border-top:1px solid rgba(255,255,255,.04)}
 
 .footer{position:relative;z-index:1;width:100%;padding:.75rem 1rem 1rem;display:flex;flex-direction:column;align-items:center;gap:.25rem}
@@ -163,11 +165,17 @@ a.gm-row:hover{background:rgba(255,255,255,.03)}
 <div class="about-section" id="aboutSection" style="display:none;position:relative;z-index:1;padding:1rem">
   <div style="max-width:520px;margin:0 auto;text-align:center">
     <img src="kings-classic.png" alt="Classic Sacramento Kings Logo" id="aboutLogo" style="width:180px;margin:0 auto .75rem;display:block;opacity:.8;cursor:pointer;transition:transform .15s">
-    <button id="beamButton" style="display:block;margin:0 auto 2rem;padding:.8rem 2rem;font-size:.85rem;font-weight:800;text-transform:uppercase;letter-spacing:.15em;color:var(--beam);background:transparent;border:2px solid var(--beam);border-radius:8px;cursor:pointer;transition:all .15s;position:relative;overflow:hidden">Light the Beam</button>
+    <div style="display:flex;gap:.75rem;justify-content:center;margin-bottom:1rem;opacity:.35">
+      <a href="https://www.nba.com/kings" target="_blank" rel="noopener" style="color:inherit"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M4 8a4 4 0 0 1 8 0" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="1" x2="8" y2="15" stroke="currentColor" stroke-width="1.2"/><line x1="1" y1="8" x2="15" y2="8" stroke="currentColor" stroke-width="1.2"/></svg></a>
+      <a href="https://twitter.com/SacramentoKings" target="_blank" rel="noopener" style="color:inherit"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M9.5 6.7L14.2 1.2h-1.1L9 5.9 5.8 1.2H1.5l4.9 7.1L1.5 14.2h1.1l4.3-5 3.4 5h4.3L9.5 6.7zm-1.5 1.8l-.5-.7L3.2 2.1h1.7l3.2 4.6.5.7 4.2 5.9h-1.7L8 8.5z"/></svg></a>
+      <a href="https://www.instagram.com/sacramentokings" target="_blank" rel="noopener" style="color:inherit"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="1.5" y="1.5" width="13" height="13" rx="3.5" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="12" cy="4" r=".9"/></svg></a>
+      <a href="https://shop.kings.com" target="_blank" rel="noopener" style="color:inherit"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3 5h10l-1 9H4L3 5z" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 5V4a2.5 2.5 0 0 1 5 0v1" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a>
+    </div>
+    <button id="beamButton" class="beam-btn" style="display:block;margin:0 auto 2rem;padding:1rem 3rem;font-size:1rem;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:#fff;background:var(--beam);border:none;border-radius:12px;cursor:pointer;box-shadow:0 4px 0 var(--purple),0 8px 20px rgba(0,0,0,.3);transition:all .1s;position:relative">Light the Beam</button>
     <div style="text-align:left">
       <h3 style="font-size:.7rem;text-transform:uppercase;letter-spacing:.2em;opacity:.3;margin-bottom:.75rem">About This Site</h3>
       <p style="font-size:.85rem;line-height:1.7;opacity:.5;margin-bottom:1.25rem">
-        After every Kings win, the beam is lit. The physical beam shoots from Golden 1 Center into the Sacramento sky after home wins, but for Kings fans everywhere, the beam is a state of mind. All data is pulled from ESPN's public API. Scores update every 30 seconds during live games. Season archives go back to 2022-23 when the beam tradition began.
+        After every Kings win, the beam is lit. The physical beam shoots from Golden 1 Center into the Sacramento sky after home wins, but for Kings fans everywhere, the beam is a state of mind. When the Kings win, the beam is lit until the next game. During live games, the site shows win probability — the answer changes from YES to MAYBE to UNLIKELY as the game progresses. All data is pulled from ESPN's public API. Scores update every 30 seconds during live games. Season archives go back to 2022-23 when the beam tradition began.
       </p>
       <h3 style="font-size:.7rem;text-transform:uppercase;letter-spacing:.2em;opacity:.3;margin-bottom:.75rem">About the Author</h3>
     </div>
@@ -189,10 +197,10 @@ a.gm-row:hover{background:rgba(255,255,255,.03)}
 </div>
 <div class="footer">
   <div class="footer-links">
-    <a href="https://www.nba.com/kings" target="_blank" rel="noopener" title="NBA.com/Kings">&#127936;</a>
-    <a href="https://twitter.com/SacramentoKings" target="_blank" rel="noopener" title="@SacramentoKings">&#120143;</a>
-    <a href="https://www.instagram.com/sacramentokings" target="_blank" rel="noopener" title="Instagram">&#128247;</a>
-    <a href="https://shop.kings.com" target="_blank" rel="noopener" title="Kings Store">&#128722;</a>
+    <a href="https://www.nba.com/kings" target="_blank" rel="noopener" title="NBA.com/Kings"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M4 8a4 4 0 0 1 8 0" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="1" x2="8" y2="15" stroke="currentColor" stroke-width="1.2"/><line x1="1" y1="8" x2="15" y2="8" stroke="currentColor" stroke-width="1.2"/></svg></a>
+    <a href="https://twitter.com/SacramentoKings" target="_blank" rel="noopener" title="@SacramentoKings"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M9.5 6.7L14.2 1.2h-1.1L9 5.9 5.8 1.2H1.5l4.9 7.1L1.5 14.2h1.1l4.3-5 3.4 5h4.3L9.5 6.7zm-1.5 1.8l-.5-.7L3.2 2.1h1.7l3.2 4.6.5.7 4.2 5.9h-1.7L8 8.5z"/></svg></a>
+    <a href="https://www.instagram.com/sacramentokings" target="_blank" rel="noopener" title="Instagram"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="1.5" y="1.5" width="13" height="13" rx="3.5" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="12" cy="4" r=".9"/></svg></a>
+    <a href="https://shop.kings.com" target="_blank" rel="noopener" title="Kings Store"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3 5h10l-1 9H4L3 5z" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 5V4a2.5 2.5 0 0 1 5 0v1" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a>
     <span class="dot">|</span>
     <a href="https://x.com/BrendanWelsh" target="_blank" rel="noopener">@BrendanWelsh</a>
   </div>
@@ -287,13 +295,11 @@ document.addEventListener('click',function(e){
     selectedGame.classList.remove('gm-active');
     selectedGame=null;
     clearPreview();
-    if(!isMobile()){
-      hideCtx();
-      var q=document.querySelector('.question');var a=document.querySelector('.answer');
-      if(q&&q.dataset.orig)q.textContent=q.dataset.orig;
-      if(a&&a.dataset.orig)a.textContent=a.dataset.orig;
-      if(lastData){var ld=lastData.last;if(ld){var c=ld.competitions[0],k=fk(c.competitors),o=fo(c.competitors);if(sc(k)>sc(o))document.body.className='beam-on';else document.body.className='beam-off'}else document.body.className='beam-off'}
-    }
+    hideCtx();
+    var q=document.querySelector('.question');var a=document.querySelector('.answer');
+    if(q&&q.dataset.orig)q.textContent=q.dataset.orig;
+    if(a&&a.dataset.orig)a.textContent=a.dataset.orig;
+    if(lastData){var ld=lastData.last;if(ld){var c=ld.competitions[0],k=fk(c.competitors),o=fo(c.competitors);if(sc(k)>sc(o))document.body.className='beam-on';else document.body.className='beam-off'}else document.body.className='beam-off'}
   }
 });
 
@@ -348,29 +354,25 @@ function buildBeamCal(games,origBeam){
       (function(oaC,ghC,ksC,osC,dateC,wonC,gameIdx){
         var dotEnter=function(){
           fillPreview(oaC,ghC,ksC,osC,fd(dateC),wonC);
-          if(!isMobile()){
-            showCtx('Against the '+tn(oaC)+' on '+fd(dateC));
-            var q=document.querySelector('.question');var a=document.querySelector('.answer');
-            if(q)q.dataset.orig=q.dataset.orig||q.textContent;
-            if(a)a.dataset.orig=a.dataset.orig||a.textContent;
-            if(q)q.textContent='Was the beam lit?';
-            if(a)a.textContent=wonC?'YES':'NO';
-            if(wonC)document.body.className='beam-on';
-            else document.body.className='beam-off';
-          }
+          showCtx('Against the '+tn(oaC)+' on '+fd(dateC));
+          var q=document.querySelector('.question');var a=document.querySelector('.answer');
+          if(q)q.dataset.orig=q.dataset.orig||q.textContent;
+          if(a)a.dataset.orig=a.dataset.orig||a.textContent;
+          if(q)q.textContent='Was the beam lit?';
+          if(a)a.textContent=wonC?'YES':'NO';
+          if(wonC)document.body.className='beam-on';
+          else document.body.className='beam-off';
           var gmRow=document.querySelector('.gm-row[data-game-idx="'+gameIdx+'"]');
           if(gmRow){gmRow.classList.add('gm-active');if(!isMobile())gmRow.scrollIntoView({block:'nearest',behavior:'smooth'})}
         };
         var dotLeave=function(){
           clearPreview();
-          if(!isMobile()){
-            hideCtx();
-            if(!origBeam)document.body.className='beam-off';
-            else document.body.className='beam-on';
-            var q=document.querySelector('.question');var a=document.querySelector('.answer');
-            if(q&&q.dataset.orig)q.textContent=q.dataset.orig;
-            if(a&&a.dataset.orig)a.textContent=a.dataset.orig;
-          }
+          hideCtx();
+          if(!origBeam)document.body.className='beam-off';
+          else document.body.className='beam-on';
+          var q=document.querySelector('.question');var a=document.querySelector('.answer');
+          if(q&&q.dataset.orig)q.textContent=q.dataset.orig;
+          if(a&&a.dataset.orig)a.textContent=a.dataset.orig;
           var gmRow=document.querySelector('.gm-row.gm-active');
           if(gmRow)gmRow.classList.remove('gm-active');
         };
@@ -390,8 +392,6 @@ function fillPreview(oA,gh,ks,os,dateStr,won){
   var hs=document.getElementById('historyStatus');
   if(hs){hs.textContent=(won?'Beam was lit':'No beam')+' \u00B7 '+ks+'-'+os;hs.className='history-status '+(won?'lit':'dark')}
   var bs=document.getElementById('beamSub');if(bs)bs.style.opacity='0';
-  // On mobile: skip preview bar + hero changes (user can't see them)
-  if(isMobile())return;
   var pb=document.getElementById('previewBar');if(!pb)return;
   pb.textContent='';
   var h=gh;var aA=h?oA:'SAC',hA=h?'SAC':oA,aS=h?os:ks,hS=h?ks:os;
@@ -408,16 +408,15 @@ function fillPreview(oA,gh,ks,os,dateStr,won){
   pb.appendChild(ctr);
   pb.appendChild($('span','game-bar-meta',dateStr));
   pb.style.display='';
-  var pw=document.getElementById('previewWrap');if(pw)pw.style.height=pb.offsetHeight+'px';
+  pb.style.opacity='1';
 }
 function clearPreview(){
   var hs=document.getElementById('historyStatus');
   if(hs){hs.textContent='';hs.className='history-status'}
   var bs=document.getElementById('beamSub');if(bs)bs.style.opacity='';
-  if(isMobile())return;
   var pb=document.getElementById('previewBar');if(!pb)return;
   pb.textContent='';pb.className='game-bar';pb.style.display='none';
-  var pw=document.getElementById('previewWrap');if(pw)pw.style.height='0';
+  pb.style.opacity='0';
 }
 function showCtx(txt){var h=document.getElementById('hoverCtx');if(h){h.textContent=txt;h.classList.add('show')}}
 function hideCtx(){var h=document.getElementById('hoverCtx');if(h){h.textContent='';h.classList.remove('show')}}
@@ -436,7 +435,9 @@ function buildLiveBar(d){
   if(d.wp!==null||mockLive){
     var prob=d.wp!==null?(d.wp*100).toFixed(1):(mockWp*100).toFixed(1);
     var meta=bar.querySelector('.game-bar-meta');
-    meta.appendChild($('span','live-prob',' \u00B7 '+prob+'% SAC'));
+    meta.appendChild($('span','win-prob',' \u00B7 Win Probability '));
+    var probSpan=$('span','live-prob');probSpan.textContent=prob+'%';probSpan.style.fontSize='1.1rem';
+    meta.appendChild(probSpan);
   }
   if(mockLive){
     var lbl=bar.querySelector('.game-bar-label');
@@ -568,7 +569,7 @@ function render(d){
     var tiles=$('div','game-tiles');
 
     // Preview bar — populated when hovering All Games or dots (fixed height wrapper prevents layout shift)
-    var previewWrap=$('div','');previewWrap.style.cssText='height:0;overflow:visible;position:relative;z-index:2;transition:height .15s';previewWrap.id='previewWrap';
+    var previewWrap=$('div','');previewWrap.style.cssText='min-height:3rem;position:relative;z-index:2';previewWrap.id='previewWrap';
     var previewBar=$('div','game-bar');previewBar.id='previewBar';
     previewBar.style.cssText='display:none';
     previewWrap.appendChild(previewBar);
@@ -619,12 +620,15 @@ function render(d){
     if(d.done.length>0){
       var histBox=$('div','history-box');
       var histTitle=$('div','history-title');
-      histTitle.textContent=d.beams+' beam'+(d.beams!==1?'s':'')+' lit this season \u00B7 '+d.done.length+' games played';
+      histTitle.textContent=d.beams+' beams lit \u00B7 '+d.done.length+' games \u00B7 '+pct(w,l);
       histBox.appendChild(histTitle);
       histBox.appendChild(buildBeamCal(d.done,origBeam));
       var histStatus=$('div','history-status');histStatus.id='historyStatus';
       histBox.appendChild(histStatus);
       tiles.appendChild(histBox);
+      var calLabel=$('div','beam-cal-label');
+      calLabel.textContent=isMobile()?'Tap a game to light the beam':'Hover over games to light the beam';
+      tiles.appendChild(calLabel);
     }
 
     tilesEl.appendChild(tiles);
@@ -640,12 +644,9 @@ function render(d){
     var beamSub=$('p','question');beamSub.id='beamSub';beamSub.textContent='beams were lit';
     beamSub.style.marginBottom='1.5rem';
     app.appendChild(beamSub);
-    var recLine=$('p','game-box-sub');recLine.textContent=d.rec+' \u00B7 '+pct(w,l);
-    recLine.style.opacity='.3';recLine.style.marginBottom='1rem';
-    app.appendChild(recLine);
     // Past season tiles: preview bar + history box
     var pastTiles=$('div','game-tiles');
-    var pastWrap=$('div','');pastWrap.style.cssText='height:0;overflow:visible;position:relative;z-index:2;transition:height .15s';pastWrap.id='previewWrap';
+    var pastWrap=$('div','');pastWrap.style.cssText='min-height:3rem;position:relative;z-index:2';pastWrap.id='previewWrap';
     var pastPreview=$('div','game-bar');pastPreview.id='previewBar';
     pastPreview.style.cssText='display:none';
     pastWrap.appendChild(pastPreview);
@@ -653,12 +654,15 @@ function render(d){
     if(d.done.length>0){
       var histBox=$('div','history-box');
       var histTitle=$('div','history-title');
-      histTitle.textContent=d.beams+' beam'+(d.beams!==1?'s':'')+' lit \u00B7 '+d.done.length+' games';
+      histTitle.textContent=d.beams+' beams lit \u00B7 '+d.done.length+' games \u00B7 '+pct(w,l);
       histBox.appendChild(histTitle);
       histBox.appendChild(buildBeamCal(d.done,origBeam));
       var histStatus=$('div','history-status');histStatus.id='historyStatus';
       histBox.appendChild(histStatus);
       pastTiles.appendChild(histBox);
+      var calLabel=$('div','beam-cal-label');
+      calLabel.textContent=isMobile()?'Tap a game to light the beam':'Hover over games to light the beam';
+      pastTiles.appendChild(calLabel);
     }
     tilesEl.appendChild(pastTiles);
     document.body.className='beam-off';origBeam=false;
@@ -684,36 +688,32 @@ function render(d){
     var row=document.createElement('a');row.className='gm-row '+(gw?'w':'l');row.href=gu(g.id);row.target='_blank';row.rel='noopener';
     row.dataset.gameIdx=String(d.done.length-1-idx);
     row.appendChild($('span','gm-date',fs(g.date)));
-    var ol=document.createElement('img');ol.src=tl(oa);ol.alt=oa;ol.className='gm-logo';row.appendChild(ol);
     row.appendChild($('span','gm-opp',(gh?'vs ':'@ ')+oa));
+    var ol=document.createElement('img');ol.src=tl(oa);ol.alt=oa;ol.className='gm-logo';row.appendChild(ol);
     row.appendChild($('span','gm-res '+(gw?'w':'l'),gks+'-'+gos));
     row.appendChild($('span','gm-wl '+(gw?'w':'l'),gw?'W':'L'));
     (function(oaC,ghC,gksC,gosC,dateC,gwC,gameIdx){
       var enterFn=function(){
         fillPreview(oaC,ghC,gksC,gosC,fd(dateC),gwC);
-        if(!isMobile()){
-          showCtx('Against the '+tn(oaC)+' on '+fd(dateC));
-          var q=document.querySelector('.question');var a=document.querySelector('.answer');
-          if(q)q.dataset.orig=q.dataset.orig||q.textContent;
-          if(a)a.dataset.orig=a.dataset.orig||a.textContent;
-          if(q)q.textContent='Was the beam lit?';
-          if(a)a.textContent=gwC?'YES':'NO';
-          if(gwC)document.body.className='beam-on';
-          else document.body.className='beam-off';
-        }
+        showCtx('Against the '+tn(oaC)+' on '+fd(dateC));
+        var q=document.querySelector('.question');var a=document.querySelector('.answer');
+        if(q)q.dataset.orig=q.dataset.orig||q.textContent;
+        if(a)a.dataset.orig=a.dataset.orig||a.textContent;
+        if(q)q.textContent='Was the beam lit?';
+        if(a)a.textContent=gwC?'YES':'NO';
+        if(gwC)document.body.className='beam-on';
+        else document.body.className='beam-off';
         var dot=document.querySelector('.beam-dot[data-game-idx="'+gameIdx+'"]');
         if(dot)dot.classList.add('gm-active');
       };
       var leaveFn=function(){
         clearPreview();
-        if(!isMobile()){
-          hideCtx();
-          if(!origBeam)document.body.className='beam-off';
-          else document.body.className='beam-on';
-          var q=document.querySelector('.question');var a=document.querySelector('.answer');
-          if(q&&q.dataset.orig)q.textContent=q.dataset.orig;
-          if(a&&a.dataset.orig)a.textContent=a.dataset.orig;
-        }
+        hideCtx();
+        if(!origBeam)document.body.className='beam-off';
+        else document.body.className='beam-on';
+        var q=document.querySelector('.question');var a=document.querySelector('.answer');
+        if(q&&q.dataset.orig)q.textContent=q.dataset.orig;
+        if(a&&a.dataset.orig)a.textContent=a.dataset.orig;
         var dot=document.querySelector('.beam-dot.gm-active');
         if(dot)dot.classList.remove('gm-active');
       };
