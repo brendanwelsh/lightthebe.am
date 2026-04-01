@@ -31,7 +31,7 @@ body.beam-on .hover-ctx{color:rgba(255,255,255,.6)}
 .question{font-size:clamp(1.4rem,4.5vw,2.4rem);font-weight:800;text-transform:uppercase;letter-spacing:.12em;opacity:.6;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .question.shake{animation:qshake .4s ease}
 @keyframes qshake{0%,100%{transform:translateX(0)}15%{transform:translateX(-4px)}30%{transform:translateX(4px)}45%{transform:translateX(-3px)}60%{transform:translateX(3px)}75%{transform:translateX(-1px)}90%{transform:translateX(1px)}}
-.answer{font-size:clamp(6rem,25vw,14rem);font-weight:900;line-height:.85;letter-spacing:-.03em;width:100%;margin:1.5rem 0 3rem;text-align:center;display:flex;justify-content:center;align-items:center}
+.answer{font-size:clamp(6rem,25vw,14rem);font-weight:900;line-height:.85;letter-spacing:-.03em;width:100%;margin:1rem 0 1.5rem;text-align:center;display:flex;justify-content:center;align-items:center}
 body.beam-on .answer{color:#fff;text-shadow:0 0 100px rgba(155,77,202,.7),0 0 30px rgba(155,77,202,.4)}
 body.beam-on .question{color:#fff;opacity:1}
 body.beam-on .game-box-sub{color:rgba(255,255,255,.7)}
@@ -389,11 +389,11 @@ function fillPreview(oA,gh,ks,os,dateStr,won){
   ctr.appendChild($('span','game-bar-abbrev',hA));
   pb.appendChild(ctr);
   pb.appendChild($('span','game-bar-meta',dateStr));
-  pb.style.visibility='visible';
+  pb.style.display='';
 }
 function clearPreview(){
   var pb=document.getElementById('previewBar');if(!pb)return;
-  pb.textContent='';pb.className='game-bar';pb.style.visibility='hidden';
+  pb.textContent='';pb.className='game-bar';pb.style.display='none';
 }
 function showCtx(txt){var h=document.getElementById('hoverCtx');if(h){h.textContent=txt;h.classList.add('show')}}
 function hideCtx(){var h=document.getElementById('hoverCtx');if(h){h.textContent='';h.classList.remove('show')}}
@@ -545,7 +545,7 @@ function render(d){
 
     // Preview bar — populated when hovering All Games or dots
     var previewBar=$('div','game-bar');previewBar.id='previewBar';
-    previewBar.style.cssText='visibility:hidden;min-height:3rem';
+    previewBar.style.cssText='display:none';
     tiles.appendChild(previewBar);
 
     if(d.live||mockLive){tiles.appendChild(buildLiveBar(d))}
