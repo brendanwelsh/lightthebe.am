@@ -568,25 +568,29 @@ function render(d){
       var c=d.last.competitions[0],k=fk(c.competitors),o=fo(c.competitors),ks=sc(k),os=sc(o),h=k?.homeAway==='home',bl=ks>os;
       var oA=o.team?.abbreviation||'???';
       var lastBar=buildGameBar('Last Game',oA,h,ks,os,fs(d.last.date),bl,d.last.id,true);
-      var barCtx=(h?'vs ':'@ ')+oA+' \u00B7 '+ks+'-'+os+' \u00B7 '+fs(d.last.date);
-      (function(ctx,wasWin){
+      (function(oaL,dateL,wasWin){
         lastBar.addEventListener('mouseenter',function(){
-          showCtx(ctx);
-          if(wasWin)document.body.className='beam-on';
+          showCtx('Against the '+tn(oaL)+' on '+fd(dateL));
+          if(wasWin){document.body.className='beam-on';lastBar.classList.add('gm-active')}
           var q=document.querySelector('.question');var a=document.querySelector('.answer');
           if(q)q.dataset.orig=q.dataset.orig||q.textContent;
           if(a)a.dataset.orig=a.dataset.orig||a.textContent;
           if(q)q.textContent='Was the beam lit?';
           if(a)a.textContent=wasWin?'YES':'NO';
+          // Update history status
+          var hs=document.getElementById('historyStatus');
+          if(hs){hs.textContent=wasWin?'Beam was lit':'No beam';hs.className='history-status '+(wasWin?'lit':'dark')}
         });
         lastBar.addEventListener('mouseleave',function(){
-          hideCtx();
+          hideCtx();lastBar.classList.remove('gm-active');
           if(!origBeam)document.body.className='beam-off';
           var q=document.querySelector('.question');var a=document.querySelector('.answer');
           if(q&&q.dataset.orig)q.textContent=q.dataset.orig;
           if(a&&a.dataset.orig)a.textContent=a.dataset.orig;
+          var hs=document.getElementById('historyStatus');
+          if(hs){hs.textContent='';hs.className='history-status'}
         });
-      })(barCtx,bl);
+      })(oA,d.last.date,bl);
       tiles.appendChild(lastBar);
     }
 
