@@ -50,11 +50,11 @@ body.beam-off .answer{color:#1a1a1a}
 .game-bar:hover{background:rgba(255,255,255,.05)}
 .game-bar.lit{border-color:var(--beam);background:rgba(91,45,142,.06)}
 .game-bar.lit:hover{background:rgba(91,45,142,.12)}
-.game-bar.live-bar{border-color:var(--beam);background:rgba(91,45,142,.06);padding:.8rem 1rem}
+.game-bar.live-bar{border-color:var(--beam);background:rgba(91,45,142,.06)}
 .game-bar-label{font-size:.5rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;opacity:.3;justify-self:start}
 .game-bar.live-bar .game-bar-label{color:var(--beam);opacity:1}
 .game-bar-center{display:flex;align-items:center;justify-content:center;gap:.4rem}
-.game-bar-center img{width:24px;height:24px;flex-shrink:0}
+.game-bar-center img{width:28px;height:28px;flex-shrink:0}
 .game-bar-abbrev{font-size:.9rem;font-weight:700}
 .game-bar-score{font-size:1.2rem;font-weight:900;min-width:2rem;text-align:center}
 .game-bar-score.w{color:#fff}.game-bar-score.l{opacity:.3}
@@ -123,7 +123,7 @@ a.st-row:hover{background:rgba(255,255,255,.03)}
 a.gm-row:hover{background:rgba(255,255,255,.03)}
 .gm-row.w{border-left:3px solid var(--win)}.gm-row.l{border-left:3px solid var(--loss)}
 .gm-date{font-size:.6rem;font-weight:600;opacity:.3;width:2.5rem;flex-shrink:0}
-.gm-logo{width:24px;height:24px;flex-shrink:0}
+.gm-logo{width:22px;height:22px;flex-shrink:0}
 .gm-opp{font-size:.8rem;font-weight:700;flex:1;text-align:left}
 .gm-res{font-size:.75rem;font-weight:800;flex-shrink:0}
 .gm-res.w{color:var(--win)}.gm-res.l{color:var(--loss)}
@@ -435,9 +435,7 @@ function buildLiveBar(d){
   if(d.wp!==null||mockLive){
     var prob=d.wp!==null?(d.wp*100).toFixed(1):(mockWp*100).toFixed(1);
     var meta=bar.querySelector('.game-bar-meta');
-    meta.appendChild($('span','win-prob',' \u00B7 Win Probability '));
-    var probSpan=$('span','live-prob');probSpan.textContent=prob+'%';probSpan.style.fontSize='1.1rem';
-    meta.appendChild(probSpan);
+    meta.appendChild($('span','live-prob',prob+'% SAC'));
   }
   if(mockLive){
     var lbl=bar.querySelector('.game-bar-label');
@@ -575,7 +573,10 @@ function render(d){
     previewWrap.appendChild(previewBar);
     tiles.appendChild(previewWrap);
 
-    if(d.live||mockLive){tiles.appendChild(buildLiveBar(d))}
+    // Always reserve space for live bar (prevents shift when demo triggers)
+    var liveSlot=$('div','');liveSlot.id='liveSlot';liveSlot.style.cssText='min-height:2.8rem';
+    if(d.live||mockLive){liveSlot.textContent='';liveSlot.style.minHeight='';liveSlot.appendChild(buildLiveBar(d))}
+    tiles.appendChild(liveSlot);
 
     if(d.last){
       var c=d.last.competitions[0],k=fk(c.competitors),o=fo(c.competitors),ks=sc(k),os=sc(o),h=k?.homeAway==='home',bl=ks>os;
