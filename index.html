@@ -381,7 +381,7 @@ function fillPreview(oA,gh,ks,os,dateStr,won){
   pb.textContent='';
   var h=gh;var aA=h?oA:'SAC',hA=h?'SAC':oA,aS=h?os:ks,hS=h?ks:os;
   pb.className='game-bar'+(won?' lit':'');
-  pb.appendChild($('div','game-bar-label',''));
+  pb.appendChild($('div','game-bar-label','This Game'));
   var ctr=$('div','game-bar-center');
   var ai=document.createElement('img');ai.src=h?tl(oA):KLOGO;ai.alt=aA;ctr.appendChild(ai);
   ctr.appendChild($('span','game-bar-abbrev',aA));
@@ -393,17 +393,19 @@ function fillPreview(oA,gh,ks,os,dateStr,won){
   pb.appendChild(ctr);
   pb.appendChild($('span','game-bar-meta',dateStr));
   pb.style.display='';
+  var pw=document.getElementById('previewWrap');if(pw)pw.style.height=pb.offsetHeight+'px';
   // Update beam status under history + hide beamSub
   var hs=document.getElementById('historyStatus');
   if(hs){hs.textContent=won?'Beam was lit':'No beam';hs.className='history-status '+(won?'lit':'dark')}
-  var bs=document.getElementById('beamSub');if(bs)bs.style.display='none';
+  var bs=document.getElementById('beamSub');if(bs)bs.style.opacity='0';
 }
 function clearPreview(){
   var pb=document.getElementById('previewBar');if(!pb)return;
   pb.textContent='';pb.className='game-bar';pb.style.display='none';
+  var pw=document.getElementById('previewWrap');if(pw)pw.style.height='0';
   var hs=document.getElementById('historyStatus');
   if(hs){hs.textContent='';hs.className='history-status'}
-  var bs=document.getElementById('beamSub');if(bs)bs.style.display='';
+  var bs=document.getElementById('beamSub');if(bs)bs.style.opacity='';
 }
 function showCtx(txt){var h=document.getElementById('hoverCtx');if(h){h.textContent=txt;h.classList.add('show')}}
 function hideCtx(){var h=document.getElementById('hoverCtx');if(h){h.textContent='';h.classList.remove('show')}}
@@ -553,10 +555,12 @@ function render(d){
 
     var tiles=$('div','game-tiles');
 
-    // Preview bar — populated when hovering All Games or dots
+    // Preview bar — populated when hovering All Games or dots (fixed height wrapper prevents layout shift)
+    var previewWrap=$('div','');previewWrap.style.cssText='height:0;overflow:visible;position:relative;z-index:2;transition:height .15s';previewWrap.id='previewWrap';
     var previewBar=$('div','game-bar');previewBar.id='previewBar';
     previewBar.style.cssText='display:none';
-    tiles.appendChild(previewBar);
+    previewWrap.appendChild(previewBar);
+    tiles.appendChild(previewWrap);
 
     if(d.live||mockLive){tiles.appendChild(buildLiveBar(d))}
 
@@ -615,15 +619,21 @@ function render(d){
     storyLine.addEventListener('click',function(){this.classList.remove('shake');void this.offsetWidth;this.classList.add('shake')});
     app.appendChild(storyLine);
     var beamNum=$('p','answer',String(d.beams));
+    beamNum.style.color='#fff';
     app.appendChild(beamNum);
-    var beamSub=$('p','game-box-sub');beamSub.id='beamSub';beamSub.textContent='beams lit \u00B7 '+d.rec+' \u00B7 '+pct(w,l);
-    beamSub.style.opacity='.4';beamSub.style.marginBottom='1.5rem';
+    var beamSub=$('p','question');beamSub.id='beamSub';beamSub.textContent='beams were lit';
+    beamSub.style.marginBottom='1.5rem';
     app.appendChild(beamSub);
+    var recLine=$('p','game-box-sub');recLine.textContent=d.rec+' \u00B7 '+pct(w,l);
+    recLine.style.opacity='.3';recLine.style.marginBottom='1rem';
+    app.appendChild(recLine);
     // Past season tiles: preview bar + history box
     var pastTiles=$('div','game-tiles');
+    var pastWrap=$('div','');pastWrap.style.cssText='height:0;overflow:visible;position:relative;z-index:2;transition:height .15s';pastWrap.id='previewWrap';
     var pastPreview=$('div','game-bar');pastPreview.id='previewBar';
     pastPreview.style.cssText='display:none';
-    pastTiles.appendChild(pastPreview);
+    pastWrap.appendChild(pastPreview);
+    pastTiles.appendChild(pastWrap);
     if(d.done.length>0){
       var histBox=$('div','history-box');
       var histTitle=$('div','history-title');
