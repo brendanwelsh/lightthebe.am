@@ -70,13 +70,16 @@ body.beam-off .answer{color:#1a1a1a}
 #explosionCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:400;pointer-events:none}
 
 .history-box{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:.75rem 1rem;width:100%}
+.history-status{font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;text-align:center;height:1.2rem;margin-top:.4rem;transition:opacity .15s}
+.history-status.lit{color:var(--beam)}
+.history-status.dark{opacity:.3}
 .history-title{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;opacity:.35;margin-bottom:.5rem;text-align:center}
 .beam-cal{display:flex;flex-direction:column;gap:.25rem;max-width:700px;margin:0 auto;width:100%}
 .beam-month{display:flex;align-items:center;gap:.3rem}
 .beam-month-label{font-size:.45rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;opacity:.2;width:2rem;text-align:right;flex-shrink:0}
 .beam-month-dots{display:flex;gap:3px;flex-wrap:wrap}
 .beam-dot{width:16px;height:16px;border-radius:3px;background:rgba(255,255,255,.06);transition:all .15s;cursor:pointer;text-decoration:none}
-.beam-dot:hover{transform:scale(1.4);z-index:1}
+.beam-dot.lit:hover{transform:scale(1.4);z-index:1}
 .beam-dot.lit{background:var(--beam);box-shadow:0 0 4px rgba(155,77,202,.3)}
 .beam-dot.lit:hover{box-shadow:0 0 10px rgba(155,77,202,.6)}
 .beam-cal-label{font-size:.6rem;opacity:.3;margin-bottom:.5rem;text-align:center}
@@ -341,7 +344,7 @@ function buildBeamCal(games,origBeam){
       (function(oaC,ghC,ksC,osC,dateC,wonC,gameIdx){
         var dotEnter=function(){
           fillPreview(oaC,ghC,ksC,osC,fd(dateC),wonC);
-          showCtx(tn(oaC)+' on '+fd(dateC));
+          showCtx('Against the '+tn(oaC)+' on '+fd(dateC));
           var q=document.querySelector('.question');var a=document.querySelector('.answer');
           if(q)q.dataset.orig=q.dataset.orig||q.textContent;
           if(a)a.dataset.orig=a.dataset.orig||a.textContent;
@@ -378,7 +381,7 @@ function fillPreview(oA,gh,ks,os,dateStr,won){
   pb.textContent='';
   var h=gh;var aA=h?oA:'SAC',hA=h?'SAC':oA,aS=h?os:ks,hS=h?ks:os;
   pb.className='game-bar'+(won?' lit':'');
-  pb.appendChild($('div','game-bar-label',won?'Beam Lit':'No Beam'));
+  pb.appendChild($('div','game-bar-label',''));
   var ctr=$('div','game-bar-center');
   var ai=document.createElement('img');ai.src=h?tl(oA):KLOGO;ai.alt=aA;ctr.appendChild(ai);
   ctr.appendChild($('span','game-bar-abbrev',aA));
@@ -390,10 +393,17 @@ function fillPreview(oA,gh,ks,os,dateStr,won){
   pb.appendChild(ctr);
   pb.appendChild($('span','game-bar-meta',dateStr));
   pb.style.display='';
+  // Update beam status under history + hide beamSub
+  var hs=document.getElementById('historyStatus');
+  if(hs){hs.textContent=won?'Beam was lit':'No beam';hs.className='history-status '+(won?'lit':'dark')}
+  var bs=document.getElementById('beamSub');if(bs)bs.style.display='none';
 }
 function clearPreview(){
   var pb=document.getElementById('previewBar');if(!pb)return;
   pb.textContent='';pb.className='game-bar';pb.style.display='none';
+  var hs=document.getElementById('historyStatus');
+  if(hs){hs.textContent='';hs.className='history-status'}
+  var bs=document.getElementById('beamSub');if(bs)bs.style.display='';
 }
 function showCtx(txt){var h=document.getElementById('hoverCtx');if(h){h.textContent=txt;h.classList.add('show')}}
 function hideCtx(){var h=document.getElementById('hoverCtx');if(h){h.textContent='';h.classList.remove('show')}}
@@ -592,6 +602,8 @@ function render(d){
       histTitle.textContent=d.beams+' beam'+(d.beams!==1?'s':'')+' lit this season \u00B7 '+d.done.length+' games played';
       histBox.appendChild(histTitle);
       histBox.appendChild(buildBeamCal(d.done,origBeam));
+      var histStatus=$('div','history-status');histStatus.id='historyStatus';
+      histBox.appendChild(histStatus);
       tiles.appendChild(histBox);
     }
 
@@ -604,13 +616,13 @@ function render(d){
     app.appendChild(storyLine);
     var beamNum=$('p','answer',String(d.beams));
     app.appendChild(beamNum);
-    var beamSub=$('p','game-box-sub');beamSub.textContent='beams lit \u00B7 '+d.rec+' \u00B7 '+pct(w,l);
+    var beamSub=$('p','game-box-sub');beamSub.id='beamSub';beamSub.textContent='beams lit \u00B7 '+d.rec+' \u00B7 '+pct(w,l);
     beamSub.style.opacity='.4';beamSub.style.marginBottom='1.5rem';
     app.appendChild(beamSub);
     // Past season tiles: preview bar + history box
     var pastTiles=$('div','game-tiles');
     var pastPreview=$('div','game-bar');pastPreview.id='previewBar';
-    pastPreview.style.cssText='visibility:hidden;min-height:3rem';
+    pastPreview.style.cssText='display:none';
     pastTiles.appendChild(pastPreview);
     if(d.done.length>0){
       var histBox=$('div','history-box');
@@ -618,6 +630,8 @@ function render(d){
       histTitle.textContent=d.beams+' beam'+(d.beams!==1?'s':'')+' lit \u00B7 '+d.done.length+' games';
       histBox.appendChild(histTitle);
       histBox.appendChild(buildBeamCal(d.done,origBeam));
+      var histStatus=$('div','history-status');histStatus.id='historyStatus';
+      histBox.appendChild(histStatus);
       pastTiles.appendChild(histBox);
     }
     tilesEl.appendChild(pastTiles);
@@ -651,7 +665,7 @@ function render(d){
     (function(oaC,ghC,gksC,gosC,dateC,gwC,gameIdx){
       var enterFn=function(){
         fillPreview(oaC,ghC,gksC,gosC,fd(dateC),gwC);
-        showCtx(tn(oaC)+' on '+fd(dateC));
+        showCtx('Against the '+tn(oaC)+' on '+fd(dateC));
         var q=document.querySelector('.question');var a=document.querySelector('.answer');
         if(q)q.dataset.orig=q.dataset.orig||q.textContent;
         if(a)a.dataset.orig=a.dataset.orig||a.textContent;
