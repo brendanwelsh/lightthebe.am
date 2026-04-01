@@ -1,4 +1,4 @@
-<!-- v18 --><!DOCTYPE html>
+<!-- v19 --><!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -9,13 +9,12 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--purple:#5b2d8e;--black:#0a0a0a;--beam:#9b4dca;--win:#9b4dca;--loss:rgba(255,255,255,0.25)}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--black);color:#fff;min-height:100dvh;display:flex;flex-direction:column;align-items:center;text-align:center;overflow-x:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--black);color:#fff;min-height:100dvh;display:flex;flex-direction:column;align-items:center;text-align:center;overflow-x:hidden;scroll-behavior:smooth}
 
-/* Beam shoots UP from bottom and stays */
-body.beam-on::before{content:'';position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:6px;height:0;background:linear-gradient(0deg,var(--beam) 0%,rgba(155,77,202,.8) 30%,rgba(155,77,202,.4) 70%,rgba(155,77,202,.1) 100%);box-shadow:0 0 40px 12px rgba(155,77,202,.4),0 0 100px 40px rgba(91,45,142,.2);pointer-events:none;z-index:0;animation:beamUp .8s ease-out forwards}
-body.beam-on::after{content:'';position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:250px;height:0;background:radial-gradient(ellipse at center bottom,rgba(155,77,202,.5) 0%,rgba(91,45,142,.3) 30%,rgba(91,45,142,.1) 60%,transparent 80%);filter:blur(30px);pointer-events:none;z-index:0;animation:beamGlow .8s ease-out .2s forwards}
-@keyframes beamUp{0%{height:0}100%{height:100vh}}
-@keyframes beamGlow{0%{height:0;opacity:0}100%{height:100vh;opacity:1}}
+/* Beam turns ON — fixed full-height, fades in */
+body.beam-on::before{content:'';position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:6px;height:100vh;background:linear-gradient(0deg,var(--beam) 0%,rgba(155,77,202,.8) 30%,rgba(155,77,202,.4) 70%,rgba(155,77,202,.1) 100%);box-shadow:0 0 40px 12px rgba(155,77,202,.4),0 0 100px 40px rgba(91,45,142,.2);pointer-events:none;z-index:0;opacity:0;animation:beamOn .6s ease-out forwards}
+body.beam-on::after{content:'';position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:250px;height:100vh;background:radial-gradient(ellipse at center bottom,rgba(155,77,202,.5) 0%,rgba(91,45,142,.3) 30%,rgba(91,45,142,.1) 60%,transparent 80%);filter:blur(30px);pointer-events:none;z-index:0;opacity:0;animation:beamOn .6s ease-out .15s forwards}
+@keyframes beamOn{0%{opacity:0}100%{opacity:1}}
 
 .hero{display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;z-index:1;max-width:600px;width:100%;padding:2.5rem 1rem 1.5rem;flex:1;min-height:0}
 
@@ -24,6 +23,10 @@ body.beam-on::after{content:'';position:fixed;bottom:0;left:50%;transform:transl
 @keyframes ls{0%,100%{transform:rotate(0)}25%{transform:rotate(-5deg) scale(1.1)}75%{transform:rotate(5deg) scale(1.1)}}
 .beam-flash{position:fixed;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at center bottom,rgba(155,77,202,.9) 0%,rgba(91,45,142,.5) 30%,transparent 70%);pointer-events:none;z-index:100;animation:fi .5s ease-out forwards}
 @keyframes fi{0%{opacity:0}40%{opacity:1}100%{opacity:0}}
+.bouncy-ball{position:fixed;font-size:2rem;z-index:200;pointer-events:none;animation:ballBounce 2.5s ease-in forwards}
+@keyframes ballBounce{0%{opacity:1;transform:translateY(0) rotate(0deg)}20%{transform:translateY(-200px) rotate(180deg)}40%{transform:translateY(-50px) rotate(360deg)}60%{transform:translateY(-120px) rotate(540deg)}80%{transform:translateY(-20px) rotate(720deg)}100%{opacity:0;transform:translateY(100vh) rotate(900deg)}}
+.beam-count{font-size:clamp(1rem,3vw,1.5rem);font-weight:800;letter-spacing:.05em;margin-bottom:.75rem;color:rgba(255,255,255,.55)}
+.beam-count span{color:var(--beam);font-size:clamp(1.5rem,4vw,2.2rem)}
 
 .hover-ctx{font-size:.6rem;font-weight:600;opacity:0;height:1.2rem;text-transform:uppercase;letter-spacing:.1em;transition:opacity .15s;color:rgba(255,255,255,.4)}
 .hover-ctx.show{opacity:1}
@@ -110,7 +113,7 @@ body.beam-on .beam-ray{height:60px;opacity:.6}
 .cards-section::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:2px}
 .big-cards{display:flex;gap:.75rem;max-width:1200px;margin:0 auto;min-width:min-content;justify-content:center}
 @media(max-width:900px){.big-cards{padding-right:1rem}}
-.big-card{flex:0 0 340px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:1rem .75rem;max-height:600px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.06) transparent}
+.big-card{flex:0 0 420px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:1rem .75rem;max-height:600px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.06) transparent}
 .big-card::-webkit-scrollbar{width:3px}
 .big-card::-webkit-scrollbar-thumb{background:rgba(255,255,255,.06);border-radius:2px}
 @media(min-width:1100px){.big-card{flex:1 1 0;min-width:0;max-width:400px}}
@@ -132,12 +135,22 @@ a.gm-row:hover{background:rgba(255,255,255,.03)}
 .gm-row.w{border-left:3px solid var(--win)}.gm-row.l{border-left:3px solid var(--loss)}
 .gm-row.upcoming{border-left:3px solid rgba(255,255,255,.06);opacity:.5}
 .gm-date{font-size:.55rem;font-weight:600;opacity:.3;width:2.5rem;flex-shrink:0}
-.gm-logo{width:18px;height:18px;flex-shrink:0}
-.gm-opp{font-size:.65rem;font-weight:700;flex:1;text-align:left}
+.gm-logo{width:24px;height:24px;flex-shrink:0}
+.gm-opp{font-size:.75rem;font-weight:700;flex:1;text-align:left}
 .gm-res{font-size:.7rem;font-weight:800;flex-shrink:0}
 .gm-res.w{color:var(--win)}.gm-res.l{color:var(--loss)}
 .gm-wl{font-size:.6rem;font-weight:800;width:1rem;text-align:center;flex-shrink:0}
 .gm-wl.w{color:var(--win)}.gm-wl.l{color:var(--loss)}
+.gm-row{position:relative}
+.gm-tooltip{display:none;position:absolute;left:0;right:0;top:100%;z-index:10;background:rgba(15,15,15,.97);border:1px solid rgba(155,77,202,.3);border-radius:10px;padding:.75rem;margin-top:.2rem;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.5)}
+.gm-row:hover .gm-tooltip{display:block}
+.gm-tooltip-date{font-size:.6rem;opacity:.4;margin-bottom:.3rem}
+.gm-tooltip-matchup{display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.3rem}
+.gm-tooltip-matchup img{width:36px;height:36px}
+.gm-tooltip-score{font-size:1.2rem;font-weight:900}
+.gm-tooltip-beam{font-size:.75rem;font-weight:800;margin-top:.3rem;text-transform:uppercase;letter-spacing:.1em}
+.gm-tooltip-beam.yes{color:var(--beam)}
+.gm-tooltip-beam.no{opacity:.3}
 
 .cs{display:flex;justify-content:space-between;align-items:baseline;padding:.2rem 0}
 .cs-l{font-size:.55rem;text-transform:uppercase;letter-spacing:.08em;opacity:.25;font-weight:600}
@@ -160,6 +173,11 @@ a.gm-row:hover{background:rgba(255,255,255,.03)}
 
 .upcoming-tix,.upcoming-tix:visited{font-size:.4rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--beam);text-decoration:none;padding:.1rem .3rem;border:1px solid var(--beam);border-radius:3px;transition:all .15s;display:inline-block;margin-top:.2rem}
 .upcoming-tix:hover{background:var(--beam);color:#fff}
+@media(max-width:700px){
+  .big-cards{flex-direction:column;min-width:0;padding:0 .5rem}
+  .big-card{flex:none;width:100%}
+  .gm-tooltip{position:fixed;left:1rem;right:1rem;top:auto;bottom:1rem;margin-top:0;border-radius:14px}
+}
 </style>
 </head>
 <body>
@@ -169,9 +187,10 @@ a.gm-row:hover{background:rgba(255,255,255,.03)}
 <div class="cards-section" id="cards"></div>
 <div class="about-section" id="aboutSection" style="display:none;position:relative;z-index:1;padding:1rem">
   <div style="max-width:520px;margin:0 auto;text-align:center">
-    <img src="kings-classic.png" alt="Classic Sacramento Kings Logo" style="width:100px;margin:0 auto .75rem;display:block;opacity:.7">
-    <h2 style="font-size:1.4rem;font-weight:900;margin-bottom:.3rem;letter-spacing:.05em">LIGHT THE BEAM</h2>
-    <p style="font-size:.65rem;text-transform:uppercase;letter-spacing:.2em;opacity:.25;margin-bottom:1.25rem">Sacramento, California</p>
+    <img src="kings-classic.png" alt="Classic Sacramento Kings Logo" id="aboutLogo" style="width:180px;margin:0 auto .75rem;display:block;opacity:.7;cursor:pointer;transition:transform .15s" title="Click me...">
+    <h2 style="font-size:1.4rem;font-weight:900;margin-bottom:.3rem;letter-spacing:.05em">HOOP DREAMS, BABY</h2>
+    <p style="font-size:.55rem;text-transform:uppercase;letter-spacing:.3em;opacity:.25;margin-bottom:.4rem">Sacramento, California</p>
+    <p style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.2em;color:var(--beam);margin-bottom:1.25rem">FYBA Legend</p>
     <div style="text-align:left">
       <p style="font-size:.85rem;line-height:1.7;opacity:.5;margin-bottom:1.25rem">
         After every Kings win, the beam is lit. The physical beam shoots from Golden 1 Center into the Sacramento sky after home wins, but for Kings fans everywhere, the beam is a state of mind. Win a game, light the beam. The tradition started in 2022-23 when the Kings ended a 16-year playoff drought.
@@ -187,9 +206,11 @@ a.gm-row:hover{background:rgba(255,255,255,.03)}
       <img src="beam-house.png" alt="Purple beam lights on the house" style="width:100%;border-radius:10px;border:1px solid rgba(255,255,255,.06);object-fit:cover;aspect-ratio:4/3">
     </div>
     <p style="font-size:.55rem;opacity:.2;margin-bottom:1.25rem">Game nights at the house. The beam doesn't just stay at the arena.</p>
+    <!-- Light the Beam button -->
+    <button id="beamButton" style="display:block;margin:1.5rem auto;padding:1rem 2.5rem;font-size:1.1rem;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:#fff;background:linear-gradient(180deg,var(--beam) 0%,var(--purple) 100%);border:none;border-radius:50px;cursor:pointer;box-shadow:0 6px 20px rgba(155,77,202,.4),0 2px 4px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.2);transition:transform .1s,box-shadow .1s;position:relative;overflow:hidden">LIGHT THE BEAM</button>
     <div style="text-align:left">
       <p style="font-size:.85rem;line-height:1.7;opacity:.65;margin-bottom:.75rem">
-        Built by <a href="https://x.com/BrendanWelsh" target="_blank" rel="noopener" style="color:var(--beam);text-decoration:none;font-weight:700">@BrendanWelsh</a>. Parents raised him to be a Kings fan. Grew up playing youth basketball in Sacramento, played on the court at Arco Arena. Sat in the nosebleeds watching Webber, Peja, Vlade, Doug Christie, and the greatest team to never win a championship. Skipped school in 4th grade to go get Carl's Jr Kings bobbleheads. Hoop dreams.
+        Built by <a href="https://x.com/BrendanWelsh" target="_blank" rel="noopener" style="color:var(--beam);text-decoration:none;font-weight:700">@BrendanWelsh</a>. Parents raised him to be a Kings fan. Grew up playing youth basketball in Sacramento, played on the court at Arco Arena. Sat in the nosebleeds watching Webber, Peja, Vlade, Doug Christie, and the greatest team to never win a championship. Skipped school in 4th grade to go get Carl's Jr Kings bobbleheads. Hoop dreams, baby.
       </p>
     </div>
   </div>
@@ -282,6 +303,22 @@ function hideCtx(){var h=document.getElementById('hoverCtx');if(h){h.textContent
 function ord(n){var s=['th','st','nd','rd'],v=n%100;return n+(s[(v-20)%10]||s[v]||s[0])}
 function pct(w,l){return w+l>0?(w/(w+l)).toFixed(3).replace(/^0/,''):'.000'}
 
+var TEAM_NAMES={
+  ATL:'Atlanta Hawks',BOS:'Boston Celtics',BKN:'Brooklyn Nets',
+  CHA:'Charlotte Hornets',CHI:'Chicago Bulls',CLE:'Cleveland Cavaliers',
+  DAL:'Dallas Mavericks',DEN:'Denver Nuggets',DET:'Detroit Pistons',
+  GS:'Golden State Warriors',GSW:'Golden State Warriors',HOU:'Houston Rockets',
+  IND:'Indiana Pacers',LAC:'LA Clippers',LAL:'Los Angeles Lakers',
+  MEM:'Memphis Grizzlies',MIA:'Miami Heat',MIL:'Milwaukee Bucks',
+  MIN:'Minnesota Timberwolves',NO:'New Orleans Pelicans',NOP:'New Orleans Pelicans',
+  NY:'New York Knicks',NYK:'New York Knicks',OKC:'Oklahoma City Thunder',
+  ORL:'Orlando Magic',PHI:'Philadelphia 76ers',PHX:'Phoenix Suns',
+  POR:'Portland Trail Blazers',SAC:'Sacramento Kings',SA:'San Antonio Spurs',
+  SAS:'San Antonio Spurs',TOR:'Toronto Raptors',UTAH:'Utah Jazz',UTA:'Utah Jazz',
+  WSH:'Washington Wizards',WAS:'Washington Wizards'
+};
+function tn(abbr){return TEAM_NAMES[abbr]||TEAM_NAMES[abbr.toUpperCase()]||abbr}
+
 async function getData(){
   var sd=await fj(schedUrl(currentSeason)),stSum=sd.team?.standingSummary||'',ev=sd.events||[];
   var last=null,next=null,done=[],sched=[];
@@ -361,6 +398,32 @@ async function getData(){
   return{rec:rec,stSum:stSum,last:last,live:lg,next:next,done:done,sched:sched,str:str,stt:stt,bStr:bStr,bStt:bStt,bWin:bWin,wp:wp,beams:beams,divT:divT,allT:allT,kSt:kSt,gLeft:sched.length,teamRanks:teamRanks}
 }
 
+function fillHoverBar(oa,gh,ks,os,dateStr,won){
+  var hb=document.getElementById('hoverGameBar');
+  if(!hb)return;
+  hb.textContent='';
+  var h=gh;var aA=h?oa:'SAC',hA=h?'SAC':oa,aS=h?os:ks,hS=h?ks:os;
+  hb.appendChild($('div','game-bar-label',won?'Beam Lit':'No Beam'));
+  var ctr=$('div','game-bar-center');
+  var ai=document.createElement('img');ai.src=h?tl(oa):KLOGO;ai.alt=aA;ctr.appendChild(ai);
+  ctr.appendChild($('span','game-bar-abbrev',aA));
+  ctr.appendChild($('span','game-bar-score '+(aS>hS?'w':'l'),String(aS)));
+  ctr.appendChild($('span','game-bar-at','@'));
+  ctr.appendChild($('span','game-bar-score '+(hS>aS?'w':'l'),String(hS)));
+  var hi=document.createElement('img');hi.src=h?KLOGO:tl(oa);hi.alt=hA;ctr.appendChild(hi);
+  ctr.appendChild($('span','game-bar-abbrev',hA));
+  hb.appendChild(ctr);
+  hb.appendChild($('span','game-bar-meta',dateStr));
+  hb.className='game-bar'+(won?' lit':'');
+  hb.style.visibility='visible';hb.style.opacity='1';
+}
+function clearHoverBar(){
+  var hb=document.getElementById('hoverGameBar');
+  if(!hb)return;
+  hb.style.opacity='0';
+  setTimeout(function(){if(hb.style.opacity==='0')hb.style.visibility='hidden'},150);
+}
+
 function buildLiveBar(d){
   // Live game as a simple bar matching the other bars
   var lc=d.live?d.live.competitions[0]:null;
@@ -421,8 +484,10 @@ function render(d){
     app.appendChild(questionEl);
     var ans=$('p','answer','...');app.appendChild(ans);
     // Beam count for current season
-    var bcLine=$('p','game-box-sub');bcLine.textContent='The Kings have lit the beam '+d.beams+' time'+(d.beams!==1?'s':'')+' this season';
-    bcLine.style.marginBottom='.75rem';bcLine.style.opacity='.35';
+    var bcLine=$('div','beam-count');
+    var bcNum=document.createElement('span');bcNum.textContent=d.beams;
+    bcLine.appendChild(bcNum);
+    bcLine.appendChild(document.createTextNode(' beam'+(d.beams!==1?'s':'')+' lit this season'));
     app.appendChild(bcLine);
     // Beam calendar for current season
     if(d.done.length>0){
@@ -456,10 +521,19 @@ function render(d){
       live=false;var c=d.last.competitions[0],k=fk(c.competitors),o=fo(c.competitors),ks=sc(k),os=sc(o),h=k?.homeAway==='home',bl=ks>os;
       ans.textContent=bl?'YES':'NO';
       document.body.className=bl?'beam-on':'beam-off';origBeam=bl;
+      if(bl)setTimeout(bounceBalls,500);
     }
 
     // Horizontal scoreboard bars
     var tiles=$('div','game-tiles');
+
+    // Reserved hover game bar — always present, populated on All Games hover
+    var hoverBar=$('div','game-bar');hoverBar.id='hoverGameBar';
+    hoverBar.style.cssText='visibility:hidden;opacity:0;transition:opacity .15s';
+    hoverBar.appendChild($('div','game-bar-label','\u00A0'));
+    var hctr=$('div','game-bar-center');hctr.appendChild(document.createTextNode('\u00A0'));hoverBar.appendChild(hctr);
+    hoverBar.appendChild($('div','game-bar-meta','\u00A0'));
+    tiles.appendChild(hoverBar);
 
     // LIVE GAME bar (if live or mock)
     if(d.live||mockLive){tiles.appendChild(buildLiveBar(d))}
@@ -520,7 +594,7 @@ function render(d){
         row.appendChild($('span','upcoming-row-date',fsd(g.date)));
         var opp=$('div','upcoming-row-opp');
         var ol=document.createElement('img');ol.src=tl(oa);ol.alt=oa;opp.appendChild(ol);
-        opp.appendChild(document.createTextNode((gh?'vs ':'@ ')+oa));
+        opp.appendChild(document.createTextNode((gh?'vs ':'@ ')+tn(oa)));
         row.appendChild(opp);
         var meta=$('div','upcoming-row-meta');
         var tix=gc.tickets?.[0]?.links?.[0]?.href;
@@ -535,16 +609,18 @@ function render(d){
   }else{
     // Past season — same text positions as current season
     live=false;
-    var pastQ=$('p','question','The Kings lit the beam');
+    var pastQ=$('p','question',(currentSeason-1)+'-'+String(currentSeason).slice(2)+' Season');
     pastQ.addEventListener('click',function(){this.classList.remove('shake');void this.offsetWidth;this.classList.add('shake')});
     app.appendChild(pastQ);
     var beamNum=$('p','answer',String(d.beams));
     app.appendChild(beamNum);
-    var timesLine=$('p','question');timesLine.textContent='times';timesLine.style.marginBottom='.5rem';
-    app.appendChild(timesLine);
-    var bcLine2=$('p','game-box-sub');bcLine2.textContent='in the '+(currentSeason-1)+'-'+String(currentSeason).slice(2)+' season';
-    bcLine2.style.marginBottom='1rem';bcLine2.style.opacity='.25';
-    app.appendChild(bcLine2);
+    var beamLabel=$('div','beam-count');
+    beamLabel.textContent='beam'+(d.beams!==1?'s':'')+' lit';
+    beamLabel.style.fontSize='1.2rem';beamLabel.style.textTransform='uppercase';beamLabel.style.letterSpacing='.15em';
+    app.appendChild(beamLabel);
+    var recLine=$('p','game-box-sub');recLine.textContent=d.rec+' \u00B7 '+pct(w,l)+' \u00B7 Hover a win to light it';
+    recLine.style.opacity='.3';recLine.style.marginBottom='1rem';
+    app.appendChild(recLine);
     // Beam calendar
     if(d.done.length>0){
       app.appendChild(buildBeamCal(d.done,origBeam));
@@ -569,7 +645,7 @@ function render(d){
     bc.appendChild(c1);
   }
 
-  // CARD 2: All Games + Upcoming
+  // CARD 2: All Games (completed only — upcoming is in the section above)
   var c2=$('div','big-card');c2.appendChild($('div','big-card-title','All Games'));
   d.done.slice().reverse().forEach(function(g){
     var gc=g.competitions[0],gk=fk(gc.competitors),go=fo(gc.competitors),gks=sc(gk),gos=sc(go),gw=gks>gos,gh=gk?.homeAway==='home',oa=go?.team?.abbreviation||'???';
@@ -579,19 +655,39 @@ function render(d){
     row.appendChild($('span','gm-opp',(gh?'vs ':'@ ')+oa));
     row.appendChild($('span','gm-res '+(gw?'w':'l'),gks+'-'+gos));
     row.appendChild($('span','gm-wl '+(gw?'w':'l'),gw?'W':'L'));
-    // Hover over games changes hero text + shows context
-    var ctxTxt=(gh?'vs ':'@ ')+oa+' \u00B7 '+gks+'-'+gos+' \u00B7 '+fs(g.date);
-    if(gw){(function(ctx){row.addEventListener('mouseenter',function(){showCtx(ctx);document.body.className='beam-on';var q=document.querySelector('.question');var a=document.querySelector('.answer');if(q)q.dataset.orig=q.dataset.orig||q.textContent;if(a)a.dataset.orig=a.dataset.orig||a.textContent;if(q)q.textContent='Was the beam lit?';if(a)a.textContent='YES'});row.addEventListener('mouseleave',function(){hideCtx();eggOn=false;if(!origBeam)document.body.className='beam-off';var q=document.querySelector('.question');var a=document.querySelector('.answer');if(q&&q.dataset.orig)q.textContent=q.dataset.orig;if(a&&a.dataset.orig)a.textContent=a.dataset.orig})})(ctxTxt)}
-    else{(function(ctx){row.addEventListener('mouseenter',function(){showCtx(ctx);var q=document.querySelector('.question');var a=document.querySelector('.answer');if(q)q.dataset.orig=q.dataset.orig||q.textContent;if(a)a.dataset.orig=a.dataset.orig||a.textContent;if(q)q.textContent='Was the beam lit?';if(a)a.textContent='NO'});row.addEventListener('mouseleave',function(){hideCtx();var q=document.querySelector('.question');var a=document.querySelector('.answer');if(q&&q.dataset.orig)q.textContent=q.dataset.orig;if(a&&a.dataset.orig)a.textContent=a.dataset.orig})})(ctxTxt)}
-    c2.appendChild(row);
-  });
-  if(d.sched.length>0)c2.appendChild($('div','st-sep','--- UPCOMING ---'));
-  d.sched.forEach(function(g){
-    var gc=g.competitions[0],go=fo(gc.competitors),gh=fk(gc.competitors)?.homeAway==='home',oa=go?.team?.abbreviation||'???';
-    var row=$('div','gm-row upcoming');
-    row.appendChild($('span','gm-date',fs(g.date)));
-    var ol=document.createElement('img');ol.src=tl(oa);ol.alt=oa;ol.className='gm-logo';row.appendChild(ol);
-    row.appendChild($('span','gm-opp',(gh?'vs ':'@ ')+oa));
+    // Rich hover tooltip
+    var tip=$('div','gm-tooltip');
+    tip.appendChild($('div','gm-tooltip-date','Kings '+(gh?'vs':'@')+' '+tn(oa)+' \u00B7 '+fd(g.date)));
+    var matchup=$('div','gm-tooltip-matchup');
+    var kImg=document.createElement('img');kImg.src=KLOGO;kImg.alt='SAC';matchup.appendChild(kImg);
+    matchup.appendChild($('span','gm-tooltip-score',gks+' - '+gos));
+    var oImg=document.createElement('img');oImg.src=tl(oa);oImg.alt=oa;matchup.appendChild(oImg);
+    tip.appendChild(matchup);
+    var beamLit=gw&&gh;
+    var beamEl=$('div','gm-tooltip-beam '+(beamLit?'yes':(gw?'no':'no')));
+    beamEl.textContent=beamLit?'Beam was lit!':gw?'W \u00B7 Away game':'No beam';
+    tip.appendChild(beamEl);
+    row.appendChild(tip);
+    // Hover: populate game bar above Last Game + change hero text
+    (function(oaC,ghC,gksC,gosC,dateC,gwC){
+      row.addEventListener('mouseenter',function(){
+        fillHoverBar(oaC,ghC,gksC,gosC,fd(dateC),gwC);
+        showCtx((ghC?'vs ':'@ ')+oaC+' \u00B7 '+gksC+'-'+gosC+' \u00B7 '+fs(dateC));
+        var q=document.querySelector('.question');var a=document.querySelector('.answer');
+        if(q)q.dataset.orig=q.dataset.orig||q.textContent;
+        if(a)a.dataset.orig=a.dataset.orig||a.textContent;
+        if(q)q.textContent='Was the beam lit?';
+        if(a)a.textContent=gwC?'YES':'NO';
+        if(gwC)document.body.className='beam-on';
+      });
+      row.addEventListener('mouseleave',function(){
+        clearHoverBar();hideCtx();eggOn=false;
+        if(!origBeam)document.body.className='beam-off';
+        var q=document.querySelector('.question');var a=document.querySelector('.answer');
+        if(q&&q.dataset.orig)q.textContent=q.dataset.orig;
+        if(a&&a.dataset.orig)a.textContent=a.dataset.orig;
+      });
+    })(oa,gh,gks,gos,g.date,gw);
     c2.appendChild(row);
   });
   bc.appendChild(c2);
@@ -650,10 +746,57 @@ function render(d){
 
 function schedRefresh(){if(ref)clearInterval(ref);ref=setInterval(function(){getData().then(function(d){lastData=d;render(d)}).catch(function(){})},live?30000:120000)}
 
+// Bouncing basketballs celebration
+function bounceBalls(){
+  for(var i=0;i<12;i++){
+    (function(idx){
+      setTimeout(function(){
+        var ball=document.createElement('div');
+        ball.className='bouncy-ball';
+        ball.textContent='\uD83C\uDFC0';
+        ball.style.left=Math.random()*90+5+'%';
+        ball.style.top=Math.random()*60+20+'%';
+        ball.style.animationDuration=(2+Math.random()*2)+'s';
+        ball.style.fontSize=(1.5+Math.random()*1.5)+'rem';
+        document.body.appendChild(ball);
+        setTimeout(function(){ball.remove()},5000);
+      },idx*150);
+    })(i);
+  }
+}
+
+// Grant Napier quotes — AUDIO via Web Speech API
+var NAPIER_QUOTES=[
+  "If you don't like that, you don't like NBA basketball!",
+  "OH WHAT A PLAY!",
+  "SLAM DUNK!",
+  "Light the beam, baby!",
+  "This team is SPECIAL!",
+  "ARE YOU KIDDING ME?!",
+  "Sacramento Kings basketball!",
+  "HE IS ON FIRE!"
+];
+var lastQuote=-1;
+function showQuote(){
+  var idx;do{idx=Math.floor(Math.random()*NAPIER_QUOTES.length)}while(idx===lastQuote&&NAPIER_QUOTES.length>1);
+  lastQuote=idx;
+  // Speak it aloud
+  if('speechSynthesis' in window){
+    window.speechSynthesis.cancel();
+    var u=new SpeechSynthesisUtterance(NAPIER_QUOTES[idx]);
+    u.rate=1.1;u.pitch=1.2;u.volume=1;
+    window.speechSynthesis.speak(u);
+  }
+  // Flash + beam
+  var f=$('div','beam-flash');document.body.appendChild(f);setTimeout(function(){f.remove()},500);
+  document.body.classList.add('beam-on');
+  setTimeout(function(){document.body.classList.remove('beam-on')},3000);
+}
+
+// Logo click — 5 taps triggers Grant Napier quote
 var tc=0,tt=null;
 var eggOn=false;
-function egg(){eggOn=!eggOn;var q=document.querySelector('.question');var a=document.querySelector('.answer');if(eggOn){document.body.className='beam-on';if(q)q.textContent='Is the beam lit?';if(a){a.textContent='YES';a.style.transition='transform .3s';a.style.transform='scale(1.15)';setTimeout(function(){a.style.transform='scale(1)'},300)}}else{if(lastData)render(lastData)}}
-document.getElementById('app').addEventListener('click',function(e){var l=e.target.closest('.logo');if(!l)return;tc++;l.classList.remove('shake');void l.offsetWidth;l.classList.add('shake');clearTimeout(tt);tt=setTimeout(function(){tc=0},1500);if(tc>=5){tc=0;clearTimeout(tt);egg()}});
+document.getElementById('app').addEventListener('click',function(e){var l=e.target.closest('.logo');if(!l)return;tc++;l.classList.remove('shake');void l.offsetWidth;l.classList.add('shake');clearTimeout(tt);tt=setTimeout(function(){tc=0},1500);if(tc>=5){tc=0;clearTimeout(tt);showQuote()}});
 
 function buildSeasonBar(){
   var bar=document.getElementById('seasonBar');
@@ -696,6 +839,23 @@ function buildSeasonBar(){
 buildSeasonBar();
 
 getData().then(function(d){lastData=d;render(d)}).catch(function(){render(null)});
+
+// Beam button on about page
+document.getElementById('beamButton').addEventListener('mousedown',function(){this.style.transform='scale(.95)';this.style.boxShadow='0 2px 8px rgba(155,77,202,.3),0 1px 2px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.2)'});
+document.getElementById('beamButton').addEventListener('mouseup',function(){this.style.transform='scale(1)';this.style.boxShadow='0 6px 20px rgba(155,77,202,.4),0 2px 4px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.2)'});
+document.getElementById('beamButton').addEventListener('click',function(){
+  var f=$('div','beam-flash');document.body.appendChild(f);setTimeout(function(){f.remove()},500);
+  document.body.classList.add('beam-on');
+  setTimeout(function(){document.body.classList.remove('beam-on')},3000);
+});
+
+// About page logo — 5 clicks triggers quotes too
+var atc=0,att=null;
+document.getElementById('aboutLogo').addEventListener('click',function(){
+  atc++;this.style.transform='scale(.9)';var self=this;setTimeout(function(){self.style.transform='scale(1)'},150);
+  clearTimeout(att);att=setTimeout(function(){atc=0},1500);
+  if(atc>=5){atc=0;clearTimeout(att);showQuote()}
+});
 </script>
 </body>
 </html>
