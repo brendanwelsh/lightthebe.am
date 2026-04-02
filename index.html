@@ -31,7 +31,7 @@ body.beam-on .hover-ctx{color:rgba(255,255,255,.6)}
 .question{font-size:clamp(1.4rem,4.5vw,2.4rem);font-weight:800;text-transform:uppercase;letter-spacing:.12em;opacity:.6;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .question.shake{animation:qshake .4s ease}
 @keyframes qshake{0%,100%{transform:translateX(0)}15%{transform:translateX(-4px)}30%{transform:translateX(4px)}45%{transform:translateX(-3px)}60%{transform:translateX(3px)}75%{transform:translateX(-1px)}90%{transform:translateX(1px)}}
-.answer{font-size:clamp(4rem,18vw,14rem);font-weight:900;line-height:.85;letter-spacing:-.03em;width:100%;margin:1rem 0 1.5rem;text-align:center;display:flex;justify-content:center;align-items:center;overflow:hidden}
+.answer{font-size:clamp(3rem,15vw,14rem);font-weight:900;line-height:.85;letter-spacing:-.03em;width:100%;margin:1rem 0 1.5rem;text-align:center;display:flex;justify-content:center;align-items:center;white-space:nowrap}
 body.beam-on .answer{color:#fff;text-shadow:0 0 100px rgba(155,77,202,.7),0 0 30px rgba(155,77,202,.4)}
 body.beam-on .question{color:#fff;opacity:1}
 body.beam-on .game-box-sub{color:rgba(255,255,255,.7)}
@@ -178,10 +178,13 @@ a.gm-row:hover{background:rgba(255,255,255,.03)}
     <div style="text-align:left">
       <h3 style="font-size:.7rem;text-transform:uppercase;letter-spacing:.2em;opacity:.3;margin-bottom:.75rem">About This Site</h3>
       <p style="font-size:.85rem;line-height:1.7;opacity:.5;margin-bottom:1.25rem">
-        "Light the beam" started as a Sacramento Kings tradition — after every home win, a purple beam shoots from the roof of Golden 1 Center into the night sky. But it's become bigger than basketball. Got a promotion? Light the beam. Aced the exam? Light the beam. Your kid took their first steps? Light the beam. It's a Sacramento thing. It's a celebration.
+        After every Sacramento Kings home win, a purple beam shoots from the crown of Golden 1 Center into the Sacramento sky. The beam is powered by a 1.5 million candlepower searchlight mounted on the arena roof — visible from miles away. It stays lit for about an hour after the game, painting the downtown skyline purple. The tradition started in 2022-23 when the Kings ended a 16-year playoff drought.
       </p>
       <p style="font-size:.85rem;line-height:1.7;opacity:.5;margin-bottom:1.25rem">
-        This site tracks every beam. The beam stays lit from the final buzzer until the next game tips off. During live games, the answer shifts — YES, LIKELY, MAYBE, DOUBT, NOPE — based on real-time win probability from ESPN. All data is pulled from ESPN's public API. Scores update every 30 seconds during live games. Season archives go back to 2022-23 when the Kings ended a 16-year playoff drought and the beam tradition began.
+        But "light the beam" has become bigger than basketball. Got a promotion? Light the beam. Aced the exam? Light the beam. Your kid took their first steps? Light the beam. It's a Sacramento thing. It's a celebration. Light the beam, baby.
+      </p>
+      <p style="font-size:.85rem;line-height:1.7;opacity:.5;margin-bottom:1.25rem">
+        This site tracks every beam. During live games, the answer shifts — YES, LIKELY, PROBABLY, MAYBE, DOUBTFUL, UNLIKELY, NOPE — based on real-time win probability from ESPN. All data pulled from ESPN's public API. Scores update every 30 seconds during live games. Season archives go back to 2022-23.
       </p>
       <h3 style="font-size:.7rem;text-transform:uppercase;letter-spacing:.2em;opacity:.3;margin-bottom:.75rem">About the Author</h3>
     </div>
@@ -235,10 +238,13 @@ function beamPhrase(wp){
   if(wp===null)return'...';
   var p=wp*100;
   if(p>=90)return'YES';
-  if(p>=75)return'LIKELY';
+  if(p>=80)return'LIKELY';
+  if(p>=70)return'PROBABLY';
   if(p>=60)return'MAYBE';
-  if(p>=40)return'MAYBE';
-  if(p>=25)return'DOUBT';
+  if(p>=50)return'MAYBE';
+  if(p>=40)return'DOUBTFUL';
+  if(p>=30)return'UNLIKELY';
+  if(p>=20)return'NOPE';
   if(p>=10)return'NOPE';
   return'NO';
 }
