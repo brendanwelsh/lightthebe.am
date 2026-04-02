@@ -568,7 +568,7 @@ function render(d){
       }
       ans.style.whiteSpace='pre-line';
       questionEl.textContent='Will the beam be lit?';
-      document.body.className='beam-on';origBeam=true;
+      document.body.className='beam-off';origBeam=false;
     }else if(d.last){
       live=false;var c=d.last.competitions[0],k=fk(c.competitors),o=fo(c.competitors),ks=sc(k),os=sc(o),h=k?.homeAway==='home',bl=ks>os;
       ans.textContent=bl?'YES':'NO';
