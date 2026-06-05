@@ -1,4 +1,4 @@
-<!-- v25 --><!DOCTYPE html>
+<!-- v28 --><!DOCTYPE html>
 <html lang="en-US">
 <head>
 <meta charset="UTF-8">
@@ -146,8 +146,9 @@ body.beam-off .answer{color:#1a1a1a}
 .beam-cal{display:flex;flex-direction:column;gap:.25rem;max-width:700px;margin:0 auto;width:100%}
 .beam-month{display:flex;align-items:center;gap:.3rem}
 .beam-month-label{font-size:.45rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;opacity:.2;width:2rem;text-align:right;flex-shrink:0}
-.beam-month-dots{display:flex;gap:3px;flex-wrap:wrap}
-.beam-dot{width:16px;height:16px;border-radius:3px;background:rgba(255,255,255,.06);transition:all .15s;cursor:pointer;text-decoration:none}
+/* Grid with fixed column count eliminates orphan rows from flex-wrap. 18 cols covers NBA busiest months (Dec/Jan can hit 17). Max-width caps dot size on desktop. */
+.beam-month-dots{display:grid;grid-template-columns:repeat(18,1fr);gap:3px;flex:1;max-width:360px}
+.beam-dot{aspect-ratio:1;border-radius:3px;background:rgba(255,255,255,.06);transition:all .15s;cursor:pointer;text-decoration:none}
 .beam-dot.lit:hover{transform:scale(1.4);z-index:1}
 .beam-dot.lit{background:var(--beam);box-shadow:0 0 4px rgba(155,77,202,.3)}
 .beam-dot.lit:hover{box-shadow:0 0 10px rgba(155,77,202,.6)}
@@ -224,7 +225,11 @@ a.gm-row:hover{background:rgba(255,255,255,.03)}
 .donate-btn.bmc:hover{background:#fff;transform:translateY(-1px)}
 .donate-btn.pp{background:rgba(0,112,186,.1);color:#3b9eea;border:1px solid rgba(59,158,234,.4)}
 .donate-btn.pp:hover{background:rgba(0,112,186,.2);transform:translateY(-1px)}
-.season-bar{position:relative;z-index:2;width:100%;display:flex;justify-content:center;gap:.4rem;padding:.6rem 1rem;overflow-x:auto;-webkit-overflow-scrolling:touch;flex-shrink:0}
+.page-nav{position:relative;z-index:2;width:100%;display:flex;justify-content:center;gap:.4rem;padding:.55rem 1rem .25rem;overflow-x:auto;-webkit-overflow-scrolling:touch;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.04)}
+.page-nav a{background:transparent;border:none;border-radius:0;padding:.2rem .5rem;font-size:.7rem;font-weight:800;color:rgba(255,255,255,.5);cursor:pointer;white-space:nowrap;text-decoration:none;text-transform:uppercase;letter-spacing:.1em;transition:color .15s;border-bottom:2px solid transparent;line-height:1.6}
+.page-nav a:hover{color:#fff}
+.page-nav a.active{color:#fff;border-bottom-color:var(--beam)}
+.season-bar{position:relative;z-index:2;width:100%;display:flex;justify-content:center;gap:.4rem;padding:.5rem 1rem .6rem;overflow-x:auto;-webkit-overflow-scrolling:touch;flex-shrink:0}
 .season-pill{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:.25rem .7rem;font-size:.65rem;font-weight:700;color:rgba(255,255,255,.4);cursor:pointer;white-space:nowrap;transition:all .2s;text-decoration:none}
 .season-pill:hover{background:rgba(255,255,255,.08);color:rgba(255,255,255,.6)}
 .season-pill.active{background:var(--beam);border-color:var(--beam);color:#fff}
@@ -232,7 +237,7 @@ a.gm-row:hover{background:rgba(255,255,255,.03)}
 @media(max-width:700px){
   .big-cards{flex-direction:column;min-width:0;padding:0 .5rem}
   .big-card{flex:none;width:100%}
-  .beam-dot{width:18px;height:18px;border-radius:4px}
+  .beam-dot{border-radius:4px}
   .logo{width:100px;height:100px;margin-bottom:1rem}
   .hero{padding:1.5rem .75rem 1rem}
   .question{font-size:clamp(1rem,4vw,1.8rem)}
@@ -240,6 +245,14 @@ a.gm-row:hover{background:rgba(255,255,255,.03)}
 </style>
 </head>
 <body>
+<nav class="page-nav">
+  <a href="/" class="active">Home</a>
+  <a href="/players">Roster</a>
+  <a href="/coaches">Coaches</a>
+  <a href="/totals">Totals</a>
+  <a href="/stats">Stats</a>
+  <a href="#" id="aboutLink">About</a>
+</nav>
 <div class="season-bar" id="seasonBar"></div>
 <div class="hero" id="app"><p class="loading">LOADING...</p></div>
 <div class="tiles-section" id="tilesSection"></div>
@@ -265,13 +278,42 @@ a.gm-row:hover{background:rgba(255,255,255,.03)}
       <a href="https://shop.kings.com" target="_blank" rel="noopener" style="color:inherit"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3 5h10l-1 9H4L3 5z" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 5V4a2.5 2.5 0 0 1 5 0v1" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a>
     </div>
     <button id="beamButton" class="beam-btn" style="display:block;margin:0 auto 2rem;padding:1rem 3rem;font-size:1rem;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:#fff;background:var(--beam);border:none;border-radius:12px;cursor:pointer;box-shadow:0 4px 0 var(--purple),0 8px 20px rgba(0,0,0,.3);transition:all .1s;position:relative">Light the Beam</button>
-    <!-- About the Author -->
+
+    <!-- The Beam — the actual subject of this site -->
     <div style="text-align:left">
-      <h3 style="font-size:.7rem;text-transform:uppercase;letter-spacing:.2em;opacity:.3;margin-bottom:.75rem">About the Author</h3>
-      <p style="font-size:.85rem;line-height:1.7;opacity:.65;margin-bottom:1.25rem">
-        Built by <a href="https://x.com/BrendanWelsh" target="_blank" rel="noopener" style="color:var(--beam);text-decoration:none;font-weight:700">@BrendanWelsh</a>, FYBA Legend. Hoop dreams. Known as BulldogsRock25 on AIM. Born and raised in Sacramento. Grew up playing youth basketball, played on the court at Arco Arena. Sat in the nosebleeds watching Webber, Peja, Vlade, Doug Christie, and the greatest team to never win a championship. Skipped school in 4th grade to get Carl's Jr Kings bobbleheads. Recently got $15 tickets to a game and $16 hot dogs.
+      <h3 style="font-size:.7rem;text-transform:uppercase;letter-spacing:.2em;opacity:.3;margin-bottom:.75rem">The Beam</h3>
+
+      <!-- Big-stat callouts: tech specs at a glance -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.6rem;margin-bottom:1.5rem">
+        <div style="background:rgba(91,45,142,.08);border:1px solid rgba(155,77,202,.2);border-radius:10px;padding:.85rem .65rem;text-align:center">
+          <div style="font-size:1.5rem;font-weight:900;color:var(--beam);line-height:1">1.5M</div>
+          <div style="font-size:.5rem;font-weight:800;opacity:.6;text-transform:uppercase;letter-spacing:.15em;margin-top:.2rem">Candlepower</div>
+        </div>
+        <div style="background:rgba(91,45,142,.08);border:1px solid rgba(155,77,202,.2);border-radius:10px;padding:.85rem .65rem;text-align:center">
+          <div style="font-size:1.5rem;font-weight:900;color:var(--beam);line-height:1">~60</div>
+          <div style="font-size:.5rem;font-weight:800;opacity:.6;text-transform:uppercase;letter-spacing:.15em;margin-top:.2rem">Min Per Beam</div>
+        </div>
+        <div style="background:rgba(91,45,142,.08);border:1px solid rgba(155,77,202,.2);border-radius:10px;padding:.85rem .65rem;text-align:center">
+          <div style="font-size:1.5rem;font-weight:900;color:var(--beam);line-height:1">Oct 29</div>
+          <div style="font-size:.5rem;font-weight:800;opacity:.6;text-transform:uppercase;letter-spacing:.15em;margin-top:.2rem">First Lit · 2022</div>
+        </div>
+      </div>
+
+      <p style="font-size:.85rem;line-height:1.7;opacity:.7;margin-bottom:1rem">A <strong style="color:#fff">1.5 million candlepower</strong> searchlight on the roof of Golden 1 Center. Fires after every Kings <strong style="color:#fff">home win</strong>. Stays lit about an hour. Visible from miles across the valley.</p>
+      <p style="font-size:.85rem;line-height:1.7;opacity:.7;margin-bottom:1rem">Started <strong style="color:#fff">October 29, 2022</strong> — the night the Kings beat the Heat 119-113 at home, kicking off the season they'd end a <strong style="color:#fff">16-year playoff drought</strong>. The beam became the rallying cry.</p>
+      <p style="font-size:.85rem;line-height:1.7;opacity:.7;margin-bottom:1rem">"Light the beam" outgrew basketball. Got a promotion? Light the beam. Kid took their first steps? Light the beam. It's a Sacramento thing.</p>
+      <p style="font-size:.7rem;opacity:.45;margin-bottom:1.5rem">This site tracks every beam. Data via ESPN's public API. Scores update every 30 seconds during live games. Season archives back to 2022-23.</p>
+    </div>
+
+    <p style="font-size:.6rem;opacity:.25;margin:1.5rem 0;text-align:center">Not affiliated with the Sacramento Kings. Made by a fan, for fans.</p>
+
+    <!-- The Maker — small, at the end -->
+    <div style="text-align:left;margin-top:2rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.06)">
+      <h3 style="font-size:.7rem;text-transform:uppercase;letter-spacing:.2em;opacity:.3;margin-bottom:.75rem">The Maker</h3>
+      <p style="font-size:.75rem;line-height:1.6;opacity:.55;margin-bottom:1rem">
+        Built by <a href="https://x.com/BrendanWelsh" target="_blank" rel="noopener" style="color:var(--beam);text-decoration:none;font-weight:700">@BrendanWelsh</a>, Sacramento-born fan. Watched Webber, Peja, Vlade, Bibby, Doug Christie from the nosebleeds. Bibby's autograph at Food Source 2002. $15 tickets, $16 hot dogs, worth every penny.
       </p>
-      <p style="font-size:.7rem;line-height:1.6;opacity:.45;margin-bottom:.75rem">If this site has lit up your beam, help keep the lights on.</p>
+      <p style="font-size:.65rem;line-height:1.5;opacity:.4;margin-bottom:.5rem">If the beam's lit something up for you, throw a tip to keep the lights on.</p>
       <div class="donate-row">
         <a href="https://buymeacoffee.com/brendanwelsh" target="_blank" rel="noopener" class="donate-btn bmc">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" x2="6" y1="2" y2="4"/><line x1="10" x2="10" y1="2" y2="4"/><line x1="14" x2="14" y1="2" y2="4"/></svg>
@@ -282,32 +324,14 @@ a.gm-row:hover{background:rgba(255,255,255,.03)}
           PayPal
         </a>
       </div>
+
+      <!-- Maker photos — compact -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:1.5rem">
+        <img src="bibby-full.png" alt="Getting Bibby's autograph 2002" style="width:100%;border-radius:8px;border:1px solid rgba(255,255,255,.08);object-fit:cover;aspect-ratio:4/3;box-shadow:0 4px 16px rgba(0,0,0,.3)">
+        <img src="beam-house.png" alt="The beam at home" style="width:100%;border-radius:8px;border:1px solid rgba(255,255,255,.08);object-fit:cover;aspect-ratio:4/3;box-shadow:0 4px 16px rgba(0,0,0,.3)">
+      </div>
+      <p style="font-size:.55rem;opacity:.3;margin:.4rem 0 0;text-align:center">Bibby's autograph · Food Source 2002. The beam at home, every game night.</p>
     </div>
-    <!-- Photos — clean, one per row -->
-    <img src="bibby-full.png" alt="Getting Bibby's autograph" style="width:100%;max-width:440px;border-radius:12px;margin:0 auto .4rem;display:block;border:1px solid rgba(255,255,255,.08);box-shadow:0 4px 20px rgba(0,0,0,.4)">
-    <p style="font-size:.6rem;opacity:.25;margin-bottom:1.25rem">Getting Bibby's autograph at Food Source, 2002</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.4rem">
-      <img src="beam-house.png" alt="The beam at home" style="width:100%;border-radius:10px;border:1px solid rgba(255,255,255,.08);object-fit:cover;aspect-ratio:4/3;box-shadow:0 4px 16px rgba(0,0,0,.3)">
-      <img src="beam-tv.png" alt="Game night" style="width:100%;border-radius:10px;border:1px solid rgba(255,255,255,.08);object-fit:cover;aspect-ratio:4/3;box-shadow:0 4px 16px rgba(0,0,0,.3)">
-    </div>
-    <p style="font-size:.6rem;opacity:.25;margin-bottom:1.25rem">The beam doesn't just stay at the arena.</p>
-    <img src="hotdog.jpg" alt="$15 seats, $16 hot dogs" style="width:100%;max-width:440px;border-radius:12px;margin:0 auto .4rem;display:block;border:1px solid rgba(255,255,255,.08);box-shadow:0 4px 20px rgba(0,0,0,.4)">
-    <p style="font-size:.6rem;opacity:.25;margin-bottom:1.5rem">$15 seats. $16 hot dogs. Worth every penny.</p>
-    <p style="font-size:1rem;font-weight:800;color:var(--beam);margin-bottom:1.5rem">Light the beam.</p>
-    <!-- About This Site -->
-    <div style="text-align:left">
-      <h3 style="font-size:.7rem;text-transform:uppercase;letter-spacing:.2em;opacity:.3;margin-bottom:.75rem">About This Site</h3>
-      <p style="font-size:.85rem;line-height:1.7;opacity:.5;margin-bottom:1.25rem">
-        After every Sacramento Kings home win, a purple beam shoots from the crown of Golden 1 Center into the Sacramento sky. The beam is powered by a 1.5 million candlepower searchlight mounted on the arena roof — visible from miles away. It stays lit for about an hour after the game, painting the downtown skyline purple. The tradition started in 2022-23 when the Kings ended a 16-year playoff drought.
-      </p>
-      <p style="font-size:.85rem;line-height:1.7;opacity:.5;margin-bottom:1.25rem">
-        This site tracks every beam. During live games, the answer shifts — YES, LIKELY, PROBABLY, MAYBE, DOUBTFUL, UNLIKELY, NOPE — based on real-time win probability from ESPN. All data pulled from ESPN's public API. Scores update every 30 seconds during live games. Season archives go back to 2022-23.
-      </p>
-      <p style="font-size:.85rem;line-height:1.7;opacity:.5;margin-bottom:1.25rem">
-        But "light the beam" has become bigger than basketball. Got a promotion? Light the beam. Aced the exam? Light the beam. Your kid took their first steps? Light the beam. It's a Sacramento thing. It's a celebration.
-      </p>
-    </div>
-    <p style="font-size:.6rem;opacity:.25;margin-bottom:1.5rem">Not affiliated with the Sacramento Kings. Made by a fan, for fans.</p>
 
     <!-- Manual AdSense slot: About page. Auto Ads may place ads here automatically.
          For a fixed unit, paste a data-ad-slot from AdSense console below, uncomment, and delete the placeholder. -->
@@ -760,41 +784,30 @@ function render(d){
     document.body.className='beam-dormant';origBeam=false;
 
     var tiles=$('div','game-tiles');
+
+    // Recap CTA button right below the countdown
+    if(d.done.length>0){
+      var recapBtn=document.createElement('a');
+      recapBtn.href='#';
+      var lastSeasonLabel=(currentSeason-1)+'-'+String(currentSeason).slice(2);
+      recapBtn.textContent='View '+lastSeasonLabel+' Recap →';
+      recapBtn.style.cssText='display:inline-flex;align-items:center;justify-content:center;margin:0 auto 1rem;padding:.55rem 1.2rem;background:rgba(91,45,142,.1);border:1px solid rgba(155,77,202,.35);border-radius:8px;color:var(--beam);font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.12em;text-decoration:none;transition:all .15s;align-self:center';
+      recapBtn.onmouseover=function(){this.style.background='rgba(91,45,142,.18)';this.style.borderColor='var(--beam)';};
+      recapBtn.onmouseout=function(){this.style.background='rgba(91,45,142,.1)';this.style.borderColor='rgba(155,77,202,.35)';};
+      recapBtn.onclick=function(e){
+        e.preventDefault();
+        // Trigger the last-season pill — find pill by year (autoCurrentSeason)
+        var pills=document.querySelectorAll('.season-pill');
+        for(var i=0;i<pills.length;i++){
+          if(pills[i].dataset.year===String(autoCurrentSeason)){pills[i].click();return}
+        }
+      };
+      tiles.appendChild(recapBtn);
+    }
+
     var previewWrap=$('div','');previewWrap.style.cssText='min-height:3rem;position:relative;z-index:2';previewWrap.id='previewWrap';
     var previewBar=$('div','game-bar');previewBar.id='previewBar';previewBar.style.cssText='display:none';
     previewWrap.appendChild(previewBar);tiles.appendChild(previewWrap);
-
-    if(d.last){
-      var fc=d.last.competitions[0],fkk=fk(fc.competitors),foo=fo(fc.competitors),fks=sc(fkk),fos=sc(foo),fh=fkk?.homeAway==='home',fbl=fks>fos;
-      var foA=foo.team?.abbreviation||'???';
-      var finBar=buildGameBar('Season Finale',foA,fh,fks,fos,fs(d.last.date),fbl,d.last.id,true);
-      (function(oaL,dateL,wasWin){
-        finBar.addEventListener('mouseenter',function(){
-          showCtx('Against the '+tn(oaL)+' on '+fd(dateL));
-          finBar.classList.add('gm-active');
-          document.body.className=wasWin?'beam-on':'beam-off';
-          stopCountdown();
-          var q=document.querySelector('.question'),a=document.querySelector('.answer'),s=document.querySelector('.cd-sub');
-          if(q){q.dataset.orig=q.dataset.orig||q.textContent;q.textContent='Was the beam lit?'}
-          if(a){a.dataset.orig=a.dataset.orig||a.textContent;a.textContent=wasWin?'YES':'NO'}
-          if(s){s.dataset.orig=s.dataset.orig||s.textContent;s.textContent=''}
-          var hs=document.getElementById('historyStatus');
-          if(hs){hs.textContent=wasWin?'Beam was lit':'No beam';hs.className='history-status '+(wasWin?'lit':'dark')}
-        });
-        finBar.addEventListener('mouseleave',function(){
-          hideCtx();finBar.classList.remove('gm-active');
-          document.body.className='beam-dormant';
-          var q=document.querySelector('.question'),a=document.querySelector('.answer'),s=document.querySelector('.cd-sub');
-          if(q&&q.dataset.orig)q.textContent=q.dataset.orig;
-          if(a&&a.dataset.orig)a.textContent=a.dataset.orig;
-          if(s&&s.dataset.orig)s.textContent=s.dataset.orig;
-          startCountdown(offseasonMilestones(),a,s);
-          var hs=document.getElementById('historyStatus');
-          if(hs){hs.textContent='';hs.className='history-status'}
-        });
-      })(foA,d.last.date,fbl);
-      tiles.appendChild(finBar);
-    }
 
     if(msOff.length>0){
       var mList=$('div','milestone-list');
@@ -808,19 +821,6 @@ function render(d){
       tiles.appendChild(mList);
     }
 
-    if(d.done.length>0){
-      var histBox=$('div','history-box');
-      var histTitle=$('div','history-title');
-      histTitle.textContent=(currentSeason-1)+'-'+String(currentSeason).slice(2)+' final · '+d.beams+' beams · '+d.done.length+' games · '+pct(w,l);
-      histBox.appendChild(histTitle);
-      histBox.appendChild(buildBeamCal(d.done,origBeam));
-      var histStatus=$('div','history-status');histStatus.id='historyStatus';
-      histBox.appendChild(histStatus);
-      tiles.appendChild(histBox);
-      var calLabel=$('div','beam-cal-label');
-      calLabel.textContent=isMobile()?'Tap a game to relight the beam':'Hover over games to relight the beam';
-      tiles.appendChild(calLabel);
-    }
     tilesEl.appendChild(tiles);
 
   }else if(isCurrent&&d.phase==='preseason'&&!mockLive){
@@ -1006,7 +1006,10 @@ function render(d){
 
   var bc=$('div','big-cards');
 
-  if(isCurrent&&d.allT.length>0){
+  // Skip big-cards on offseason/preseason — those views are about the future, not recap content.
+  var skipBigCards=isCurrent&&(d.phase==='offseason'||d.phase==='preseason')&&!mockLive;
+
+  if(!skipBigCards&&isCurrent&&d.allT.length>0){
     var c1=$('div','big-card');c1.appendChild($('div','big-card-title','NBA Standings'));
     d.allT.forEach(function(t,i){
       var row=document.createElement('a');row.className='st-row'+(t.id===KID?' is-kings':'');row.href=eu(t.abbrev);row.target='_blank';row.rel='noopener';
@@ -1018,6 +1021,7 @@ function render(d){
     bc.appendChild(c1);
   }
 
+  if(!skipBigCards){
   var c2=$('div','big-card');c2.appendChild($('div','big-card-title','All Games'));
   d.done.slice().reverse().forEach(function(g,idx){
     var gc=g.competitions[0],gk=fk(gc.competitors),go=fo(gc.competitors),gks=sc(gk),gos=sc(go),gw=gks>gos,gh=gk?.homeAway==='home',oa=go?.team?.abbreviation||'???';
@@ -1064,8 +1068,9 @@ function render(d){
     c2.appendChild(row);
   });
   bc.appendChild(c2);
+  } // end !skipBigCards
 
-  if(isCurrent){
+  if(!skipBigCards&&isCurrent){
   var c3=$('div','big-card');
   // Team Rankings first
   var trKeys=Object.keys(d.teamRanks);
@@ -1204,20 +1209,29 @@ function buildSeasonBar(){
     });
     bar.appendChild(pill);
   }
-  var aboutPill=$('div','season-pill');
-  aboutPill.textContent='About';
-  aboutPill.addEventListener('click',function(){
+}
+buildSeasonBar();
+
+// About link (in page nav) toggles the about section.
+document.getElementById('aboutLink').addEventListener('click',function(e){
+  e.preventDefault();
+  var aboutVisible=document.getElementById('aboutSection').style.display==='block';
+  if(aboutVisible){
+    document.getElementById('app').style.display='';
+    document.getElementById('tilesSection').style.display='';
+    document.getElementById('cards').style.display='';
+    document.getElementById('aboutSection').style.display='none';
+    this.classList.remove('active');
+    document.querySelector('.page-nav a[href="/"]').classList.add('active');
+  }else{
     document.getElementById('app').style.display='none';
     document.getElementById('tilesSection').style.display='none';
     document.getElementById('cards').style.display='none';
     document.getElementById('aboutSection').style.display='block';
-    var pills=document.querySelectorAll('.season-pill');
-    pills.forEach(function(p){p.classList.remove('active')});
-    aboutPill.classList.add('active');
-  });
-  bar.appendChild(aboutPill);
-}
-buildSeasonBar();
+    document.querySelectorAll('.page-nav a').forEach(function(a){a.classList.remove('active')});
+    this.classList.add('active');
+  }
+});
 
 getData().then(function(d){lastData=d;buildSeasonBar();render(d)}).catch(function(){render(null)});
 

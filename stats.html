@@ -1,0 +1,591 @@
+<!-- v33 --><!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stats — Light the Beam</title>
+<meta name="description" content="Beam stats and records since Oct 29, 2022. Charts, big numbers, and pre-beam Kings home-win history for context.">
+<meta name="theme-color" content="#5b2d8e">
+<link rel="canonical" href="https://lightthebe.am/stats">
+<link rel="icon" type="image/png" href="/kings-logo.png">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--purple:#5b2d8e;--black:#0a0a0a;--beam:#9b4dca}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--black);color:#fff;min-height:100dvh;display:flex;flex-direction:column;align-items:center;text-align:center;overflow-x:hidden;padding-bottom:4rem}
+body.beam-dormant::before{content:'';position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:3px;height:40vh;background:linear-gradient(0deg,rgba(155,77,202,.18) 0%,rgba(155,77,202,.06) 60%,transparent 100%);pointer-events:none;z-index:0;animation:beamPulse 3s ease-in-out infinite}
+@keyframes beamPulse{0%,100%{opacity:.5}50%{opacity:1}}
+
+.page-nav{position:relative;z-index:2;width:100%;display:flex;justify-content:center;gap:.4rem;padding:.55rem 1rem .25rem;overflow-x:auto;-webkit-overflow-scrolling:touch;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.04)}
+.page-nav a{background:transparent;border:none;border-radius:0;padding:.2rem .5rem;font-size:.7rem;font-weight:800;color:rgba(255,255,255,.5);cursor:pointer;white-space:nowrap;text-decoration:none;text-transform:uppercase;letter-spacing:.1em;transition:color .15s;border-bottom:2px solid transparent;line-height:1.6}
+.page-nav a:hover{color:#fff}
+.page-nav a.active{color:#fff;border-bottom-color:var(--beam)}
+
+.hero{display:flex;flex-direction:column;align-items:center;position:relative;z-index:1;max-width:780px;width:100%;padding:1.5rem 1rem 1rem;text-align:center}
+.page-title{font-size:clamp(1.6rem,5vw,2.4rem);font-weight:900;letter-spacing:.04em;text-transform:uppercase;line-height:1.05}
+.page-sub{font-size:.75rem;font-weight:600;opacity:.45;margin-top:.5rem;letter-spacing:.05em;max-width:520px;line-height:1.5}
+
+.status-bar{display:flex;align-items:center;gap:.6rem;margin:1rem 0;font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.15em;opacity:.5}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--beam);box-shadow:0 0 8px rgba(155,77,202,.6);animation:dotPulse 1.4s ease-in-out infinite}
+.status-bar.done .status-dot{animation:none;opacity:.3;box-shadow:none}
+@keyframes dotPulse{0%,100%{opacity:.4;transform:scale(.85)}50%{opacity:1;transform:scale(1.1)}}
+
+main{width:100%;max-width:780px;padding:0 1rem;position:relative;z-index:1}
+
+.section-header{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.2em;opacity:.55;margin:2.5rem 0 .8rem;padding-bottom:.5rem;border-bottom:1px solid rgba(255,255,255,.06);text-align:left;display:flex;justify-content:space-between;align-items:baseline}
+.section-header .sub{font-size:.55rem;opacity:.6;letter-spacing:.1em;font-weight:600}
+
+/* Big-number stats grid at top */
+.big-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.75rem;margin-bottom:1.5rem}
+.big-stat{background:linear-gradient(135deg,rgba(91,45,142,.08),rgba(155,77,202,.04));border:1px solid rgba(155,77,202,.18);border-radius:12px;padding:1rem .75rem;text-align:center;display:flex;flex-direction:column;gap:.2rem}
+.big-stat .v{font-size:clamp(1.8rem,4.5vw,2.6rem);font-weight:900;color:#fff;line-height:.95;letter-spacing:-.02em}
+.big-stat .l{font-size:.55rem;font-weight:800;opacity:.6;text-transform:uppercase;letter-spacing:.15em;margin-top:.2rem}
+.big-stat .sub{font-size:.55rem;opacity:.4;font-weight:600;margin-top:.1rem}
+.big-stat.accent .v{color:var(--beam)}
+
+/* Beams-by-season bar chart */
+.season-bars{display:flex;flex-direction:column;gap:.5rem;margin-bottom:.5rem}
+.season-bar-row{display:grid;grid-template-columns:5rem 1fr 3rem;align-items:center;gap:.75rem;font-size:.7rem;font-weight:700}
+.season-bar-label{opacity:.65;letter-spacing:.05em;text-align:left}
+.season-bar-track{height:24px;background:rgba(255,255,255,.04);border-radius:4px;overflow:hidden;position:relative}
+.season-bar-fill{height:100%;background:linear-gradient(90deg,var(--beam),rgba(91,45,142,.65));border-radius:4px;transition:width .4s ease-out}
+.season-bar-count{text-align:right;font-weight:800;color:var(--beam)}
+
+/* Monthly heatmap */
+.heatmap{display:grid;grid-template-columns:5rem repeat(7,1fr);gap:3px;font-size:.55rem;font-weight:700}
+.heatmap-month-label{opacity:.4;text-transform:uppercase;letter-spacing:.1em;align-self:center;text-align:right;padding-right:.4rem;font-size:.6rem}
+.heatmap-cell{aspect-ratio:1;border-radius:3px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.65rem;font-weight:800}
+.heatmap-cell.l0{background:rgba(255,255,255,.04);color:rgba(255,255,255,.2)}
+.heatmap-cell.l1{background:rgba(155,77,202,.18)}
+.heatmap-cell.l2{background:rgba(155,77,202,.38)}
+.heatmap-cell.l3{background:rgba(155,77,202,.65)}
+.heatmap-cell.l4{background:var(--beam);box-shadow:0 0 6px rgba(155,77,202,.5)}
+.heatmap-season-label{opacity:.4;text-transform:uppercase;letter-spacing:.1em;text-align:center;font-size:.5rem;align-self:end;padding-bottom:.25rem}
+.heatmap-legend{display:flex;align-items:center;gap:.4rem;font-size:.5rem;opacity:.5;margin-top:.75rem;justify-content:flex-end;letter-spacing:.1em;text-transform:uppercase}
+.heatmap-legend .swatch{display:flex;gap:2px}
+.heatmap-legend .swatch span{width:12px;height:12px;border-radius:3px;background:rgba(155,77,202,.4)}
+.heatmap-legend .swatch span:nth-child(1){background:rgba(255,255,255,.04)}
+.heatmap-legend .swatch span:nth-child(2){background:rgba(155,77,202,.18)}
+.heatmap-legend .swatch span:nth-child(3){background:rgba(155,77,202,.38)}
+.heatmap-legend .swatch span:nth-child(4){background:rgba(155,77,202,.65)}
+.heatmap-legend .swatch span:nth-child(5){background:var(--beam)}
+
+.records-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.75rem}
+.record-card{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.05);border-radius:12px;padding:1rem;text-decoration:none;color:inherit;transition:all .15s;display:flex;flex-direction:column;gap:.35rem;text-align:left;min-height:130px;position:relative}
+.record-card:hover{background:rgba(91,45,142,.06);border-color:rgba(155,77,202,.25);transform:translateY(-1px)}
+.record-card.skel{background:rgba(255,255,255,.015);border-color:rgba(255,255,255,.03)}
+.record-card.skel .skel-line{height:14px;background:linear-gradient(90deg,rgba(255,255,255,.03),rgba(255,255,255,.06),rgba(255,255,255,.03));background-size:200% 100%;animation:shimmer 1.6s ease-in-out infinite;border-radius:3px;margin:.25rem 0}
+.record-card.skel .skel-line.short{width:40%;height:10px}
+.record-card.skel .skel-line.mid{width:70%;height:18px}
+.record-card.skel .skel-line.long{width:90%;height:12px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+.record-card .label{font-size:.55rem;font-weight:800;text-transform:uppercase;letter-spacing:.15em;color:var(--beam);opacity:.8;display:flex;justify-content:space-between;align-items:center}
+.record-card .era{font-size:.5rem;font-weight:700;opacity:.4;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.5)}
+.record-card .era.beam{color:var(--beam);opacity:.8}
+.record-card .title{font-size:1.05rem;font-weight:900;letter-spacing:-.01em}
+.record-card .value{font-size:1.6rem;font-weight:900;line-height:1;color:#fff;margin:.2rem 0;letter-spacing:-.02em}
+.record-card .meta{font-size:.7rem;opacity:.55;font-weight:600;line-height:1.4}
+
+.lore{display:flex;flex-direction:column;gap:1.5rem;text-align:left}
+.lore-block{background:rgba(255,255,255,.018);border:1px solid rgba(255,255,255,.04);border-radius:12px;padding:1.25rem 1.25rem}
+.lore-title{font-size:1.05rem;font-weight:900;letter-spacing:-.01em;margin-bottom:.5rem;color:#fff}
+.lore-sub{font-size:.55rem;font-weight:800;text-transform:uppercase;letter-spacing:.18em;color:var(--beam);opacity:.7;margin-bottom:.75rem}
+.lore p{font-size:.85rem;line-height:1.65;opacity:.7;margin-bottom:.75rem}
+.lore p:last-child{margin-bottom:0}
+.lore strong{color:#fff;font-weight:700;opacity:.95}
+.timeline{display:flex;flex-direction:column;gap:.4rem}
+.timeline-row{display:grid;grid-template-columns:5rem 1fr;gap:.75rem;align-items:start;padding:.4rem 0;border-top:1px solid rgba(255,255,255,.04)}
+.timeline-row:first-child{border-top:none}
+.timeline-yr{font-size:.7rem;font-weight:800;color:var(--beam);letter-spacing:.05em}
+.timeline-txt{font-size:.8rem;line-height:1.6;opacity:.75}
+
+.note{font-size:.55rem;opacity:.3;font-weight:600;margin-top:2rem;line-height:1.5;text-align:left;padding:0 .5rem}
+.err{font-size:.85rem;opacity:.5;margin:2rem 0}
+</style>
+</head>
+<body class="beam-dormant">
+<nav class="page-nav">
+  <a href="/">Home</a>
+  <a href="/players">Roster</a>
+  <a href="/coaches">Coaches</a>
+  <a href="/totals">Totals</a>
+  <a href="/stats" class="active">Stats</a>
+</nav>
+<div class="hero">
+  <div class="page-title">Beam Stats</div>
+  <div class="page-sub">Every beam since Oct 29, 2022, by the numbers.</div>
+  <div class="status-bar" id="statusBar"><span class="status-dot"></span><span id="statusText">Loading history…</span></div>
+</div>
+<main id="app"></main>
+<script>
+var KID='23';
+var BEAM_START_DATE='2022-10-29'; // Source of truth: searchlight first lit on this date vs MIA
+var CURRENT_SEASON=(function(){var n=new Date();return n.getMonth()>=9?n.getFullYear()+1:n.getFullYear()})();
+
+function $(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e}
+async function fj(u){var r=await fetch(u);if(!r.ok)throw new Error(r.status);return r.json()}
+function sc(c){var s=c.score;if(s==null)return 0;if(typeof s==='object')return parseInt(s.displayValue||s.value,10)||0;return parseInt(s,10)||0}
+function fmtDate(d){return new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}
+function tn(abbr){var m={ATL:'Hawks',BOS:'Celtics',BKN:'Nets',CHA:'Hornets',CHI:'Bulls',CLE:'Cavaliers',DAL:'Mavericks',DEN:'Nuggets',DET:'Pistons',GS:'Warriors',GSW:'Warriors',HOU:'Rockets',IND:'Pacers',LAC:'Clippers',LAL:'Lakers',MEM:'Grizzlies',MIA:'Heat',MIL:'Bucks',MIN:'Timberwolves',NO:'Pelicans',NOP:'Pelicans',NJ:'Nets',NY:'Knicks',NYK:'Knicks',OKC:'Thunder',ORL:'Magic',PHI:'76ers',PHX:'Suns',POR:'Trail Blazers',SA:'Spurs',SAS:'Spurs',SEA:'SuperSonics',TOR:'Raptors',UTA:'Jazz',UTAH:'Jazz',VAN:'Grizzlies',WSH:'Wizards',WAS:'Wizards',CHO:'Hornets'};return m[abbr]||abbr}
+function isPreBeam(g){return g.preBeam!==undefined?g.preBeam:(g.date<BEAM_START_DATE)}
+
+function setStatus(t,done){var s=document.getElementById('statusBar');document.getElementById('statusText').textContent=t;if(done){s.classList.add('done')}}
+function hideStatus(){document.getElementById('statusBar').style.display='none'}
+
+// Render skeleton cards immediately so the page never looks empty.
+function renderSkeleton(){
+  var app=document.getElementById('app');
+  app.appendChild($('div','section-header','Beam Records'));
+  var grid=$('div','records-grid');
+  for(var i=0;i<10;i++){
+    var c=$('div','record-card skel');
+    c.appendChild($('div','skel-line short'));
+    c.appendChild($('div','skel-line mid'));
+    c.appendChild($('div','skel-line long'));
+    grid.appendChild(c);
+  }
+  app.appendChild(grid);
+}
+
+async function loadAll(){
+  renderSkeleton();
+
+  // 1. Fetch pre-baked static JSON (closed seasons).
+  var history;
+  try{
+    setStatus('Loading 2001-02 → most recent season…');
+    history=await fj('/games-history.json');
+  }catch(e){
+    setStatus('History file unavailable; loading live only…');
+    history={games:[]};
+  }
+  var allGames=(history.games||[]).slice();
+  // Render with what we have so far (instant).
+  renderAll(allGames,/*partial=*/true);
+
+  // 2. Fetch current season live (and cache).
+  setStatus('Crunching '+seasonName(CURRENT_SEASON)+'…');
+  try{
+    var current=await loadCurrentSeason();
+    allGames=allGames.concat(current);
+    renderAll(allGames,/*partial=*/false);
+  }catch(e){
+    // fall through; we still have history records
+  }
+  setStatus('All seasons loaded',true);
+  setTimeout(hideStatus,2500);
+}
+
+function seasonName(yr){return(yr-1)+'-'+String(yr).slice(2)}
+
+// Current-season live load — uses the same cache key totals.html does so they share data.
+function curCacheKey(yr){return'lthe-games-v2-'+yr}
+function readCur(yr){
+  try{var raw=localStorage.getItem(curCacheKey(yr));if(!raw)return null;var c=JSON.parse(raw);if(Date.now()-c.cachedAt<6*3600*1000)return c.games;return null}catch(e){return null}
+}
+function writeCur(yr,games){try{localStorage.setItem(curCacheKey(yr),JSON.stringify({cachedAt:Date.now(),games:games}))}catch(e){}}
+
+async function loadCurrentSeason(){
+  var cached=readCur(CURRENT_SEASON);
+  if(cached)return cached;
+
+  var scheds=await Promise.all([
+    fj('https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/'+KID+'/schedule?season='+CURRENT_SEASON+'&seasontype=2').catch(function(){return{events:[]}}),
+    fj('https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/'+KID+'/schedule?season='+CURRENT_SEASON+'&seasontype=3').catch(function(){return{events:[]}})
+  ]);
+  var events=[].concat(scheds[0].events||[],scheds[1].events||[]);
+  var finals=events.filter(function(e){return e.competitions?.[0]?.status?.type?.name==='STATUS_FINAL'});
+  var seen={},uniq=[];finals.forEach(function(e){if(!seen[e.id]){seen[e.id]=1;uniq.push(e)}});
+
+  var BATCH=10,results=[];
+  for(var i=0;i<uniq.length;i+=BATCH){
+    var batch=uniq.slice(i,i+BATCH);
+    var batchResults=await Promise.all(batch.map(function(e){
+      return fj('https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event='+e.id)
+        .then(function(d){return extractGameLive(e,d)})
+        .catch(function(){return null});
+    }));
+    batchResults.forEach(function(r){if(r)results.push(r)});
+    setStatus('Crunching '+seasonName(CURRENT_SEASON)+'… '+Math.min(i+BATCH,uniq.length)+'/'+uniq.length);
+  }
+  writeCur(CURRENT_SEASON,results);
+  return results;
+}
+
+function extractGameLive(event,summary){
+  var comp=event.competitions?.[0];if(!comp)return null;
+  var ks=comp.competitors?.find(function(x){return String(x.team?.id)===KID});
+  var os=comp.competitors?.find(function(x){return String(x.team?.id)!==KID});
+  if(!ks||!os)return null;
+  var kScore=sc(ks),oScore=sc(os);
+  function teamStats(teamBox){var out={};(teamBox?.statistics||[]).forEach(function(s){out[s.name]=s.displayValue});return out}
+  var teamsBox=summary.boxscore?.teams||[];
+  var sacBox=teamsBox.find(function(t){return String(t.team?.id)===KID});
+  var oppBox=teamsBox.find(function(t){return String(t.team?.id)!==KID});
+  var sacLs=(ks.linescores||[]).map(function(l){return parseInt(l.displayValue||l.value,10)||0});
+  var oppLs=(os.linescores||[]).map(function(l){return parseInt(l.displayValue||l.value,10)||0});
+  return{gameId:event.id,date:event.date,home:ks.homeAway==='home',won:kScore>oScore,
+    kScore:kScore,oScore:oScore,opp:os.team?.abbreviation||'???',
+    sacStats:teamStats(sacBox),oppStats:teamStats(oppBox),sacLinescores:sacLs,oppLinescores:oppLs};
+}
+
+// ===== Records computation =====
+
+function nz(v){var n=parseInt(v,10);return isNaN(n)?0:n}
+
+// Quarter-by-quarter cumulative deficit fallback when largestLead isn't available.
+function deficitFromLinescores(g){
+  var sacLs=g.sacLinescores||[],oppLs=g.oppLinescores||[];
+  if(sacLs.length===0||oppLs.length===0)return 0;
+  var cumK=0,cumO=0,maxDef=0;
+  var n=Math.min(sacLs.length,oppLs.length);
+  for(var i=0;i<n;i++){
+    cumK+=sacLs[i];cumO+=oppLs[i];
+    var def=cumO-cumK;
+    if(def>maxDef)maxDef=def;
+  }
+  return maxDef;
+}
+
+function biggestDeficit(g){
+  // Prefer ESPN's largestLead stat; fall back to linescore math for older games.
+  var fromStat=nz(g.oppStats?.largestLead);
+  if(fromStat>0)return fromStat;
+  return deficitFromLinescores(g);
+}
+
+// Generic record computation. Caller filters games to beam-era OR pre-beam first.
+function computeRecords(games){
+  var sorted=games.slice().sort(function(a,b){return new Date(a.date)-new Date(b.date)});
+  var homeGames=sorted.filter(function(g){return g.home});
+  var homeWins=homeGames.filter(function(g){return g.won});
+
+  function best(arr,score){
+    var top=null,topScore=-Infinity;
+    arr.forEach(function(g){var s=score(g);if(s>topScore){topScore=s;top=g}});
+    return top?{game:top,score:topScore}:null;
+  }
+  function worst(arr,score){
+    var top=null,topScore=Infinity;
+    arr.forEach(function(g){var s=score(g);if(s<topScore){topScore=s;top=g}});
+    return top?{game:top,score:topScore}:null;
+  }
+
+  var brightest=best(homeWins,function(g){return g.kScore-g.oScore});
+  var almostDark=worst(homeWins,function(g){return g.kScore-g.oScore});
+  var brink=best(homeWins,biggestDeficit);
+  var arch=best(homeWins,function(g){return nz(g.sacStats?.assists)});
+  var heist=best(homeWins,function(g){return nz(g.sacStats?.steals)});
+  var highScore=best(homeWins,function(g){return g.kScore});
+
+  function longestStreak(filter){
+    var max={count:0,games:[]},cur=[];
+    homeGames.forEach(function(g){
+      if(filter(g)){cur.push(g)}
+      else{if(cur.length>max.count)max={count:cur.length,games:cur.slice()};cur=[]}
+    });
+    if(cur.length>max.count)max={count:cur.length,games:cur.slice()};
+    return max;
+  }
+  var inferno=longestStreak(function(g){return g.won});
+  var dark=longestStreak(function(g){return!g.won});
+
+  var fortress={wins:homeWins.length,losses:homeGames.length-homeWins.length,games:homeGames.length};
+  var firstBeam=homeWins[0]||null;
+  var latestBeam=homeWins[homeWins.length-1]||null;
+
+  var oppCount={};homeWins.forEach(function(g){oppCount[g.opp]=(oppCount[g.opp]||0)+1});
+  var mostBeamedOpp=null;Object.keys(oppCount).forEach(function(opp){if(!mostBeamedOpp||oppCount[opp]>mostBeamedOpp.count)mostBeamedOpp={opp:opp,count:oppCount[opp]}});
+
+  // Cadence — average days between consecutive home wins in this dataset
+  var cadence=null;
+  if(homeWins.length>=2){
+    var gaps=[];
+    for(var i=1;i<homeWins.length;i++){
+      gaps.push((new Date(homeWins[i].date)-new Date(homeWins[i-1].date))/86400000);
+    }
+    cadence=gaps.reduce(function(a,b){return a+b},0)/gaps.length;
+  }
+
+  return{brightest:brightest,almostDark:almostDark,brink:brink,arch:arch,heist:heist,
+    highScore:highScore,inferno:inferno,dark:dark,fortress:fortress,
+    firstBeam:firstBeam,latestBeam:latestBeam,cadence:cadence,
+    mostBeamedOpp:mostBeamedOpp,homeWins:homeWins};
+}
+
+// ===== Render =====
+
+function recordCard(label,title,value,game,metaTxt){
+  var card=document.createElement(game?'a':'div');
+  card.className='record-card';
+  if(game)card.href='/game?id='+game.gameId;
+  var labelRow=$('div','label');
+  labelRow.appendChild($('span','',label));
+  card.appendChild(labelRow);
+  card.appendChild($('div','title',title));
+  card.appendChild($('div','value',value));
+  if(metaTxt)card.appendChild($('div','meta',metaTxt));
+  return card;
+}
+
+function seasonYrOf(g){var d=new Date(g.date);return d.getMonth()>=9?d.getFullYear()+1:d.getFullYear()}
+
+function renderAll(games,partial){
+  var app=document.getElementById('app');
+  app.textContent='';
+
+  var beamGames=games.filter(function(g){return!isPreBeam(g)});
+  var beamR=computeRecords(beamGames);
+
+  // 1. Big numbers
+  renderBigStats(app,beamR,beamGames);
+
+  // 2. Beams per season (bars)
+  renderSeasonBars(app,beamGames);
+
+  // 3. Beams per month (heatmap)
+  renderMonthHeatmap(app,beamGames);
+
+  // 4. Records cards
+  var hdr=$('div','section-header');
+  hdr.appendChild($('span','','Records'));
+  hdr.appendChild($('span','sub','since Oct 29, 2022'));
+  app.appendChild(hdr);
+  var grid=$('div','records-grid');
+  renderBeamCards(grid,beamR);
+  app.appendChild(grid);
+
+  // 5. Pre-beam — kept short, just records
+  var preGames=games.filter(function(g){return isPreBeam(g)});
+  if(preGames.length>0){
+    var preR=computeRecords(preGames);
+    var hdr2=$('div','section-header');
+    hdr2.appendChild($('span','','Pre-Beam Highlights'));
+    hdr2.appendChild($('span','sub','home wins, not beams · 2001-02 → Oct 28, 2022'));
+    app.appendChild(hdr2);
+    var grid2=$('div','records-grid');
+    renderPreBeamCards(grid2,preR);
+    app.appendChild(grid2);
+  }
+}
+
+function renderBigStats(app,r,games){
+  var sec=document.createElement('div');sec.className='big-stats';
+  var beams=r.fortress.wins;
+  var beamMinutes=beams*60;
+  var winRate=r.fortress.games>0?Math.round(beams/r.fortress.games*100):0;
+  var avgMargin=beams>0?(games.filter(function(g){return g.home&&g.won}).reduce(function(s,g){return s+(g.kScore-g.oScore)},0)/beams).toFixed(1):'—';
+
+  function card(v,l,sub,accent){
+    var c=document.createElement('div');c.className='big-stat'+(accent?' accent':'');
+    c.appendChild($('div','v',String(v)));
+    c.appendChild($('div','l',l));
+    if(sub)c.appendChild($('div','sub',sub));
+    return c;
+  }
+  sec.appendChild(card(beams,'Beams','since Oct 29, 2022',true));
+  sec.appendChild(card(beamMinutes.toLocaleString(),'Minutes Lit','~60 min per beam'));
+  sec.appendChild(card('+'+avgMargin,'Avg Margin','per beam win'));
+  sec.appendChild(card(winRate+'%','Home Win Rate',r.fortress.wins+'-'+r.fortress.losses+' at home'));
+  app.appendChild(sec);
+}
+
+function renderSeasonBars(app,games){
+  var bySeason={};
+  games.forEach(function(g){if(g.home&&g.won){var yr=seasonYrOf(g);bySeason[yr]=(bySeason[yr]||0)+1}});
+  var years=Object.keys(bySeason).map(Number).sort();
+  if(years.length===0)return;
+  var max=Math.max.apply(null,Object.values(bySeason));
+
+  var hdr=$('div','section-header');
+  hdr.appendChild($('span','','Beams by Season'));
+  hdr.appendChild($('span','sub','home wins per season'));
+  app.appendChild(hdr);
+
+  var bars=document.createElement('div');bars.className='season-bars';
+  years.forEach(function(yr){
+    var row=document.createElement('div');row.className='season-bar-row';
+    row.appendChild($('div','season-bar-label',(yr-1)+'-'+String(yr).slice(2)));
+    var track=document.createElement('div');track.className='season-bar-track';
+    var fill=document.createElement('div');fill.className='season-bar-fill';
+    fill.style.width=Math.max(6,bySeason[yr]/max*100)+'%';
+    track.appendChild(fill);
+    row.appendChild(track);
+    row.appendChild($('div','season-bar-count',String(bySeason[yr])));
+    bars.appendChild(row);
+  });
+  app.appendChild(bars);
+}
+
+function renderMonthHeatmap(app,games){
+  var months=['OCT','NOV','DEC','JAN','FEB','MAR','APR'];
+  var bySeasonMonth={};
+  games.forEach(function(g){
+    if(!(g.home&&g.won))return;
+    var dt=new Date(g.date);
+    var yr=dt.getMonth()>=9?dt.getFullYear()+1:dt.getFullYear();
+    var monthIdx=dt.getMonth();
+    var col=monthIdx>=9?monthIdx-9:monthIdx+3;
+    if(col<0||col>6)return;
+    bySeasonMonth[yr]=bySeasonMonth[yr]||{};
+    bySeasonMonth[yr][col]=(bySeasonMonth[yr][col]||0)+1;
+  });
+  var years=Object.keys(bySeasonMonth).map(Number).sort();
+  if(years.length===0)return;
+
+  var max=0;
+  years.forEach(function(yr){months.forEach(function(_,i){var v=(bySeasonMonth[yr]||{})[i]||0;if(v>max)max=v})});
+
+  var hdr=$('div','section-header');
+  hdr.appendChild($('span','','Beams by Month'));
+  hdr.appendChild($('span','sub','where the beam lives in the calendar'));
+  app.appendChild(hdr);
+
+  var grid=document.createElement('div');grid.className='heatmap';
+  grid.appendChild($('div','heatmap-season-label',''));
+  months.forEach(function(m){grid.appendChild($('div','heatmap-season-label',m))});
+
+  years.forEach(function(yr){
+    grid.appendChild($('div','heatmap-month-label',(yr-1)+'-'+String(yr).slice(2)));
+    for(var i=0;i<7;i++){
+      var v=(bySeasonMonth[yr]||{})[i]||0;
+      var level=v===0?0:v<=max*0.25?1:v<=max*0.5?2:v<=max*0.75?3:4;
+      grid.appendChild($('div','heatmap-cell l'+level,v>0?String(v):''));
+    }
+  });
+  app.appendChild(grid);
+
+  var legend=document.createElement('div');legend.className='heatmap-legend';
+  legend.appendChild($('span','','Low'));
+  var sw=document.createElement('span');sw.className='swatch';
+  for(var k=0;k<5;k++)sw.appendChild(document.createElement('span'));
+  legend.appendChild(sw);
+  legend.appendChild($('span','','High'));
+  app.appendChild(legend);
+}
+
+function renderBeamCards(grid,r){
+  if(r.brightest){
+    var g=r.brightest.game;
+    grid.appendChild(recordCard('Brightest Beam','Largest home-win margin','+'+r.brightest.score,g,
+      'SAC '+g.kScore+'-'+g.oScore+' '+tn(g.opp)+' · '+fmtDate(g.date)));
+  }
+  if(r.brink&&r.brink.score>0){
+    var g=r.brink.game;
+    grid.appendChild(recordCard('Beam from the Brink','Largest deficit overcome at home','down '+r.brink.score,g,
+      'Came back to beat '+tn(g.opp)+' '+g.kScore+'-'+g.oScore+' · '+fmtDate(g.date)));
+  }
+  if(r.arch){
+    var g=r.arch.game;
+    grid.appendChild(recordCard('Beam Architects','Most assists in a beam game',r.arch.score+' AST',g,
+      'vs '+tn(g.opp)+' '+g.kScore+'-'+g.oScore+' · '+fmtDate(g.date)));
+  }
+  if(r.heist){
+    var g=r.heist.game;
+    grid.appendChild(recordCard('Beam Heist','Most steals in a beam game',r.heist.score+' STL',g,
+      'vs '+tn(g.opp)+' '+g.kScore+'-'+g.oScore+' · '+fmtDate(g.date)));
+  }
+  if(r.highScore){
+    var g=r.highScore.game;
+    grid.appendChild(recordCard('Sky-Splitter','Most Kings points in a beam game',String(r.highScore.score),g,
+      'vs '+tn(g.opp)+' · '+fmtDate(g.date)));
+  }
+  if(r.almostDark){
+    var g=r.almostDark.game;
+    grid.appendChild(recordCard('Flickering Beam','Closest beam win',' +'+r.almostDark.score,g,
+      'SAC '+g.kScore+'-'+g.oScore+' '+tn(g.opp)+' · '+fmtDate(g.date)));
+  }
+  if(r.inferno.count>0){
+    var range=r.inferno.games.length?fmtDate(r.inferno.games[0].date)+' → '+fmtDate(r.inferno.games[r.inferno.games.length-1].date):'';
+    grid.appendChild(recordCard('Beam Inferno','Longest consecutive beams',r.inferno.count+' in a row',null,range));
+  }
+  if(r.dark.count>0){
+    var range=r.dark.games.length?fmtDate(r.dark.games[0].date)+' → '+fmtDate(r.dark.games[r.dark.games.length-1].date):'';
+    grid.appendChild(recordCard('The Long Dark','Longest beam-off streak (home losses)',r.dark.count+' straight',null,range));
+  }
+  grid.appendChild(recordCard('Beam Fortress','Home record · beam era',
+    r.fortress.wins+'-'+r.fortress.losses,null,
+    Math.round(r.fortress.wins/r.fortress.games*100)+'% home win rate across '+r.fortress.games+' games'));
+  if(r.mostBeamedOpp){
+    grid.appendChild(recordCard('Frequent Flyer','Opponent SAC has beamed most',tn(r.mostBeamedOpp.opp),null,
+      r.mostBeamedOpp.count+' beams lit against them'));
+  }
+  if(r.firstBeam){
+    var g=r.firstBeam;
+    grid.appendChild(recordCard('First Beam','First lit beam in Sacramento history',fmtDate(g.date),g,
+      'SAC '+g.kScore+'-'+g.oScore+' '+tn(g.opp)));
+  }
+  if(r.latestBeam&&r.latestBeam!==r.firstBeam){
+    var g=r.latestBeam;
+    grid.appendChild(recordCard('Latest Beam','Most recent lit beam',fmtDate(g.date),g,
+      'SAC '+g.kScore+'-'+g.oScore+' '+tn(g.opp)));
+  }
+  if(r.cadence!==null){
+    grid.appendChild(recordCard('Beam Cadence','Average days between lit beams',
+      r.cadence.toFixed(1)+'d',null,r.fortress.wins+' beams lit since Oct 29, 2022'));
+  }
+  var beamMinutes=r.fortress.wins*60;
+  grid.appendChild(recordCard('Beam Minutes','Cumulative time the beam has shone',
+    beamMinutes.toLocaleString()+' min',null,
+    'Roughly '+(beamMinutes/60).toFixed(0)+' hours · ~60 min per beam'));
+}
+
+function renderPreBeamCards(grid,r){
+  // Same metrics, neutral language ("home win" not "beam")
+  if(r.brightest){
+    var g=r.brightest.game;
+    grid.appendChild(recordCard('Biggest Blowout','Largest pre-beam home-win margin','+'+r.brightest.score,g,
+      'SAC '+g.kScore+'-'+g.oScore+' '+tn(g.opp)+' · '+fmtDate(g.date)));
+  }
+  if(r.brink&&r.brink.score>0){
+    var g=r.brink.game;
+    grid.appendChild(recordCard('Biggest Comeback','Largest deficit overcome at home','down '+r.brink.score,g,
+      'Came back to beat '+tn(g.opp)+' '+g.kScore+'-'+g.oScore+' · '+fmtDate(g.date)));
+  }
+  if(r.arch){
+    var g=r.arch.game;
+    grid.appendChild(recordCard('Most Assists','In a pre-beam home win',r.arch.score+' AST',g,
+      'vs '+tn(g.opp)+' '+g.kScore+'-'+g.oScore+' · '+fmtDate(g.date)));
+  }
+  if(r.heist){
+    var g=r.heist.game;
+    grid.appendChild(recordCard('Most Steals','In a pre-beam home win',r.heist.score+' STL',g,
+      'vs '+tn(g.opp)+' '+g.kScore+'-'+g.oScore+' · '+fmtDate(g.date)));
+  }
+  if(r.highScore){
+    var g=r.highScore.game;
+    grid.appendChild(recordCard('Highest Scoring','Most Kings points in a pre-beam home win',String(r.highScore.score),g,
+      'vs '+tn(g.opp)+' · '+fmtDate(g.date)));
+  }
+  if(r.almostDark){
+    var g=r.almostDark.game;
+    grid.appendChild(recordCard('Closest Win','Smallest margin pre-beam home win','+'+r.almostDark.score,g,
+      'SAC '+g.kScore+'-'+g.oScore+' '+tn(g.opp)+' · '+fmtDate(g.date)));
+  }
+  if(r.inferno.count>0){
+    var range=r.inferno.games.length?fmtDate(r.inferno.games[0].date)+' → '+fmtDate(r.inferno.games[r.inferno.games.length-1].date):'';
+    grid.appendChild(recordCard('Longest Home Win Streak','Pre-beam consecutive home wins',r.inferno.count+' in a row',null,range));
+  }
+  if(r.dark.count>0){
+    var range=r.dark.games.length?fmtDate(r.dark.games[0].date)+' → '+fmtDate(r.dark.games[r.dark.games.length-1].date):'';
+    grid.appendChild(recordCard('Longest Home Loss Streak','Pre-beam consecutive home losses',r.dark.count+' straight',null,range));
+  }
+  grid.appendChild(recordCard('Pre-Beam Home Record','2001-02 → Oct 28, 2022',
+    r.fortress.wins+'-'+r.fortress.losses,null,
+    Math.round(r.fortress.wins/r.fortress.games*100)+'% home win rate across '+r.fortress.games+' games'));
+  if(r.firstBeam){
+    var g=r.firstBeam;
+    grid.appendChild(recordCard('First Tracked Home Win','Oldest in our dataset',fmtDate(g.date),g,
+      'SAC '+g.kScore+'-'+g.oScore+' '+tn(g.opp)));
+  }
+}
+
+// Lore prose removed — see About for beam history. This page is stats-focused.
+
+loadAll().catch(function(e){
+  console.error(e);
+  setStatus('Couldn\'t load records.',true);
+});
+</script>
+</body>
+</html>
