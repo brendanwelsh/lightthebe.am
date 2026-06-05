@@ -1,0 +1,191 @@
+<!-- v23 --><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Players — Light the Beam</title>
+<meta name="description" content="Sacramento Kings players ranked by beam contribution.">
+<meta name="theme-color" content="#5b2d8e">
+<link rel="canonical" href="https://lightthebe.am/players.html">
+<link rel="icon" type="image/png" href="/kings-logo.png">
+<meta name="robots" content="noindex">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--purple:#5b2d8e;--black:#0a0a0a;--beam:#9b4dca;--win:#9b4dca;--loss:rgba(255,255,255,0.25)}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--black);color:#fff;min-height:100dvh;display:flex;flex-direction:column;align-items:center;text-align:center;overflow-x:hidden;padding-bottom:4rem}
+body.beam-dormant::before{content:'';position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:3px;height:40vh;background:linear-gradient(0deg,rgba(155,77,202,.18) 0%,rgba(155,77,202,.06) 60%,transparent 100%);pointer-events:none;z-index:0;animation:beamPulse 3s ease-in-out infinite}
+@keyframes beamPulse{0%,100%{opacity:.5}50%{opacity:1}}
+
+.nav-bar{position:relative;z-index:2;width:100%;display:flex;justify-content:center;gap:.4rem;padding:.6rem 1rem;flex-shrink:0}
+.nav-pill{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:.25rem .9rem;font-size:.65rem;font-weight:700;color:rgba(255,255,255,.4);cursor:pointer;white-space:nowrap;transition:all .2s;text-decoration:none}
+.nav-pill:hover{background:rgba(255,255,255,.08);color:rgba(255,255,255,.8)}
+
+.hero{display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;z-index:1;max-width:700px;width:100%;padding:1.5rem 1rem 1rem}
+.page-title{font-size:clamp(1.6rem,5vw,2.4rem);font-weight:900;letter-spacing:-.01em;text-transform:uppercase;letter-spacing:.05em}
+.page-sub{font-size:.75rem;font-weight:600;opacity:.4;margin-top:.5rem;letter-spacing:.05em}
+
+.progress{font-size:.7rem;opacity:.4;margin:.75rem 0;font-weight:600}
+
+.list-section{width:100%;max-width:780px;padding:0 1rem;margin-top:1rem;position:relative;z-index:1}
+
+.player-list{display:flex;flex-direction:column;gap:.4rem}
+.player-row{display:grid;grid-template-columns:2rem auto 1fr auto auto auto;align-items:center;padding:.6rem .85rem;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.04);border-radius:10px;text-decoration:none;color:inherit;transition:all .15s;gap:.7rem;border-left:3px solid transparent}
+.player-row:hover{background:rgba(255,255,255,.05);border-left-color:var(--beam)}
+.player-row.top:not(:hover){border-left-color:rgba(155,77,202,.4)}
+.rank{font-size:.75rem;font-weight:800;opacity:.4;text-align:right}
+.player-row.top .rank{color:var(--beam);opacity:1}
+.player-row .ph{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.04);object-fit:cover;object-position:top center;flex-shrink:0}
+.player-row .info{text-align:left;min-width:0;display:flex;flex-direction:column;gap:.15rem}
+.player-row .name{font-size:.85rem;font-weight:700;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.player-row .pos{font-size:.55rem;opacity:.4;font-weight:700;text-transform:uppercase;letter-spacing:.1em}
+.player-row .beams{font-size:1.1rem;font-weight:900;color:var(--beam);text-align:right;min-width:2.5rem}
+.player-row .beams-label{font-size:.5rem;opacity:.4;text-transform:uppercase;letter-spacing:.1em;text-align:right;font-weight:700;margin-top:.1rem}
+.player-row .games{font-size:.7rem;font-weight:700;opacity:.5;text-align:right;min-width:3rem}
+.player-row .rate{font-size:.7rem;font-weight:800;text-align:right;min-width:3rem;color:#fff}
+.player-row .rate.low{opacity:.4}
+
+.col-label{font-size:.5rem;opacity:.3;text-transform:uppercase;letter-spacing:.12em;font-weight:700;text-align:right}
+
+.header-row{display:grid;grid-template-columns:2rem auto 1fr auto auto auto;align-items:center;padding:0 .85rem .4rem;gap:.7rem;border-bottom:1px solid rgba(255,255,255,.05);margin-bottom:.5rem}
+.header-row .ph{width:38px;height:38px;visibility:hidden}
+
+.note{font-size:.6rem;opacity:.3;font-weight:600;margin-top:1.5rem;line-height:1.5}
+.loading{font-size:1rem;opacity:.3;font-weight:600;margin:3rem 0}
+.err{font-size:.85rem;opacity:.5;margin:2rem 0}
+</style>
+</head>
+<body class="beam-dormant">
+<div class="nav-bar">
+  <a href="/" class="nav-pill">← Light the Beam</a>
+  <a href="/players" class="nav-pill active">Current Roster</a>
+  <a href="/totals" class="nav-pill">All-Time Totals</a>
+</div>
+<div class="hero">
+  <div class="page-title">Beam Contributors</div>
+  <div class="page-sub">Current roster · ranked by beams lit while on the floor · 2025-26</div>
+  <div class="progress" id="progress">Loading roster…</div>
+</div>
+<div id="app"></div>
+<script>
+var KID='23';
+
+function $(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e}
+function pl(id){return'https://a.espncdn.com/i/headshots/nba/players/full/'+id+'.png'}
+async function fj(u){var r=await fetch(u);if(!r.ok)throw new Error(r.status);return r.json()}
+function pct(n,d){return d>0?(n/d*100).toFixed(0)+'%':'—'}
+function sc(c){var s=c.score;if(s==null)return 0;if(typeof s==='object')return parseInt(s.displayValue||s.value,10)||0;return parseInt(s,10)||0}
+
+function setProgress(t){var p=document.getElementById('progress');if(p)p.textContent=t}
+
+async function load(){
+  try{
+    var now=new Date(),seasonYr=now.getMonth()>=9?now.getFullYear()+1:now.getFullYear();
+
+    setProgress('Loading roster + schedule…');
+    var roster,schedule;
+    [roster,schedule]=await Promise.all([
+      fj('https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/'+KID+'/roster'),
+      fj('https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/'+KID+'/schedule?season='+seasonYr+'&seasontype=2').catch(function(){return{events:[]}})
+    ]);
+
+    // Index Kings games by event id for fast lookup
+    var kingsResultByEvent={};
+    (schedule.events||[]).forEach(function(e){
+      var c=e.competitions?.[0];if(!c||c.status?.type?.name!=='STATUS_FINAL')return;
+      var ks=c.competitors?.find(function(x){return String(x.team?.id)===KID});
+      var os=c.competitors?.find(function(x){return String(x.team?.id)!==KID});
+      if(!ks||!os)return;
+      var kScore=sc(ks),oScore=sc(os);
+      kingsResultByEvent[e.id]={won:kScore>oScore,home:ks.homeAway==='home'};
+    });
+
+    var athletes=roster.athletes||[];
+    setProgress('Crunching '+athletes.length+' players…');
+
+    // Fetch each player's gamelog in parallel
+    var results=await Promise.all(athletes.map(function(a){
+      return fj('https://site.api.espn.com/apis/common/v3/sports/basketball/nba/athletes/'+a.id+'/gamelog')
+        .then(function(gl){return compute(a,gl,kingsResultByEvent)})
+        .catch(function(){return{athlete:a,homeBeams:0,beams:0,games:0,err:true}});
+    }));
+
+    // Sort: home beams primary (this is what "beam contributor" means), then beams, then games
+    results.sort(function(a,b){
+      if(b.homeBeams!==a.homeBeams)return b.homeBeams-a.homeBeams;
+      if(b.beams!==a.beams)return b.beams-a.beams;
+      return b.games-a.games;
+    });
+
+    render(results);
+    setProgress('');
+    document.getElementById('progress').style.display='none';
+  }catch(e){
+    setProgress('');
+    document.getElementById('app').innerHTML='<p class="err">Couldn\'t load player list.</p>';
+  }
+}
+
+function compute(athlete,gamelog,kingsResultByEvent){
+  var labels=gamelog.labels||[];
+  var minIdx=labels.indexOf('MIN');
+  var st=(gamelog.seasonTypes||[]).find(function(s){return s.displayName?.indexOf('Regular')>=0})||(gamelog.seasonTypes||[])[0]||{};
+  var games=0,beams=0,homeBeams=0,homeGames=0;
+  (st.categories||[]).forEach(function(cat){
+    (cat.events||[]).forEach(function(e){
+      var kr=kingsResultByEvent[e.eventId];if(!kr)return;
+      var min=parseInt(e.stats?.[minIdx],10)||0;
+      if(min<=0)return;
+      games++;
+      if(kr.won)beams++;
+      if(kr.home){homeGames++;if(kr.won)homeBeams++}
+    });
+  });
+  return{athlete:athlete,games:games,beams:beams,homeBeams:homeBeams,homeGames:homeGames};
+}
+
+function render(rows){
+  var app=document.getElementById('app');app.textContent='';
+  var sec=$('div','list-section');
+
+  // Header row
+  var hdr=$('div','header-row');
+  hdr.appendChild($('div','col-label','#'));
+  hdr.appendChild($('div','ph'));
+  var spacer=$('div','col-label','Player');spacer.style.textAlign='left';hdr.appendChild(spacer);
+  hdr.appendChild($('div','col-label','Beams'));
+  hdr.appendChild($('div','col-label','Games'));
+  hdr.appendChild($('div','col-label','Win %'));
+  sec.appendChild(hdr);
+
+  var list=$('div','player-list');
+  rows.forEach(function(r,i){
+    var a=r.athlete;
+    var row=document.createElement('a');row.className='player-row'+(i<3&&r.homeBeams>0?' top':'');
+    row.href='/player.html?id='+a.id;
+    row.appendChild($('div','rank',String(i+1)));
+    var img=document.createElement('img');img.className='ph';img.src=a.headshot?.href||pl(a.id);img.alt=a.displayName||'';
+    img.onerror=function(){this.style.opacity='0.2';this.src='/kings-logo.png'};
+    row.appendChild(img);
+    var info=$('div','info');
+    info.appendChild($('div','name',a.displayName||a.shortName||'?'));
+    var posTxt=(a.position?.abbreviation||'')+(a.jersey?' · #'+a.jersey:'');
+    info.appendChild($('div','pos',posTxt));
+    row.appendChild(info);
+    row.appendChild($('div','beams',String(r.homeBeams)));
+    row.appendChild($('div','games',r.games+' g'));
+    var rateClass=r.games>=10?'':'low';
+    row.appendChild($('div','rate '+rateClass,pct(r.beams,r.games)));
+    list.appendChild(row);
+  });
+  sec.appendChild(list);
+
+  // Note
+  sec.appendChild($('div','note','"Beams" counts Kings home wins the player was on the floor for. "Games" includes home + road. Roster shown is current — recently traded-away players don\'t appear. Trade-ins start accruing from their first Kings appearance.'));
+
+  app.appendChild(sec);
+}
+
+load();
+</script>
+</body>
+</html>

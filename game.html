@@ -1,0 +1,278 @@
+<!-- v23 --><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game Recap — Light the Beam</title>
+<meta name="description" content="Sacramento Kings game recap. Beam status, box score, win probability.">
+<meta name="theme-color" content="#5b2d8e">
+<link rel="canonical" href="https://lightthebe.am/game.html">
+<link rel="icon" type="image/png" href="/kings-logo.png">
+<meta name="robots" content="noindex">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--purple:#5b2d8e;--black:#0a0a0a;--beam:#9b4dca;--win:#9b4dca;--loss:rgba(255,255,255,0.25)}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--black);color:#fff;min-height:100dvh;display:flex;flex-direction:column;align-items:center;text-align:center;overflow-x:hidden;padding-bottom:4rem}
+body.beam-on::before{content:'';position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:6px;height:100vh;background:linear-gradient(0deg,var(--beam) 0%,rgba(155,77,202,.8) 30%,rgba(155,77,202,.4) 70%,rgba(155,77,202,.1) 100%);box-shadow:0 0 40px 12px rgba(155,77,202,.4),0 0 100px 40px rgba(91,45,142,.2);pointer-events:none;z-index:0;opacity:.8}
+body.beam-off{background:var(--black)}
+.nav-bar{position:relative;z-index:2;width:100%;display:flex;justify-content:center;gap:.4rem;padding:.6rem 1rem;flex-shrink:0}
+.nav-pill{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:.25rem .9rem;font-size:.65rem;font-weight:700;color:rgba(255,255,255,.4);cursor:pointer;white-space:nowrap;transition:all .2s;text-decoration:none}
+.nav-pill:hover{background:rgba(255,255,255,.08);color:rgba(255,255,255,.8)}
+.hero{display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;z-index:1;max-width:700px;width:100%;padding:1.5rem 1rem .5rem}
+.matchup{display:flex;align-items:center;justify-content:center;gap:1.5rem;width:100%;margin:1rem 0 1.5rem}
+.team-block{display:flex;flex-direction:column;align-items:center;gap:.5rem;flex:1;max-width:200px}
+.team-block img{width:80px;height:80px}
+.team-abbr{font-size:1.1rem;font-weight:800;letter-spacing:.05em}
+.team-score{font-size:3.5rem;font-weight:900;line-height:1;letter-spacing:-.03em}
+.team-score.w{color:#fff}
+.team-score.l{opacity:.4}
+.vs{font-size:.7rem;font-weight:800;opacity:.3;text-transform:uppercase;letter-spacing:.15em}
+.beam-status{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.18em;padding:.4rem 1rem;border-radius:20px;margin:.5rem 0 1.5rem}
+.beam-status.lit{background:rgba(155,77,202,.15);border:1px solid var(--beam);color:var(--beam)}
+.beam-status.dark{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4)}
+.game-meta{font-size:.7rem;opacity:.4;font-weight:600;margin-bottom:1rem}
+.section{width:100%;max-width:700px;padding:0 1rem;margin-top:1.5rem;position:relative;z-index:1}
+.section-title{font-size:.6rem;text-transform:uppercase;letter-spacing:.2em;opacity:.4;font-weight:700;margin-bottom:.75rem;padding-bottom:.4rem;border-bottom:1px solid rgba(255,255,255,.05);text-align:left}
+.perf-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:600px){.perf-grid{grid-template-columns:1fr}}
+.perf-team{display:flex;flex-direction:column;gap:.3rem}
+.perf-team-label{font-size:.6rem;font-weight:800;opacity:.5;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.3rem;display:flex;align-items:center;gap:.4rem}
+.perf-team-label img{width:18px;height:18px}
+.perf-row{display:grid;grid-template-columns:1fr auto auto auto auto;align-items:center;padding:.4rem .6rem;border-radius:6px;background:rgba(255,255,255,.025);text-decoration:none;color:inherit;transition:background .15s;gap:.5rem}
+.perf-row:hover{background:rgba(255,255,255,.05)}
+.perf-name{font-size:.75rem;font-weight:700;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.perf-stat{font-size:.65rem;font-weight:700;opacity:.7;text-align:right;min-width:1.8rem}
+.perf-stat.pts{color:var(--beam);font-size:.85rem;font-weight:900;opacity:1;min-width:2.2rem}
+.perf-stat-label{font-size:.45rem;opacity:.3;text-transform:uppercase;letter-spacing:.1em}
+.team-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem}
+@media(max-width:600px){.team-stats{grid-template-columns:repeat(2,1fr)}}
+.team-stat-cell{display:flex;flex-direction:column;align-items:center;padding:.6rem .4rem;background:rgba(255,255,255,.025);border-radius:8px}
+.team-stat-row{display:flex;width:100%;justify-content:space-between;align-items:center;font-size:.75rem;font-weight:800}
+.team-stat-row .sac{color:var(--beam)}
+.team-stat-row .opp{opacity:.5}
+.team-stat-label{font-size:.5rem;opacity:.3;text-transform:uppercase;letter-spacing:.1em;margin-top:.3rem;font-weight:700}
+.wp-chart{width:100%;height:90px;background:rgba(255,255,255,.02);border-radius:8px;position:relative;overflow:hidden}
+.wp-chart svg{width:100%;height:100%}
+.wp-final{position:absolute;top:.5rem;right:.75rem;font-size:.7rem;font-weight:800;color:var(--beam)}
+.espn-link{display:inline-flex;align-items:center;gap:.3rem;font-size:.6rem;font-weight:700;color:rgba(255,255,255,.3);text-decoration:none;margin-top:1rem;text-transform:uppercase;letter-spacing:.1em}
+.espn-link:hover{color:rgba(255,255,255,.6)}
+.loading{font-size:1rem;opacity:.3;font-weight:600;margin:3rem 0}
+.err{font-size:.85rem;opacity:.5;margin:2rem 0}
+</style>
+</head>
+<body>
+<div class="nav-bar">
+  <a href="/" class="nav-pill">← Light the Beam</a>
+  <a href="/players" class="nav-pill">Current Roster</a>
+  <a href="/totals" class="nav-pill">All-Time Totals</a>
+</div>
+<div id="app"><p class="loading">Loading game...</p></div>
+<script>
+var KID='23',KLOGO='https://a.espncdn.com/i/teamlogos/nba/500/sac.png';
+var params=new URLSearchParams(location.search),gameId=params.get('id');
+
+function $(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e}
+function tl(a){return'https://a.espncdn.com/i/teamlogos/nba/500/'+a.toLowerCase()+'.png'}
+function pl(id){return'https://a.espncdn.com/i/headshots/nba/players/full/'+id+'.png'}
+async function fj(u){var r=await fetch(u);if(!r.ok)throw new Error(r.status);return r.json()}
+function fd(d){return new Date(d).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'})}
+function ft(d){return new Date(d).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',timeZoneName:'short'})}
+
+async function load(){
+  if(!gameId){document.getElementById('app').innerHTML='<p class="err">No game ID specified. Try <code>?id={ESPN_GAME_ID}</code>.</p>';return}
+  try{
+    var d=await fj('https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event='+gameId);
+    render(d);
+  }catch(e){
+    document.getElementById('app').innerHTML='<p class="err">Couldn\'t load game '+gameId+'.</p>';
+  }
+}
+
+function render(d){
+  var app=document.getElementById('app');app.textContent='';
+  var hdr=d.header||{},comp=hdr.competitions?.[0],comps=comp?.competitors||[];
+  var sac=comps.find(function(c){return String(c.team?.id)===KID})||comps[0];
+  var opp=comps.find(function(c){return String(c.team?.id)!==KID})||comps[1];
+  if(!sac||!opp){app.innerHTML='<p class="err">Game data malformed.</p>';return}
+
+  var sacScore=parseInt(sac.score,10)||0,oppScore=parseInt(opp.score,10)||0;
+  var status=comp.status?.type?.name||'';
+  var isFinal=status==='STATUS_FINAL';
+  var sacWon=isFinal&&sacScore>oppScore;
+  var sacIsHome=sac.homeAway==='home';
+
+  // Beam glow only if Kings won at home
+  if(sacWon&&sacIsHome){document.body.className='beam-on'}else{document.body.className='beam-off'}
+
+  var hero=$('div','hero');
+
+  // Matchup display: away on left, home on right
+  var matchup=$('div','matchup');
+  var awayT=sacIsHome?opp:sac,homeT=sacIsHome?sac:opp;
+  var awayS=sacIsHome?oppScore:sacScore,homeS=sacIsHome?sacScore:oppScore;
+  matchup.appendChild(buildTeamBlock(awayT,awayS,awayS>=homeS&&isFinal));
+  var mid=$('div');mid.style.display='flex';mid.style.flexDirection='column';mid.style.alignItems='center';mid.style.gap='.5rem';
+  mid.appendChild($('span','vs','@'));
+  matchup.appendChild(mid);
+  matchup.appendChild(buildTeamBlock(homeT,homeS,homeS>=awayS&&isFinal));
+  hero.appendChild(matchup);
+
+  // Beam status
+  var status_label=isFinal?(sacWon&&sacIsHome?'lit':(sacWon?'win, no beam (road game)':'dark')):'in progress';
+  var bs=$('div','beam-status '+(sacWon&&sacIsHome?'lit':'dark'));
+  bs.textContent=isFinal?(sacWon?(sacIsHome?'BEAM LIT':'WIN · ROAD GAME'):'NO BEAM'):'NOT FINAL';
+  hero.appendChild(bs);
+
+  // Meta
+  var date=comp.date?fd(comp.date):'';
+  var venue=comp.venue?.fullName||'';
+  var meta=$('div','game-meta',date+(venue?' · '+venue:''));
+  hero.appendChild(meta);
+
+  app.appendChild(hero);
+
+  // Top performers section
+  var bs2=d.boxscore||{};
+  var teams=bs2.players||[];
+  if(teams.length>=2){
+    var perfSec=$('div','section');
+    perfSec.appendChild($('div','section-title','Top Performers'));
+    var grid=$('div','perf-grid');
+    teams.forEach(function(t){grid.appendChild(buildPerfTeam(t))});
+    perfSec.appendChild(grid);
+    app.appendChild(perfSec);
+  }
+
+  // Team stats
+  var teamStats=bs2.teams||[];
+  if(teamStats.length>=2){
+    var statSec=$('div','section');
+    statSec.appendChild($('div','section-title','Team Stats'));
+    statSec.appendChild(buildTeamStats(teamStats));
+    app.appendChild(statSec);
+  }
+
+  // Win probability final
+  var wp=d.winprobability||[];
+  if(wp.length>0){
+    var wpSec=$('div','section');
+    wpSec.appendChild($('div','section-title','Win Probability'));
+    wpSec.appendChild(buildWP(wp,sacIsHome));
+    app.appendChild(wpSec);
+  }
+
+  // ESPN link
+  var espnSec=$('div','section');
+  espnSec.style.textAlign='center';
+  var el=document.createElement('a');el.className='espn-link';el.href='https://www.espn.com/nba/game/_/gameId/'+gameId;el.target='_blank';el.rel='noopener';
+  el.textContent='Full box score on ESPN →';
+  espnSec.appendChild(el);
+  app.appendChild(espnSec);
+
+  document.title=sac.team?.abbreviation+' '+sacScore+' '+opp.team?.abbreviation+' '+oppScore+' — Light the Beam';
+}
+
+function buildTeamBlock(t,score,isWinner){
+  var b=$('div','team-block');
+  var img=document.createElement('img');img.src=t.team?.logo||tl(t.team?.abbreviation||'');img.alt=t.team?.abbreviation||'';b.appendChild(img);
+  b.appendChild($('div','team-abbr',t.team?.abbreviation||'???'));
+  b.appendChild($('div','team-score '+(isWinner?'w':'l'),String(score)));
+  return b;
+}
+
+function buildPerfTeam(t){
+  var col=$('div','perf-team');
+  var lbl=$('div','perf-team-label');
+  var img=document.createElement('img');img.src=t.team?.logo||tl(t.team?.abbreviation||'');img.alt=t.team?.abbreviation||'';lbl.appendChild(img);
+  var ab=document.createElement('span');ab.textContent=t.team?.abbreviation||'???';lbl.appendChild(ab);
+  col.appendChild(lbl);
+
+  // Get athletes from first statistic group (usually all-in-one)
+  var sg=t.statistics?.[0]||{};
+  var athletes=sg.athletes||[];
+  var labels=sg.labels||[];
+  var ptsIdx=labels.indexOf('PTS'),rebIdx=labels.indexOf('REB'),astIdx=labels.indexOf('AST'),minIdx=labels.indexOf('MIN');
+
+  // Sort by points scored, top 5 who played
+  var played=athletes.filter(function(a){return!a.didNotPlay&&a.stats&&a.stats.length>0});
+  played.sort(function(a,b){return(parseInt(b.stats[ptsIdx],10)||0)-(parseInt(a.stats[ptsIdx],10)||0)});
+
+  played.slice(0,5).forEach(function(a){
+    var ath=a.athlete||{};
+    var row=document.createElement('a');row.className='perf-row';row.href='/player.html?id='+ath.id;
+    row.appendChild($('div','perf-name',ath.displayName||ath.shortName||'?'));
+    row.appendChild($('div','perf-stat pts',a.stats[ptsIdx]||'0'));
+    row.appendChild($('div','perf-stat',a.stats[rebIdx]||'0'));
+    row.appendChild($('div','perf-stat',a.stats[astIdx]||'0'));
+    row.appendChild($('div','perf-stat',(a.stats[minIdx]||'0')+'m'));
+    col.appendChild(row);
+  });
+
+  return col;
+}
+
+function buildTeamStats(teamStats){
+  var grid=$('div','team-stats');
+  // teamStats[0] and [1] each have statistics array
+  // Pick a few key stats to surface
+  var keyStats=['fieldGoalPct','threePointFieldGoalPct','freeThrowPct','rebounds','assists','turnovers','steals','blocks'];
+  var labelMap={fieldGoalPct:'FG%',threePointFieldGoalPct:'3PT%',freeThrowPct:'FT%',rebounds:'REB',assists:'AST',turnovers:'TO',steals:'STL',blocks:'BLK'};
+
+  var sacTeam=teamStats.find(function(t){return String(t.team?.id)===KID})||teamStats[0];
+  var oppTeam=teamStats.find(function(t){return String(t.team?.id)!==KID})||teamStats[1];
+
+  // Build a map: stat name -> {sac, opp}
+  function statMap(t){var m={};(t.statistics||[]).forEach(function(s){m[s.name]=s.displayValue});return m}
+  var sacM=statMap(sacTeam),oppM=statMap(oppTeam);
+
+  keyStats.forEach(function(k){
+    if(!(k in sacM)||!(k in oppM))return;
+    var cell=$('div','team-stat-cell');
+    var row=$('div','team-stat-row');
+    row.appendChild($('span','sac',sacM[k]));
+    row.appendChild($('span','opp',oppM[k]));
+    cell.appendChild(row);
+    cell.appendChild($('div','team-stat-label',labelMap[k]));
+    grid.appendChild(cell);
+  });
+
+  return grid;
+}
+
+function buildWP(wp,sacIsHome){
+  var chart=$('div','wp-chart');
+  var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.setAttribute('viewBox','0 0 1000 100');svg.setAttribute('preserveAspectRatio','none');
+  // Each wp point: homeWinPercentage. SAC's wp = home if SAC home, else 1-home
+  var pts=wp.map(function(p,i){
+    var sacWp=sacIsHome?p.homeWinPercentage:(1-p.homeWinPercentage);
+    return{x:i/(wp.length-1)*1000,y:100-sacWp*100,sacWp:sacWp};
+  });
+  // Build SAC area path (above 50% line is good for SAC)
+  var path='M 0,100 ';
+  pts.forEach(function(p){path+='L '+p.x.toFixed(1)+','+p.y.toFixed(1)+' '});
+  path+='L 1000,100 Z';
+  var area=document.createElementNS('http://www.w3.org/2000/svg','path');
+  area.setAttribute('d',path);area.setAttribute('fill','rgba(155,77,202,.3)');svg.appendChild(area);
+
+  // Line
+  var line='M ';
+  pts.forEach(function(p,i){line+=(i===0?'':'L ')+p.x.toFixed(1)+','+p.y.toFixed(1)+' '});
+  var l=document.createElementNS('http://www.w3.org/2000/svg','path');
+  l.setAttribute('d',line);l.setAttribute('fill','none');l.setAttribute('stroke','#9b4dca');l.setAttribute('stroke-width','2');svg.appendChild(l);
+
+  // 50% midline
+  var mid=document.createElementNS('http://www.w3.org/2000/svg','line');
+  mid.setAttribute('x1','0');mid.setAttribute('y1','50');mid.setAttribute('x2','1000');mid.setAttribute('y2','50');
+  mid.setAttribute('stroke','rgba(255,255,255,.1)');mid.setAttribute('stroke-dasharray','4,4');svg.appendChild(mid);
+
+  chart.appendChild(svg);
+  var final=$('div','wp-final',(pts[pts.length-1].sacWp*100).toFixed(0)+'% SAC at end');
+  chart.appendChild(final);
+  return chart;
+}
+
+load();
+</script>
+</body>
+</html>

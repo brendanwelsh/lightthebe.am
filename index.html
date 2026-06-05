@@ -1,17 +1,86 @@
-<!-- v20 --><!DOCTYPE html>
-<html lang="en">
+<!-- v25 --><!DOCTYPE html>
+<html lang="en-US">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Did the Sacramento Kings light the beam? Live game results and season stats.">
-<title>LIGHT THE BEAM</title>
-<link rel="icon" href="https://a.espncdn.com/i/teamlogos/nba/500/sac.png">
+<title>Light the Beam · lightthebeam — Did the Sacramento Kings Win?</title>
+<meta name="description" content="Light the Beam (lightthebeam) — real-time tracker for the Sacramento Kings beam. Live win probability during games, season recap, beam counts, schedule, standings. Updated every 30 seconds.">
+<meta name="keywords" content="lightthebeam, light the beam, Sacramento Kings beam, Kings beam tracker, NBA Kings, Sacramento Kings score, Kings live, Golden 1 Center, Kings schedule, Sacramento basketball, beam lit, did the kings win">
+<meta name="theme-color" content="#5b2d8e">
+<meta name="author" content="Brendan Welsh">
+<meta name="application-name" content="Light the Beam">
+<meta name="apple-mobile-web-app-title" content="Light the Beam">
+<link rel="canonical" href="https://lightthebe.am/">
+<link rel="alternate" hreflang="en-US" href="https://lightthebe.am/">
+<link rel="alternate" hreflang="x-default" href="https://lightthebe.am/">
+
+<!-- Open Graph -->
+<meta property="og:title" content="Light the Beam — Sacramento Kings Tracker">
+<meta property="og:description" content="Did the Sacramento Kings light the beam? Live game results, season recap, and beam counts.">
+<meta property="og:url" content="https://lightthebe.am/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Light the Beam">
+<meta property="og:image" content="https://lightthebe.am/preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="1880">
+<meta property="og:image:alt" content="Light the Beam — the Sacramento Kings beam tracker showing 'YES' when the Kings win at home.">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter Card. Using 'summary' (small square) instead of 'summary_large_image' because preview.png is portrait;
+     'summary_large_image' would crop top/bottom in the 2:1 viewport. Swap back to summary_large_image once a 1200x630 image is created. -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:domain" content="lightthebe.am">
+<meta name="twitter:title" content="Light the Beam — Sacramento Kings Tracker">
+<meta name="twitter:description" content="Did the Sacramento Kings light the beam? Real-time tracker.">
+<meta name="twitter:image" content="https://lightthebe.am/preview.png">
+<meta name="twitter:image:alt" content="Light the Beam — the Sacramento Kings beam tracker.">
+<meta name="twitter:creator" content="@BrendanWelsh">
+<meta name="twitter:site" content="@BrendanWelsh">
+
+<!-- Icons -->
+<link rel="icon" type="image/png" href="/kings-logo.png">
+<link rel="apple-touch-icon" href="/kings-logo.png">
+
+<!-- Performance -->
+<link rel="preconnect" href="https://site.api.espn.com">
+<link rel="preconnect" href="https://a.espncdn.com" crossorigin>
+
+<!-- JSON-LD structured data -->
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","name":"Light the Beam","alternateName":["lightthebeam","Sacramento Kings Beam Tracker","Light the Beam · lightthebe.am"],"url":"https://lightthebe.am/","description":"Real-time tracker for the Sacramento Kings beam — live game results, season recap, and beam counts since the beam tradition began in 2022-23.","inLanguage":"en-US","keywords":"lightthebeam, Sacramento Kings beam, NBA Kings, Kings tracker","publisher":{"@type":"Person","name":"Brendan Welsh","url":"https://x.com/BrendanWelsh"},"potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://lightthebe.am/?q={search_term_string}"},"query-input":"required name=search_term_string"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Organization","name":"Light the Beam","alternateName":"lightthebeam","url":"https://lightthebe.am/","logo":"https://lightthebe.am/kings-logo.png","sameAs":["https://x.com/BrendanWelsh"],"founder":{"@type":"Person","name":"Brendan Welsh"},"areaServed":{"@type":"Country","name":"United States"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SportsTeam","name":"Sacramento Kings","sport":"Basketball","memberOf":{"@type":"SportsOrganization","name":"NBA"},"location":{"@type":"Place","name":"Golden 1 Center","address":{"@type":"PostalAddress","addressLocality":"Sacramento","addressRegion":"CA","postalCode":"95814","addressCountry":"US"}},"url":"https://www.nba.com/kings"}
+</script>
+
+<!-- Google AdSense. No SRI integrity hash because Google rotates adsbygoogle.js without publishing hashes;
+     adding integrity= would break ads on every Google deploy. -->
+<meta name="google-adsense-account" content="ca-pub-4193227775621187">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4193227775621187" crossorigin="anonymous"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--purple:#5b2d8e;--black:#0a0a0a;--beam:#9b4dca;--win:#9b4dca;--loss:rgba(255,255,255,0.25)}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--black);color:#fff;min-height:100dvh;display:flex;flex-direction:column;align-items:center;text-align:center;overflow-x:hidden;scroll-behavior:smooth}
 
 body.beam-on::before{content:'';position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:6px;height:100vh;background:linear-gradient(0deg,var(--beam) 0%,rgba(155,77,202,.8) 30%,rgba(155,77,202,.4) 70%,rgba(155,77,202,.1) 100%);box-shadow:0 0 40px 12px rgba(155,77,202,.4),0 0 100px 40px rgba(91,45,142,.2);pointer-events:none;z-index:0;opacity:0;animation:beamOn .6s ease-out forwards}
+body.beam-dormant::before{content:'';position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:3px;height:40vh;background:linear-gradient(0deg,rgba(155,77,202,.18) 0%,rgba(155,77,202,.06) 60%,transparent 100%);pointer-events:none;z-index:0;animation:beamPulse 3s ease-in-out infinite}
+@keyframes beamPulse{0%,100%{opacity:.5}50%{opacity:1}}
+body.beam-dormant .answer{color:rgba(255,255,255,.92);text-shadow:0 0 60px rgba(155,77,202,.35)}
+body.beam-dormant .question{color:rgba(255,255,255,.7);opacity:.85}
+.cd-sub{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.18em;opacity:.55;margin:-.5rem 0 1rem;transition:opacity .35s}
+.cd-sub.fade{opacity:0}
+.answer.cd-num{transition:opacity .35s}
+.answer.cd-num.fade{opacity:.15}
+.milestone-list{display:flex;flex-direction:column;gap:.3rem;width:100%}
+.milestone-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.05);border-radius:10px;padding:.55rem .85rem;gap:.6rem;transition:all .15s}
+.milestone-row.next{border-color:var(--beam);background:rgba(91,45,142,.08)}
+.milestone-name{font-size:.75rem;font-weight:700;text-align:left}
+.milestone-date{font-size:.55rem;opacity:.4;font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+.milestone-days{font-size:.7rem;font-weight:800;color:var(--beam);min-width:3rem;text-align:right}
+.milestone-row.next .milestone-days{font-size:.85rem}
 body.beam-on::after{content:'';position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:250px;height:100vh;background:radial-gradient(ellipse at center bottom,rgba(155,77,202,.5) 0%,rgba(91,45,142,.3) 30%,rgba(91,45,142,.1) 60%,transparent 80%);filter:blur(30px);pointer-events:none;z-index:0;opacity:0;animation:beamOn .6s ease-out .15s forwards}
 @keyframes beamOn{0%{opacity:0}100%{opacity:1}}
 
@@ -145,6 +214,16 @@ a.gm-row:hover{background:rgba(255,255,255,.03)}
 .footer .credit{font-size:.5rem;color:rgba(255,255,255,.1);letter-spacing:.06em}
 .loading{font-size:1.2rem;opacity:.3;font-weight:600}
 
+.ad-slot{width:100%;max-width:728px;margin:1.5rem auto;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.015);border:1px dashed rgba(255,255,255,.05);border-radius:8px;color:rgba(255,255,255,.15);font-size:.55rem;text-transform:uppercase;letter-spacing:.15em;font-weight:700}
+.ad-slot.leaderboard{min-height:90px}
+.ad-slot.rectangle{min-height:280px;max-width:336px}
+
+.donate-row{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;margin:1.25rem 0}
+.donate-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.6rem 1.1rem;font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;text-decoration:none;border-radius:8px;transition:all .15s}
+.donate-btn.bmc{background:#FFDD00;color:#000}
+.donate-btn.bmc:hover{background:#fff;transform:translateY(-1px)}
+.donate-btn.pp{background:rgba(0,112,186,.1);color:#3b9eea;border:1px solid rgba(59,158,234,.4)}
+.donate-btn.pp:hover{background:rgba(0,112,186,.2);transform:translateY(-1px)}
 .season-bar{position:relative;z-index:2;width:100%;display:flex;justify-content:center;gap:.4rem;padding:.6rem 1rem;overflow-x:auto;-webkit-overflow-scrolling:touch;flex-shrink:0}
 .season-pill{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:.25rem .7rem;font-size:.65rem;font-weight:700;color:rgba(255,255,255,.4);cursor:pointer;white-space:nowrap;transition:all .2s;text-decoration:none}
 .season-pill:hover{background:rgba(255,255,255,.08);color:rgba(255,255,255,.6)}
@@ -165,6 +244,17 @@ a.gm-row:hover{background:rgba(255,255,255,.03)}
 <div class="hero" id="app"><p class="loading">LOADING...</p></div>
 <div class="tiles-section" id="tilesSection"></div>
 <div class="cards-section" id="cards"></div>
+
+<!-- Manual AdSense slot: bottom of homepage. Auto Ads (loaded via <head>) may already place ads on this page.
+     For a fixed manual placement here, create an ad unit in AdSense console, paste its data-ad-slot below, uncomment, and delete the placeholder. -->
+<div class="ad-slot leaderboard" id="adHome" style="display:none">Ad space</div>
+<!--
+<div class="ad-slot leaderboard">
+  <ins class="adsbygoogle" style="display:block;width:100%" data-ad-client="ca-pub-4193227775621187" data-ad-slot="XXXXXXXXXX" data-ad-format="auto" data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+-->
+
 <div class="about-section" id="aboutSection" style="display:none;position:relative;z-index:1;padding:1rem">
   <div style="max-width:520px;margin:0 auto;text-align:center">
     <img src="kings-classic.png" alt="Classic Sacramento Kings Logo" id="aboutLogo" style="width:180px;margin:0 auto .75rem;display:block;opacity:.8;cursor:pointer;transition:transform .15s">
@@ -181,6 +271,17 @@ a.gm-row:hover{background:rgba(255,255,255,.03)}
       <p style="font-size:.85rem;line-height:1.7;opacity:.65;margin-bottom:1.25rem">
         Built by <a href="https://x.com/BrendanWelsh" target="_blank" rel="noopener" style="color:var(--beam);text-decoration:none;font-weight:700">@BrendanWelsh</a>, FYBA Legend. Hoop dreams. Known as BulldogsRock25 on AIM. Born and raised in Sacramento. Grew up playing youth basketball, played on the court at Arco Arena. Sat in the nosebleeds watching Webber, Peja, Vlade, Doug Christie, and the greatest team to never win a championship. Skipped school in 4th grade to get Carl's Jr Kings bobbleheads. Recently got $15 tickets to a game and $16 hot dogs.
       </p>
+      <p style="font-size:.7rem;line-height:1.6;opacity:.45;margin-bottom:.75rem">If this site has lit up your beam, help keep the lights on.</p>
+      <div class="donate-row">
+        <a href="https://buymeacoffee.com/brendanwelsh" target="_blank" rel="noopener" class="donate-btn bmc">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" x2="6" y1="2" y2="4"/><line x1="10" x2="10" y1="2" y2="4"/><line x1="14" x2="14" y1="2" y2="4"/></svg>
+          Buy Me a Coffee
+        </a>
+        <a href="https://paypal.me/BrendanWelsh" target="_blank" rel="noopener" class="donate-btn pp">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11A4.5 4.5 0 0 1 11.5 7h1A4.5 4.5 0 0 1 17 11.5a4 4 0 0 1-4 3.5H9.5L8 21H4l3-10Z"/><path d="M15 7a4.5 4.5 0 0 1 4 4.5 4 4 0 0 1-4 3.5h-1"/></svg>
+          PayPal
+        </a>
+      </div>
     </div>
     <!-- Photos — clean, one per row -->
     <img src="bibby-full.png" alt="Getting Bibby's autograph" style="width:100%;max-width:440px;border-radius:12px;margin:0 auto .4rem;display:block;border:1px solid rgba(255,255,255,.08);box-shadow:0 4px 20px rgba(0,0,0,.4)">
@@ -207,6 +308,17 @@ a.gm-row:hover{background:rgba(255,255,255,.03)}
       </p>
     </div>
     <p style="font-size:.6rem;opacity:.25;margin-bottom:1.5rem">Not affiliated with the Sacramento Kings. Made by a fan, for fans.</p>
+
+    <!-- Manual AdSense slot: About page. Auto Ads may place ads here automatically.
+         For a fixed unit, paste a data-ad-slot from AdSense console below, uncomment, and delete the placeholder. -->
+    <div class="ad-slot rectangle" id="adAbout" style="display:none">Ad space</div>
+    <!--
+    <div class="ad-slot rectangle">
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4193227775621187" data-ad-slot="XXXXXXXXXX" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+    -->
+
     <p style="font-size:1.1rem;font-weight:900;font-style:italic;opacity:.6;letter-spacing:.05em">Hoop Dreams, Baby.</p>
   </div>
 </div>
@@ -218,8 +330,10 @@ a.gm-row:hover{background:rgba(255,255,255,.03)}
     <a href="https://shop.kings.com" target="_blank" rel="noopener" title="Kings Store"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3 5h10l-1 9H4L3 5z" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 5V4a2.5 2.5 0 0 1 5 0v1" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a>
     <span class="dot">|</span>
     <a href="https://x.com/BrendanWelsh" target="_blank" rel="noopener">@BrendanWelsh</a>
+    <span class="dot">·</span>
+    <a href="https://buymeacoffee.com/brendanwelsh" target="_blank" rel="noopener">Support</a>
   </div>
-  <span class="credit">Data via ESPN. Not affiliated with the Sacramento Kings.</span>
+  <span class="credit">Light the Beam · <a href="https://lightthebe.am/" style="color:inherit;text-decoration:none">lightthebe.am</a> · Data via ESPN. Not affiliated with the Sacramento Kings.</span>
 </div>
 <div style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);z-index:1;display:flex;flex-direction:column;align-items:center">
   <div class="beam-ray"></div>
@@ -234,7 +348,7 @@ SCBD='https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard',
 STAND='https://site.api.espn.com/apis/v2/sports/basketball/nba/standings',
 STATS_URL='https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/{id}/statistics',
 KLOGO='https://a.espncdn.com/i/teamlogos/nba/500/sac.png',
-ref=null,live=false,lastData=null,mockLive=false,mockWp=0.67,mockKs=89,mockOs=78,mockOpp='ATL',mockQtr='3rd Qtr',mockTime='4:23';
+ref=null,live=false,lastData=null,mockLive=false,mockWp=0.67,mockKs=89,mockOs=78,mockOpp='ATL',mockQtr='3rd Qtr',mockTime='4:23',BEAM_REST='beam-off',COUNTDOWN_EVENTS=null;
 
 function schedUrl(yr){return 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/'+KID+'/schedule?season='+yr}
 
@@ -314,7 +428,13 @@ document.addEventListener('click',function(e){
     var q=document.querySelector('.question');var a=document.querySelector('.answer');
     if(q&&q.dataset.orig)q.textContent=q.dataset.orig;
     if(a&&a.dataset.orig)a.textContent=a.dataset.orig;
-    if(lastData){var ld=lastData.last;if(ld){var c=ld.competitions[0],k=fk(c.competitors),o=fo(c.competitors);if(sc(k)>sc(o))document.body.className='beam-on';else document.body.className='beam-off'}else document.body.className='beam-off'}
+    if(lastData){
+      var s=document.querySelector('.cd-sub');
+      if(s&&s.dataset.orig)s.textContent=s.dataset.orig;
+      if(COUNTDOWN_EVENTS)startCountdown(COUNTDOWN_EVENTS,a,s);
+      if(BEAM_REST==='beam-dormant'){document.body.className=BEAM_REST}
+      else{var ld=lastData.last;if(ld){var c=ld.competitions[0],k=fk(c.competitors),o=fo(c.competitors);if(sc(k)>sc(o))document.body.className='beam-on';else document.body.className=BEAM_REST}else document.body.className=BEAM_REST}
+    }
   }
 });
 
@@ -370,11 +490,14 @@ function buildBeamCal(games,origBeam){
         var dotEnter=function(){
           fillPreview(oaC,ghC,ksC,osC,fd(dateC),wonC);
           showCtx('Against the '+tn(oaC)+' on '+fd(dateC));
-          var q=document.querySelector('.question');var a=document.querySelector('.answer');
+          stopCountdown();
+          var q=document.querySelector('.question');var a=document.querySelector('.answer');var s=document.querySelector('.cd-sub');
           if(q)q.dataset.orig=q.dataset.orig||q.textContent;
           if(a)a.dataset.orig=a.dataset.orig||a.textContent;
+          if(s)s.dataset.orig=s.dataset.orig||s.textContent;
           if(q)q.textContent='Was the beam lit?';
           if(a)a.textContent=wonC?'YES':'NO';
+          if(s)s.textContent='';
           if(wonC)document.body.className='beam-on';
           else document.body.className='beam-off';
           var gmRow=document.querySelector('.gm-row[data-game-idx="'+gameIdx+'"]');
@@ -383,11 +506,12 @@ function buildBeamCal(games,origBeam){
         var dotLeave=function(){
           clearPreview();
           hideCtx();
-          if(!origBeam)document.body.className='beam-off';
-          else document.body.className='beam-on';
-          var q=document.querySelector('.question');var a=document.querySelector('.answer');
+          document.body.className=origBeam?'beam-on':BEAM_REST;
+          var q=document.querySelector('.question');var a=document.querySelector('.answer');var s=document.querySelector('.cd-sub');
           if(q&&q.dataset.orig)q.textContent=q.dataset.orig;
           if(a&&a.dataset.orig)a.textContent=a.dataset.orig;
+          if(s&&s.dataset.orig)s.textContent=s.dataset.orig;
+          if(COUNTDOWN_EVENTS)startCountdown(COUNTDOWN_EVENTS,a,s);
           var gmRow=document.querySelector('.gm-row.gm-active');
           if(gmRow)gmRow.classList.remove('gm-active');
         };
@@ -460,8 +584,70 @@ function buildLiveBar(d){
   return bar;
 }
 
+// Offseason milestone calendar — approximate NBA dates, refined automatically once ESPN's next-season schedule drops.
+function offseasonMilestones(){
+  var y=now.getFullYear();
+  var ms=[
+    {name:'NBA Draft', date:new Date(y,5,25)},
+    {name:'Free Agency', date:new Date(y,6,1)},
+    {name:'Summer League', date:new Date(y,6,10)},
+    {name:'Schedule Release', date:new Date(y,7,15)},
+    {name:'Training Camp', date:new Date(y,8,29)},
+    {name:'Opening Night', date:new Date(y,9,21)}
+  ];
+  return ms.filter(function(m){return m.date>now});
+}
+function daysTo(d){return Math.max(0,Math.ceil((d.getTime()-now.getTime())/86400000))}
+function fmtDate(d){return d.toLocaleDateString('en-US',{month:'short',day:'numeric'})}
+
+var COUNTDOWN_INT=null;
+function stopCountdown(){if(COUNTDOWN_INT){clearInterval(COUNTDOWN_INT);COUNTDOWN_INT=null}}
+function startCountdown(events,aEl,subEl){
+  stopCountdown();
+  if(!events.length||!aEl)return;
+  var idx=0;
+  function tick(){
+    var ev=events[idx];
+    var days=daysTo(ev.date);
+    aEl.classList.add('fade');
+    if(subEl)subEl.classList.add('fade');
+    setTimeout(function(){
+      aEl.textContent=String(days);
+      if(subEl)subEl.textContent='days until '+ev.name;
+      aEl.classList.remove('fade');
+      if(subEl)subEl.classList.remove('fade');
+    },350);
+    idx=(idx+1)%events.length;
+  }
+  // show first immediately without fade
+  var ev0=events[0];aEl.textContent=String(daysTo(ev0.date));
+  if(subEl)subEl.textContent='days until '+ev0.name;
+  idx=events.length>1?1:0;
+  if(events.length>1)COUNTDOWN_INT=setInterval(tick,3800);
+}
+
 async function getData(){
-  var sd=await fj(schedUrl(currentSeason)),stSum=sd.team?.standingSummary||'',ev=sd.events||[];
+  // Default endpoint follows ESPN's current focus (regular season → playoffs → postseason).
+  // In offseason that returns empty postseason; fall back to seasontype=2 for the 82-game regular season.
+  var sd=await fj(schedUrl(currentSeason)),ev=sd.events||[];
+  if(ev.length===0){
+    try{var rs=await fj(schedUrl(currentSeason)+'&seasontype=2');if((rs.events||[]).length>0){sd=rs;ev=sd.events||[]}}catch(e){}
+  }
+  // Phase auto-advance: viewing "current" but no upcoming games — probe next season.
+  if(currentSeason===autoCurrentSeason){
+    var hasSched=ev.some(function(e){return e.competitions?.[0]?.status?.type?.name==='STATUS_SCHEDULED'});
+    if(!hasSched&&ev.length>0){
+      try{
+        var np=await fj(schedUrl(autoCurrentSeason+1));
+        // Probe must return events AND describe the new year (not fall back to current)
+        if((np.events||[]).length>0&&np.season?.year===autoCurrentSeason+1){
+          autoCurrentSeason++;currentSeason=autoCurrentSeason;
+          sd=np;ev=sd.events||[];
+        }
+      }catch(e){}
+    }
+  }
+  var stSum=sd.team?.standingSummary||'';
   var last=null,next=null,done=[],sched=[];
   for(var i=0;i<ev.length;i++){var s=ev[i].competitions?.[0]?.status?.type?.name;if(s==='STATUS_FINAL'){last=ev[i];done.push(ev[i])}else if(s==='STATUS_SCHEDULED'){if(!next)next=ev[i];sched.push(ev[i])}}
   var compW=0,compL=0;
@@ -529,7 +715,12 @@ async function getData(){
   }catch(e){}
   }
 
-  return{rec:rec,stSum:stSum,last:last,live:lg,next:next,done:done,sched:sched,str:str,stt:stt,bStr:bStr,bStt:bStt,bWin:bWin,wp:wp,beams:beams,divT:divT,allT:allT,kSt:kSt,gLeft:sched.length,teamRanks:teamRanks}
+  // Phase: inseason (games scheduled remain), preseason (none played yet), offseason (all done, no upcoming)
+  var phase='inseason';
+  if(sched.length===0&&done.length>0&&!lg)phase='offseason';
+  else if(done.length===0&&sched.length>0&&!lg)phase='preseason';
+
+  return{rec:rec,stSum:stSum,last:last,live:lg,next:next,done:done,sched:sched,str:str,stt:stt,bStr:bStr,bStt:bStt,bWin:bWin,wp:wp,beams:beams,divT:divT,allT:allT,kSt:kSt,gLeft:sched.length,teamRanks:teamRanks,phase:phase}
 }
 
 function render(d){
@@ -546,7 +737,136 @@ function render(d){
   var hoverCtx=$('div','hover-ctx');hoverCtx.id='hoverCtx';
   app.appendChild(hoverCtx);
 
-  if(isCurrent){
+  stopCountdown();
+  BEAM_REST='beam-off';COUNTDOWN_EVENTS=null;
+
+  if(isCurrent&&d.phase==='offseason'&&!mockLive){
+    // ---- OFFSEASON: season is over, next schedule not yet released ----
+    var qOff=$('p','question',"How long 'til the beam?");
+    qOff.addEventListener('click',function(){this.classList.remove('shake');void this.offsetWidth;this.classList.add('shake')});
+    app.appendChild(qOff);
+    var aOff=$('p','answer cd-num','...');app.appendChild(aOff);
+    var subOff=$('p','cd-sub','');app.appendChild(subOff);
+    var msOff=offseasonMilestones();
+    // Hero is always Opening Night — the headline countdown. The milestone list below shows the others.
+    var opener=msOff.filter(function(m){return m.name==='Opening Night'})[0]||msOff[msOff.length-1];
+    BEAM_REST='beam-dormant';
+    if(opener){
+      aOff.textContent=String(daysTo(opener.date));
+      subOff.textContent='days until opening night';
+    }else{
+      aOff.textContent='soon';subOff.textContent='season is coming';
+    }
+    document.body.className='beam-dormant';origBeam=false;
+
+    var tiles=$('div','game-tiles');
+    var previewWrap=$('div','');previewWrap.style.cssText='min-height:3rem;position:relative;z-index:2';previewWrap.id='previewWrap';
+    var previewBar=$('div','game-bar');previewBar.id='previewBar';previewBar.style.cssText='display:none';
+    previewWrap.appendChild(previewBar);tiles.appendChild(previewWrap);
+
+    if(d.last){
+      var fc=d.last.competitions[0],fkk=fk(fc.competitors),foo=fo(fc.competitors),fks=sc(fkk),fos=sc(foo),fh=fkk?.homeAway==='home',fbl=fks>fos;
+      var foA=foo.team?.abbreviation||'???';
+      var finBar=buildGameBar('Season Finale',foA,fh,fks,fos,fs(d.last.date),fbl,d.last.id,true);
+      (function(oaL,dateL,wasWin){
+        finBar.addEventListener('mouseenter',function(){
+          showCtx('Against the '+tn(oaL)+' on '+fd(dateL));
+          finBar.classList.add('gm-active');
+          document.body.className=wasWin?'beam-on':'beam-off';
+          stopCountdown();
+          var q=document.querySelector('.question'),a=document.querySelector('.answer'),s=document.querySelector('.cd-sub');
+          if(q){q.dataset.orig=q.dataset.orig||q.textContent;q.textContent='Was the beam lit?'}
+          if(a){a.dataset.orig=a.dataset.orig||a.textContent;a.textContent=wasWin?'YES':'NO'}
+          if(s){s.dataset.orig=s.dataset.orig||s.textContent;s.textContent=''}
+          var hs=document.getElementById('historyStatus');
+          if(hs){hs.textContent=wasWin?'Beam was lit':'No beam';hs.className='history-status '+(wasWin?'lit':'dark')}
+        });
+        finBar.addEventListener('mouseleave',function(){
+          hideCtx();finBar.classList.remove('gm-active');
+          document.body.className='beam-dormant';
+          var q=document.querySelector('.question'),a=document.querySelector('.answer'),s=document.querySelector('.cd-sub');
+          if(q&&q.dataset.orig)q.textContent=q.dataset.orig;
+          if(a&&a.dataset.orig)a.textContent=a.dataset.orig;
+          if(s&&s.dataset.orig)s.textContent=s.dataset.orig;
+          startCountdown(offseasonMilestones(),a,s);
+          var hs=document.getElementById('historyStatus');
+          if(hs){hs.textContent='';hs.className='history-status'}
+        });
+      })(foA,d.last.date,fbl);
+      tiles.appendChild(finBar);
+    }
+
+    if(msOff.length>0){
+      var mList=$('div','milestone-list');
+      msOff.slice(0,4).forEach(function(m,i){
+        var row=$('div','milestone-row'+(i===0?' next':''));
+        row.appendChild($('div','milestone-name',m.name));
+        row.appendChild($('div','milestone-date',fmtDate(m.date)));
+        row.appendChild($('div','milestone-days',daysTo(m.date)+'d'));
+        mList.appendChild(row);
+      });
+      tiles.appendChild(mList);
+    }
+
+    if(d.done.length>0){
+      var histBox=$('div','history-box');
+      var histTitle=$('div','history-title');
+      histTitle.textContent=(currentSeason-1)+'-'+String(currentSeason).slice(2)+' final · '+d.beams+' beams · '+d.done.length+' games · '+pct(w,l);
+      histBox.appendChild(histTitle);
+      histBox.appendChild(buildBeamCal(d.done,origBeam));
+      var histStatus=$('div','history-status');histStatus.id='historyStatus';
+      histBox.appendChild(histStatus);
+      tiles.appendChild(histBox);
+      var calLabel=$('div','beam-cal-label');
+      calLabel.textContent=isMobile()?'Tap a game to relight the beam':'Hover over games to relight the beam';
+      tiles.appendChild(calLabel);
+    }
+    tilesEl.appendChild(tiles);
+
+  }else if(isCurrent&&d.phase==='preseason'&&!mockLive){
+    BEAM_REST='beam-dormant';
+    // ---- PRESEASON: next schedule released, no games played yet ----
+    var qPre=$('p','question',"How long 'til the beam?");
+    qPre.addEventListener('click',function(){this.classList.remove('shake');void this.offsetWidth;this.classList.add('shake')});
+    app.appendChild(qPre);
+    var aPre=$('p','answer cd-num','...');app.appendChild(aPre);
+    var subPre=$('p','cd-sub','');app.appendChild(subPre);
+    if(d.next){
+      var openerDate=new Date(d.next.date);
+      var ncP=d.next.competitions[0],noP=fo(ncP.competitors);
+      var noAP=noP?.team?.abbreviation||'???';
+      aPre.textContent=String(daysTo(openerDate));
+      subPre.textContent='days until opening night · vs '+noAP;
+    }else{
+      aPre.textContent='soon';
+      subPre.textContent='season is coming';
+    }
+    document.body.className='beam-dormant';origBeam=false;
+
+    var tiles=$('div','game-tiles');
+    var previewWrap=$('div','');previewWrap.style.cssText='min-height:3rem;position:relative;z-index:2';previewWrap.id='previewWrap';
+    var previewBar=$('div','game-bar');previewBar.id='previewBar';previewBar.style.cssText='display:none';
+    previewWrap.appendChild(previewBar);tiles.appendChild(previewWrap);
+
+    if(d.next){
+      var nc=d.next.competitions[0],no=fo(nc.competitors),nh=fk(nc.competitors)?.homeAway==='home';
+      var noA=no?.team?.abbreviation||'???';
+      var nextBar=buildGameBar('Opening Night',noA,nh,0,0,fsd(d.next.date)+' · '+ft(d.next.date),false,d.next.id,false);
+      var ntix=nc.tickets?.[0]?.links?.[0]?.href;
+      if(ntix){var meta=nextBar.querySelector('.game-bar-meta');var tb=document.createElement('a');tb.href=ntix;tb.target='_blank';tb.rel='noopener';tb.className='game-bar-tix';tb.textContent='Tickets';meta.appendChild(tb)}
+      tiles.appendChild(nextBar);
+    }
+    if(d.sched.length>1){
+      d.sched.slice(1,5).forEach(function(g){
+        var gc=g.competitions[0],go=fo(gc.competitors),gh=fk(gc.competitors)?.homeAway==='home';
+        var gA=go?.team?.abbreviation||'???';
+        var gBar=buildGameBar('Upcoming',gA,gh,0,0,fsd(g.date)+' · '+ft(g.date),false,g.id,false);
+        tiles.appendChild(gBar);
+      });
+    }
+    tilesEl.appendChild(tiles);
+
+  }else if(isCurrent){
     var questionEl=$('p','question','Is the beam lit?');
     questionEl.addEventListener('click',function(e){
       this.classList.remove('shake');void this.offsetWidth;this.classList.add('shake');
@@ -612,7 +932,7 @@ function render(d){
         });
         lastBar.addEventListener('mouseleave',function(){
           hideCtx();lastBar.classList.remove('gm-active');
-          if(!origBeam)document.body.className='beam-off';
+          document.body.className=origBeam?'beam-on':BEAM_REST;
           var q=document.querySelector('.question');var a=document.querySelector('.answer');
           if(q&&q.dataset.orig)q.textContent=q.dataset.orig;
           if(a&&a.dataset.orig)a.textContent=a.dataset.orig;
@@ -712,11 +1032,14 @@ function render(d){
       var enterFn=function(){
         fillPreview(oaC,ghC,gksC,gosC,fd(dateC),gwC);
         showCtx('Against the '+tn(oaC)+' on '+fd(dateC));
-        var q=document.querySelector('.question');var a=document.querySelector('.answer');
+        stopCountdown();
+        var q=document.querySelector('.question');var a=document.querySelector('.answer');var s=document.querySelector('.cd-sub');
         if(q)q.dataset.orig=q.dataset.orig||q.textContent;
         if(a)a.dataset.orig=a.dataset.orig||a.textContent;
+        if(s)s.dataset.orig=s.dataset.orig||s.textContent;
         if(q)q.textContent='Was the beam lit?';
         if(a)a.textContent=gwC?'YES':'NO';
+        if(s)s.textContent='';
         if(gwC)document.body.className='beam-on';
         else document.body.className='beam-off';
         var dot=document.querySelector('.beam-dot[data-game-idx="'+gameIdx+'"]');
@@ -725,11 +1048,12 @@ function render(d){
       var leaveFn=function(){
         clearPreview();
         hideCtx();
-        if(!origBeam)document.body.className='beam-off';
-        else document.body.className='beam-on';
-        var q=document.querySelector('.question');var a=document.querySelector('.answer');
+        document.body.className=origBeam?'beam-on':BEAM_REST;
+        var q=document.querySelector('.question');var a=document.querySelector('.answer');var s=document.querySelector('.cd-sub');
         if(q&&q.dataset.orig)q.textContent=q.dataset.orig;
         if(a&&a.dataset.orig)a.textContent=a.dataset.orig;
+        if(s&&s.dataset.orig)s.textContent=s.dataset.orig;
+        if(COUNTDOWN_EVENTS)startCountdown(COUNTDOWN_EVENTS,a,s);
         var dot=document.querySelector('.beam-dot.gm-active');
         if(dot)dot.classList.remove('gm-active');
       };
@@ -785,7 +1109,7 @@ function render(d){
   schedRefresh();
 }
 
-function schedRefresh(){if(ref)clearInterval(ref);ref=setInterval(function(){getData().then(function(d){lastData=d;render(d)}).catch(function(){})},live?30000:120000)}
+function schedRefresh(){if(ref)clearInterval(ref);ref=setInterval(function(){getData().then(function(d){lastData=d;buildSeasonBar();render(d)}).catch(function(){})},live?30000:120000)}
 
 function explode(){
   playCowbell();
@@ -868,12 +1192,13 @@ function buildSeasonBar(){
     pill.dataset.year=y;
     pill.addEventListener('click',function(){
       var yr=parseInt(this.dataset.year);
-      if(yr===currentSeason)return;
-      currentSeason=yr;
+      // Always restore homepage view (in case user was on About)
       document.getElementById('app').style.display='';
       document.getElementById('tilesSection').style.display='';
       document.getElementById('cards').style.display='';
       document.getElementById('aboutSection').style.display='none';
+      if(yr===currentSeason){buildSeasonBar();return}
+      currentSeason=yr;
       buildSeasonBar();
       getData().then(function(d){lastData=d;render(d)}).catch(function(){render(null)});
     });
@@ -894,7 +1219,7 @@ function buildSeasonBar(){
 }
 buildSeasonBar();
 
-getData().then(function(d){lastData=d;render(d)}).catch(function(){render(null)});
+getData().then(function(d){lastData=d;buildSeasonBar();render(d)}).catch(function(){render(null)});
 
 var chargeTimer=null,chargeStart=0,chargeInterval=null;
 var bb=document.getElementById('beamButton');

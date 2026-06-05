@@ -1,0 +1,583 @@
+<!-- v26 --><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All-Time Beam Contributors — Light the Beam</title>
+<meta name="description" content="Every Sacramento King since the beam era began (2022-23). Career beam counts, games, win rate.">
+<meta name="theme-color" content="#5b2d8e">
+<link rel="canonical" href="https://lightthebe.am/totals">
+<link rel="icon" type="image/png" href="/kings-logo.png">
+<meta name="robots" content="noindex">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--purple:#5b2d8e;--black:#0a0a0a;--beam:#9b4dca}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--black);color:#fff;min-height:100dvh;display:flex;flex-direction:column;align-items:center;text-align:center;overflow-x:hidden;padding-bottom:4rem}
+body.beam-dormant::before{content:'';position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:3px;height:40vh;background:linear-gradient(0deg,rgba(155,77,202,.18) 0%,rgba(155,77,202,.06) 60%,transparent 100%);pointer-events:none;z-index:0;animation:beamPulse 3s ease-in-out infinite}
+@keyframes beamPulse{0%,100%{opacity:.5}50%{opacity:1}}
+
+.nav-bar{position:relative;z-index:2;width:100%;display:flex;justify-content:center;gap:.4rem;padding:.6rem 1rem;flex-shrink:0;flex-wrap:wrap}
+.nav-pill{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:.25rem .9rem;font-size:.65rem;font-weight:700;color:rgba(255,255,255,.4);cursor:pointer;white-space:nowrap;transition:all .2s;text-decoration:none}
+.nav-pill:hover{background:rgba(255,255,255,.08);color:rgba(255,255,255,.8)}
+.nav-pill.active{background:var(--beam);border-color:var(--beam);color:#fff}
+
+.hero{display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;z-index:1;max-width:780px;width:100%;padding:1.5rem 1rem 1rem}
+.page-title{font-size:clamp(1.6rem,5vw,2.4rem);font-weight:900;letter-spacing:.05em;text-transform:uppercase;line-height:1.05}
+.page-sub{font-size:.75rem;font-weight:600;opacity:.4;margin-top:.5rem;letter-spacing:.05em}
+
+.progress-wrap{display:flex;flex-direction:column;align-items:center;width:100%;max-width:420px;margin:1rem 0}
+.progress-text{font-size:.65rem;opacity:.4;font-weight:700;text-transform:uppercase;letter-spacing:.15em;margin-bottom:.5rem}
+.progress-bar{width:100%;height:3px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden}
+.progress-bar-fill{height:100%;background:var(--beam);width:0;transition:width .25s ease-out;box-shadow:0 0 10px rgba(155,77,202,.6)}
+.season-tags{display:flex;gap:.4rem;margin-top:.6rem;flex-wrap:wrap;justify-content:center}
+.season-tag{font-size:.55rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.2rem .5rem;border-radius:10px;background:rgba(255,255,255,.04);color:rgba(255,255,255,.35);transition:all .2s}
+.season-tag.loading{color:rgba(255,255,255,.6);background:rgba(155,77,202,.1)}
+.season-tag.done{color:var(--beam);background:rgba(91,45,142,.1);border:1px solid rgba(155,77,202,.3)}
+.season-tag.cached{color:rgba(255,255,255,.5);background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.08)}
+
+.list-section{width:100%;max-width:840px;padding:0 1rem;margin-top:1.5rem;position:relative;z-index:1}
+
+.player-list{display:flex;flex-direction:column;gap:.4rem}
+.player-row{display:grid;grid-template-columns:2rem auto 1fr auto auto auto auto;align-items:center;padding:.6rem .85rem;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.04);border-radius:10px;text-decoration:none;color:inherit;transition:all .15s;gap:.7rem;border-left:3px solid transparent}
+.player-row:hover{background:rgba(255,255,255,.05);border-left-color:var(--beam)}
+.player-row.top:not(:hover){border-left-color:rgba(155,77,202,.4)}
+.rank{font-size:.75rem;font-weight:800;opacity:.4;text-align:right}
+.player-row.top .rank{color:var(--beam);opacity:1}
+.player-row .ph{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.04);object-fit:cover;object-position:top center;flex-shrink:0}
+.player-row .info{text-align:left;min-width:0;display:flex;flex-direction:column;gap:.15rem}
+.player-row .name{font-size:.85rem;font-weight:700;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.player-row .pos{font-size:.55rem;opacity:.4;font-weight:700;text-transform:uppercase;letter-spacing:.1em}
+.player-row .beams{font-size:1.1rem;font-weight:900;color:var(--beam);text-align:right;min-width:2.5rem}
+.player-row .games{font-size:.7rem;font-weight:700;opacity:.5;text-align:right;min-width:3rem}
+.player-row .rate{font-size:.7rem;font-weight:800;text-align:right;min-width:3rem;color:#fff}
+.player-row .rate.low{opacity:.35}
+.player-row .seasons{font-size:.55rem;font-weight:700;opacity:.4;text-align:right;min-width:2rem;text-transform:uppercase;letter-spacing:.08em}
+
+.name-line{display:flex;align-items:center;gap:.5rem;width:100%;min-width:0}
+.team-badge{display:inline-flex;align-items:center;gap:.25rem;font-size:.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:.12rem .35rem;border-radius:4px;background:rgba(255,255,255,.04);color:rgba(255,255,255,.45);flex-shrink:0;transition:opacity .2s;line-height:1}
+.team-badge img{width:12px;height:12px}
+.team-badge.left{background:rgba(155,77,202,.1);color:var(--beam);border:1px solid rgba(155,77,202,.3)}
+.team-badge.sac{opacity:.35}
+.team-badge.loading{opacity:.2}
+.team-badge.unknown{opacity:.25}
+
+.section-header{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.2em;opacity:.55;margin:2.5rem 0 .8rem;padding-bottom:.5rem;border-bottom:1px solid rgba(255,255,255,.06);text-align:left}
+
+.coach-list{display:flex;flex-direction:column;gap:.4rem}
+.coach-row{display:grid;grid-template-columns:2rem auto 1fr auto auto auto auto;align-items:center;padding:.6rem .85rem;background:rgba(91,45,142,.04);border:1px solid rgba(155,77,202,.12);border-radius:10px;gap:.7rem;text-decoration:none;color:inherit;transition:all .15s;border-left:3px solid transparent}
+.coach-row:hover{background:rgba(91,45,142,.08);border-left-color:var(--beam)}
+.coach-row.current:not(:hover){border-left-color:rgba(155,77,202,.5)}
+.coach-row .role{font-size:.5rem;font-weight:700;opacity:.4;text-align:right;letter-spacing:.1em;text-transform:uppercase}
+.coach-row .ph-blank{width:38px;height:38px;border-radius:50%;background:rgba(155,77,202,.1);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;color:var(--beam);flex-shrink:0}
+@media(max-width:600px){
+  .coach-row{grid-template-columns:1.4rem auto 1fr auto auto;gap:.4rem}
+  .coach-row .seasons,.coach-row .rate{display:none}
+}
+
+.col-label{font-size:.5rem;opacity:.3;text-transform:uppercase;letter-spacing:.12em;font-weight:700;text-align:right}
+.header-row{display:grid;grid-template-columns:2rem auto 1fr auto auto auto auto;align-items:center;padding:0 .85rem .4rem;gap:.7rem;border-bottom:1px solid rgba(255,255,255,.05);margin-bottom:.5rem}
+.header-row .ph{width:38px;height:38px;visibility:hidden}
+
+@media(max-width:600px){
+  .player-row,.header-row{grid-template-columns:1.4rem auto 1fr auto auto;gap:.4rem;padding:.5rem .65rem}
+  .player-row .seasons,.header-row .seasons,.header-row .col-seasons,.player-row .rate,.header-row .col-rate{display:none}
+  .player-row .name{font-size:.78rem}
+  .player-row .beams{font-size:.95rem}
+}
+
+.note{font-size:.6rem;opacity:.3;font-weight:600;margin-top:1.5rem;line-height:1.6;padding:0 1rem}
+.err{font-size:.85rem;opacity:.5;margin:2rem 0}
+</style>
+</head>
+<body class="beam-dormant">
+<div class="nav-bar">
+  <a href="/" class="nav-pill">← Light the Beam</a>
+  <a href="/players" class="nav-pill">Current Roster</a>
+  <a href="/totals" class="nav-pill active">All-Time Totals</a>
+</div>
+<div class="hero">
+  <div class="page-title">All-Time Beam Contributors</div>
+  <div class="page-sub">Every Sacramento King since the beam era began · 2022-23 onward</div>
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-text" id="progressText">Initializing…</div>
+    <div class="progress-bar"><div class="progress-bar-fill" id="progressFill"></div></div>
+    <div class="season-tags" id="seasonTags"></div>
+  </div>
+</div>
+<div id="app"></div>
+<script>
+var KID='23';
+var BEAM_ERA_START=2023; // ESPN season year = end year of NBA season. 2023 = 2022-23 (when beam tradition started).
+var CURRENT_SEASON=(function(){var n=new Date();return n.getMonth()>=9?n.getFullYear()+1:n.getFullYear()})();
+// Seasons to include — all from 2022-23 through current
+var SEASONS=[];
+for(var y=BEAM_ERA_START;y<=CURRENT_SEASON;y++)SEASONS.push(y);
+
+function $(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e}
+function pl(id){return'https://a.espncdn.com/i/headshots/nba/players/full/'+id+'.png'}
+async function fj(u){var r=await fetch(u);if(!r.ok)throw new Error(r.status);return r.json()}
+function pct(n,d){return d>0?(n/d*100).toFixed(0)+'%':'—'}
+function sc(c){var s=c.score;if(s==null)return 0;if(typeof s==='object')return parseInt(s.displayValue||s.value,10)||0;return parseInt(s,10)||0}
+function seasonName(yr){return(yr-1)+'-'+String(yr).slice(2)}
+
+// localStorage cache: past seasons are immutable; current season caches with shorter TTL.
+function cacheKey(yr){return'lthe-totals-v1-'+yr}
+function readCache(yr){
+  try{
+    var raw=localStorage.getItem(cacheKey(yr));if(!raw)return null;
+    var c=JSON.parse(raw);
+    // Past seasons immutable. Current season: invalidate if older than 6 hours.
+    if(yr<CURRENT_SEASON)return c;
+    if(Date.now()-c.cachedAt<6*3600*1000)return c;
+    return null;
+  }catch(e){return null}
+}
+function writeCache(yr,data){
+  try{localStorage.setItem(cacheKey(yr),JSON.stringify({cachedAt:Date.now(),games:data}))}catch(e){}
+}
+
+var tagsByYr={};
+function setupTags(){
+  var tags=document.getElementById('seasonTags');
+  SEASONS.forEach(function(yr){
+    var t=$('div','season-tag',seasonName(yr));
+    tagsByYr[yr]=t;tags.appendChild(t);
+  });
+}
+function markTag(yr,state){
+  var t=tagsByYr[yr];if(!t)return;t.className='season-tag '+state;
+}
+function setProgress(txt,frac){
+  document.getElementById('progressText').textContent=txt;
+  document.getElementById('progressFill').style.width=Math.round((frac||0)*100)+'%';
+}
+function hideProgress(){document.getElementById('progressWrap').style.display='none'}
+
+// Fetch all box scores for a season. Returns array of {gameId,date,home,won,players:[{id,name,position,minutes}]}
+async function loadSeason(yr,onGameDone){
+  // Pull both regular season and playoffs (beam lights for any home win).
+  var schedules=await Promise.all([
+    fj('https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/'+KID+'/schedule?season='+yr+'&seasontype=2').catch(function(){return{events:[]}}),
+    fj('https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/'+KID+'/schedule?season='+yr+'&seasontype=3').catch(function(){return{events:[]}})
+  ]);
+  var allEvents=[].concat(schedules[0].events||[],schedules[1].events||[]);
+  var finals=allEvents.filter(function(e){return e.competitions?.[0]?.status?.type?.name==='STATUS_FINAL'});
+
+  // Skip duplicates (same event id appearing in both endpoints, unlikely but safe)
+  var seenIds={},uniqFinals=[];
+  finals.forEach(function(e){if(!seenIds[e.id]){seenIds[e.id]=1;uniqFinals.push(e)}});
+
+  // Fetch summaries in concurrency-limited batches.
+  var BATCH=10;
+  var results=[];
+  for(var i=0;i<uniqFinals.length;i+=BATCH){
+    var batch=uniqFinals.slice(i,i+BATCH);
+    var batchResults=await Promise.all(batch.map(function(e){
+      return fj('https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event='+e.id)
+        .then(function(d){return extractGameData(e,d)})
+        .catch(function(){return null});
+    }));
+    batchResults.forEach(function(r){if(r){results.push(r);onGameDone&&onGameDone()}});
+  }
+  return results;
+}
+
+function extractGameData(event,summary){
+  var comp=event.competitions?.[0];if(!comp)return null;
+  var ks=comp.competitors?.find(function(x){return String(x.team?.id)===KID});
+  var os=comp.competitors?.find(function(x){return String(x.team?.id)!==KID});
+  if(!ks||!os)return null;
+  var kScore=sc(ks),oScore=sc(os);
+
+  // Find Kings players from boxscore
+  var teams=summary.boxscore?.players||[];
+  var sacTeam=teams.find(function(t){return String(t.team?.id)===KID});
+  if(!sacTeam)return null;
+  var sg=sacTeam.statistics?.[0]||{};
+  var labels=sg.labels||[];
+  var minIdx=labels.indexOf('MIN');
+  var players=[];
+  (sg.athletes||[]).forEach(function(a){
+    if(a.didNotPlay)return;
+    var mins=parseInt(a.stats?.[minIdx],10)||0;
+    if(mins<=0)return;
+    var ath=a.athlete||{};
+    players.push({
+      id:String(ath.id),
+      name:ath.displayName||ath.shortName||'?',
+      position:ath.position?.abbreviation||'',
+      jersey:ath.jersey||'',
+      minutes:mins
+    });
+  });
+
+  return{
+    gameId:event.id,
+    date:event.date,
+    home:ks.homeAway==='home',
+    won:kScore>oScore,
+    kScore:kScore,
+    oScore:oScore,
+    opp:os.team?.abbreviation||'???',
+    players:players
+  };
+}
+
+async function loadAll(){
+  setupTags();
+
+  // Estimate total games — actual loads might vary if playoffs games happened
+  var TOTAL_GAMES_ESTIMATE=SEASONS.length*82;
+  var gamesDone=0;
+
+  setProgress('Loading historical box scores…',0);
+
+  var allGames=[];
+
+  for(var i=0;i<SEASONS.length;i++){
+    var yr=SEASONS[i];
+    var cached=readCache(yr);
+    if(cached&&cached.games){
+      markTag(yr,'cached');
+      allGames=allGames.concat(cached.games);
+      gamesDone+=cached.games.length;
+      setProgress('Loaded '+seasonName(yr)+' from cache',gamesDone/TOTAL_GAMES_ESTIMATE);
+      continue;
+    }
+    markTag(yr,'loading');
+    setProgress('Crunching '+seasonName(yr)+'…',gamesDone/TOTAL_GAMES_ESTIMATE);
+    var games=await loadSeason(yr,function(){
+      gamesDone++;
+      setProgress('Crunching '+seasonName(yr)+'…',gamesDone/TOTAL_GAMES_ESTIMATE);
+    });
+    writeCache(yr,games);
+    allGames=allGames.concat(games);
+    markTag(yr,'done');
+  }
+
+  setProgress('Aggregating per-player totals…',1);
+  var players=aggregate(allGames);
+  hideProgress();
+  render(players);
+
+  // Progressive enrichment — kick off after first paint.
+  enrichPlayerTeams(players);
+  loadAndRenderCoaches(allGames);
+}
+
+// Per-player current-team fetcher with 24h localStorage cache.
+function fetchPlayerTeam(id){
+  var ck='lthe-team-v1-'+id;
+  try{
+    var raw=localStorage.getItem(ck);
+    if(raw){
+      var c=JSON.parse(raw);
+      if(Date.now()-c.cachedAt<24*3600*1000)return Promise.resolve(c.team);
+    }
+  }catch(e){}
+  return fj('https://site.api.espn.com/apis/common/v3/sports/basketball/nba/athletes/'+id).then(function(d){
+    var a=d.athlete||d;
+    var team={
+      abbr:a.team?.abbreviation||'',
+      name:a.team?.displayName||'',
+      statusName:a.status?.name||a.status?.type||''
+    };
+    try{localStorage.setItem(ck,JSON.stringify({cachedAt:Date.now(),team:team}))}catch(e){}
+    return team;
+  });
+}
+
+async function enrichPlayerTeams(rows){
+  var BATCH=12;
+  for(var i=0;i<rows.length;i+=BATCH){
+    var batch=rows.slice(i,i+BATCH);
+    await Promise.all(batch.map(function(r){
+      return fetchPlayerTeam(r.id).then(function(team){
+        r.currentTeam=team;
+        renderTeamBadge(r);
+      }).catch(function(){
+        var el=document.querySelector('[data-pid="'+r.id+'"] .team-badge');
+        if(el){el.className='team-badge unknown';el.textContent='—'}
+      });
+    }));
+  }
+}
+
+function renderTeamBadge(row){
+  var el=document.querySelector('[data-pid="'+row.id+'"] .team-badge');
+  if(!el||!row.currentTeam)return;
+  var t=row.currentTeam;
+  el.textContent='';
+  if(t.abbr==='SAC'){
+    el.className='team-badge sac';
+    el.appendChild($('span','','SAC'));
+  }else if(t.abbr){
+    el.className='team-badge left';
+    var img=document.createElement('img');img.src='https://a.espncdn.com/i/teamlogos/nba/500/'+t.abbr.toLowerCase()+'.png';img.alt=t.abbr;
+    img.onerror=function(){this.style.display='none'};
+    el.appendChild(img);
+    el.appendChild($('span','',t.abbr));
+  }else if(t.statusName&&t.statusName.toLowerCase()!=='active'){
+    // Free agent, retired, etc.
+    el.className='team-badge';
+    el.textContent=t.statusName;
+  }else{
+    el.className='team-badge unknown';
+    el.textContent='FA';
+  }
+}
+
+async function loadAndRenderCoaches(allGames){
+  // STEP 1: Discover candidate coach IDs via the per-season "coach of record" endpoint.
+  // This catches the primary coach for each season. Future coach transitions auto-detected.
+  var candidateIds=new Set();
+  await Promise.all(SEASONS.map(function(yr){
+    return fj('https://sports.core.api.espn.com/v2/sports/basketball/leagues/nba/seasons/'+yr+'/teams/'+KID+'/coaches')
+      .then(function(d){
+        (d.items||[]).forEach(function(it){
+          var m=(it['$ref']||'').match(/\/coaches\/(\d+)/);
+          if(m)candidateIds.add(m[1]);
+        });
+      }).catch(function(){});
+  }));
+
+  // STEP 2: For each candidate × season, probe the coach record endpoint.
+  // A 404 means "didn't coach this team that season." Any record with wins+losses > 0 means they did.
+  // This is how interim/mid-season transitions get surfaced.
+  var activity={}; // {cid: {yr: {wins, losses, games}}}
+  var coachIds=Array.from(candidateIds);
+  var probes=[];
+  coachIds.forEach(function(cid){
+    SEASONS.forEach(function(yr){
+      probes.push(
+        fj('https://sports.core.api.espn.com/v2/sports/basketball/leagues/nba/seasons/'+yr+'/types/2/coaches/'+cid+'/record')
+          .then(function(rec){
+            var stats=rec.stats||[];
+            var wins=(stats.find(function(s){return s.name==='wins'})||{}).value||0;
+            var losses=(stats.find(function(s){return s.name==='losses'})||{}).value||0;
+            if(wins+losses>0){
+              activity[cid]=activity[cid]||{};
+              activity[cid][yr]={wins:wins,losses:losses,games:wins+losses};
+            }
+          }).catch(function(){/* 404 = didn't coach that team that season */})
+      );
+    });
+  });
+  await Promise.all(probes);
+
+  // STEP 3: Fetch each coach's bio (name + current team)
+  var bios={};
+  await Promise.all(coachIds.map(function(cid){
+    return fj('https://sports.core.api.espn.com/v2/sports/basketball/leagues/nba/seasons/'+CURRENT_SEASON+'/coaches/'+cid)
+      .then(function(b){bios[cid]=b})
+      .catch(function(){
+        // Fallback: try without season anchor
+        return fj('https://sports.core.api.espn.com/v2/sports/basketball/leagues/nba/coaches/'+cid)
+          .then(function(b){bios[cid]=b}).catch(function(){});
+      });
+  }));
+
+  // STEP 4: Build coach objects. Beam attribution: precise for solo-coached seasons,
+  // approximate (by win-share) for interim seasons where another coach also coached.
+  var coaches=[];
+  coachIds.forEach(function(cid){
+    var act=activity[cid];if(!act)return;
+    var bio=bios[cid]||{};
+    var seasons=Object.keys(act).map(Number).sort();
+    var totalWins=0,totalLosses=0,totalGames=0,homeBeams=0,hasApproxSeason=false;
+
+    seasons.forEach(function(yr){
+      var rec=act[yr];
+      totalWins+=rec.wins;
+      totalLosses+=rec.losses;
+      totalGames+=rec.games;
+
+      // Was this an interim/split season?
+      var otherCoachesThisSeason=coachIds.filter(function(other){
+        return other!==cid&&activity[other]&&activity[other][yr];
+      });
+
+      // Compute season's actual home wins from game data we already have.
+      var seasonGames=allGames.filter(function(g){
+        var d=new Date(g.date);
+        var gyr=d.getMonth()>=9?d.getFullYear()+1:d.getFullYear();
+        return gyr===yr;
+      });
+      var seasonHomeWins=seasonGames.filter(function(g){return g.home&&g.won}).length;
+      var seasonTotalWins=seasonGames.filter(function(g){return g.won}).length;
+
+      if(otherCoachesThisSeason.length===0){
+        // Solo-coached season: precise attribution
+        homeBeams+=seasonHomeWins;
+      }else{
+        // Split season: approximate by win share
+        hasApproxSeason=true;
+        if(seasonTotalWins>0){
+          homeBeams+=Math.round(seasonHomeWins*(rec.wins/seasonTotalWins));
+        }
+      }
+    });
+
+    coaches.push({
+      id:cid,
+      firstName:bio.firstName||'',
+      lastName:bio.lastName||'',
+      teamRef:bio.team?.['$ref']||'',
+      seasons:seasons,
+      wins:totalWins,
+      losses:totalLosses,
+      games:totalGames,
+      beams:totalWins, // displayed as wins, but used for compatibility with renderer's rate calc
+      homeBeams:homeBeams,
+      approx:hasApproxSeason
+    });
+  });
+
+  // STEP 5: Resolve current team for each coach.
+  await Promise.all(coaches.map(function(c){
+    if(!c.teamRef)return Promise.resolve();
+    return fj(c.teamRef).then(function(t){
+      c.currentTeamAbbr=t.abbreviation||'';
+      c.currentTeamName=t.displayName||'';
+    }).catch(function(){});
+  }));
+
+  coaches.sort(function(a,b){
+    if(b.homeBeams!==a.homeBeams)return b.homeBeams-a.homeBeams;
+    return b.games-a.games;
+  });
+  renderCoaches(coaches);
+}
+
+function renderCoaches(coaches){
+  if(coaches.length===0)return;
+  var app=document.getElementById('app');
+  var sec=$('div','list-section');
+  sec.appendChild($('div','section-header','Head Coaches'));
+  var list=$('div','coach-list');
+  var anyApprox=false;
+  coaches.forEach(function(c,i){
+    if(c.approx)anyApprox=true;
+    var row=document.createElement('div');row.className='coach-row'+(c.currentTeamAbbr==='SAC'?' current':'');
+    row.appendChild($('div','rank',String(i+1)));
+    var ph=$('div','ph-blank',(c.firstName?.[0]||'')+(c.lastName?.[0]||''));row.appendChild(ph);
+    var info=$('div','info');
+    var nameLine=$('div','name-line');
+    nameLine.appendChild($('div','name',(c.firstName?c.firstName+' ':'')+(c.lastName||'')));
+    var badge=$('div','team-badge');badge.dataset.cid=c.id;
+    if(c.currentTeamAbbr==='SAC'){
+      badge.className='team-badge sac';badge.appendChild($('span','','SAC'));
+    }else if(c.currentTeamAbbr){
+      badge.className='team-badge left';
+      var img=document.createElement('img');img.src='https://a.espncdn.com/i/teamlogos/nba/500/'+c.currentTeamAbbr.toLowerCase()+'.png';img.alt=c.currentTeamAbbr;
+      img.onerror=function(){this.style.display='none'};
+      badge.appendChild(img);badge.appendChild($('span','',c.currentTeamAbbr));
+    }else{
+      badge.className='team-badge unknown';badge.textContent='—';
+    }
+    nameLine.appendChild(badge);
+    info.appendChild(nameLine);
+    info.appendChild($('div','pos','Head Coach'+(c.approx?' · interim/split season':'')));
+    row.appendChild(info);
+    // Show ~ prefix when beam count is approximate
+    var beamsTxt=(c.approx?'~':'')+c.homeBeams;
+    row.appendChild($('div','beams',beamsTxt));
+    row.appendChild($('div','games',c.games+'g'));
+    var rateClass=c.games>=15?'':'low';
+    row.appendChild($('div','rate '+rateClass,c.games>0?Math.round(c.wins/c.games*100)+'%':'—'));
+    row.appendChild($('div','seasons',String(c.seasons.length)));
+    list.appendChild(row);
+  });
+  sec.appendChild(list);
+  var noteText='Discovered by probing ESPN\'s coach-records endpoint across all seasons since 2022-23 — surfaces both primary and interim coaches automatically. New hires get picked up on first request. Games and wins are precise from ESPN\'s per-coach records. ';
+  if(anyApprox)noteText+='"~" indicates an approximate beam count for split seasons (ESPN reports per-coach W-L but not home/road split — beams are approximated from each coach\'s share of total wins that season). ';
+  noteText+='Limitation: a purely-interim coach who is never the season\'s coach of record in any year would still be missed.';
+  sec.appendChild($('div','note',noteText));
+  app.appendChild(sec);
+}
+
+function aggregate(games){
+  var map={};
+  games.forEach(function(g){
+    g.players.forEach(function(p){
+      if(!map[p.id]){
+        map[p.id]={id:p.id,name:p.name,position:p.position,jersey:p.jersey,beams:0,games:0,homeBeams:0,homeGames:0,seasons:{},totalMinutes:0};
+      }
+      var rec=map[p.id];
+      rec.games++;
+      rec.totalMinutes+=p.minutes;
+      if(g.won)rec.beams++;
+      if(g.home){rec.homeGames++;if(g.won)rec.homeBeams++}
+      // Track season — use ESPN convention: end-year
+      var d=new Date(g.date);
+      var yr=d.getMonth()>=9?d.getFullYear()+1:d.getFullYear();
+      rec.seasons[yr]=1;
+      // Keep latest name/position seen (most current)
+      rec.name=p.name;
+      if(p.position)rec.position=p.position;
+      if(p.jersey)rec.jersey=p.jersey;
+    });
+  });
+  var arr=Object.values(map);
+  arr.forEach(function(r){r.seasonCount=Object.keys(r.seasons).length});
+  arr.sort(function(a,b){
+    if(b.homeBeams!==a.homeBeams)return b.homeBeams-a.homeBeams;
+    if(b.beams!==a.beams)return b.beams-a.beams;
+    return b.games-a.games;
+  });
+  return arr;
+}
+
+function render(rows){
+  var app=document.getElementById('app');app.textContent='';
+  var sec=$('div','list-section');
+
+  var hdr=$('div','header-row');
+  hdr.appendChild($('div','col-label','#'));
+  hdr.appendChild($('div','ph'));
+  var name=$('div','col-label','Player');name.style.textAlign='left';hdr.appendChild(name);
+  hdr.appendChild($('div','col-label','Beams'));
+  hdr.appendChild($('div','col-label','Games'));
+  var rateLbl=$('div','col-label col-rate','Win %');hdr.appendChild(rateLbl);
+  var seasonsLbl=$('div','col-label col-seasons','Sns');hdr.appendChild(seasonsLbl);
+  sec.appendChild(hdr);
+
+  var list=$('div','player-list');
+  rows.forEach(function(r,i){
+    var row=document.createElement('a');row.className='player-row'+(i<5&&r.homeBeams>0?' top':'');
+    row.href='/player?id='+r.id;
+    row.dataset.pid=r.id;
+    row.appendChild($('div','rank',String(i+1)));
+    var img=document.createElement('img');img.className='ph';img.src=pl(r.id);img.alt=r.name;
+    img.onerror=function(){this.style.opacity='0.2';this.src='/kings-logo.png'};
+    row.appendChild(img);
+    var info=$('div','info');
+    var nameLine=$('div','name-line');
+    nameLine.appendChild($('div','name',r.name));
+    nameLine.appendChild($('div','team-badge loading','···'));
+    info.appendChild(nameLine);
+    var posTxt=r.position+(r.jersey?' · #'+r.jersey:'');
+    info.appendChild($('div','pos',posTxt));
+    row.appendChild(info);
+    row.appendChild($('div','beams',String(r.homeBeams)));
+    row.appendChild($('div','games',r.games+'g'));
+    var rateClass=r.games>=15?'':'low';
+    row.appendChild($('div','rate '+rateClass,pct(r.beams,r.games)));
+    row.appendChild($('div','seasons',String(r.seasonCount)));
+    list.appendChild(row);
+  });
+  sec.appendChild(list);
+
+  sec.appendChild($('div','note','"Beams" counts Kings home wins the player was on the floor for. "Games" includes home + road. "Sns" is seasons played for the Kings during the beam era. Includes regular season and playoffs. Active roster + every player traded away, signed, or waived since 2022-23. Trade-resilient: data derived from box scores per game — when a player stops appearing in Kings box scores, their totals freeze.'));
+
+  app.appendChild(sec);
+}
+
+loadAll().catch(function(e){
+  console.error(e);
+  hideProgress();
+  document.getElementById('app').innerHTML='<p class="err">Couldn\'t load totals.</p>';
+});
+</script>
+</body>
+</html>
