@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Beam Contributors — Light the Beam</title>
-<meta name="description" content="Every Sacramento King ranked by beams (home wins lit since Oct 29, 2022). Pre-beam tab shows the 2001-02 era's home wins separately.">
+<meta name="description" content="Every Sacramento King ranked by beams — wins, home or road, since Oct 29, 2022. Pre-beam tab shows the 2001-02 era's wins separately.">
 <meta name="theme-color" content="#5b2d8e">
 <link rel="canonical" href="https://lightthebe.am/totals">
 <link rel="icon" type="image/png" href="/kings-logo.png">
@@ -94,7 +94,7 @@ body.beam-dormant::before{content:'';position:fixed;bottom:0;left:50%;transform:
 </nav>
 <div class="hero">
   <div class="page-title">Beam Contributors</div>
-  <div class="page-sub">Every Sacramento King ranked by beams they were on the floor for. The beam first lit October 29, 2022 — pre-beam home wins are shown on a separate tab, not counted as beams.</div>
+  <div class="page-sub">Every Sacramento King ranked by beams they were on the floor for — every win lights the beam, home or road. The beam first lit October 29, 2022 — pre-beam wins are shown on a separate tab, not counted as beams.</div>
   <div class="tab-bar" id="tabBar"></div>
   <div class="status-bar" id="statusBar"><span class="status-dot"></span><span id="statusText">Loading…</span></div>
 </div>
@@ -201,7 +201,6 @@ function aggregate(games){
   var arr=Object.values(map);
   arr.forEach(function(r){r.seasonCount=Object.keys(r.seasons).length});
   arr.sort(function(a,b){
-    if(b.homeBeams!==a.homeBeams)return b.homeBeams-a.homeBeams;
     if(b.wins!==a.wins)return b.wins-a.wins;
     return b.games-a.games;
   });
@@ -264,7 +263,8 @@ function rerenderActiveTab(){
 }
 
 // Filter games + aggregate. For beam tab: only beam-era games; metric label = "Beams".
-// For historical tab: only pre-beam games; metric label = "Home Wins".
+// For historical tab: only pre-beam games; metric label = "Wins".
+// A beam = ANY Kings win (home or road) the player was on the floor for.
 function aggregateForTab(games,tab){
   var filtered=games.filter(function(g){
     if(tab==='beam')return!isPreBeam(g);
@@ -280,7 +280,7 @@ function renderPlayers(rows,tab){
   if(oldSec)oldSec.remove();
   var sec=$('div','list-section');sec.id='playerListSec';
 
-  var metricLabel=tab==='beam'?'Beams':'Home Wins';
+  var metricLabel=tab==='beam'?'Beams':'Wins';
 
   var hdr=$('div','header-row');
   hdr.appendChild($('div','col-label','#'));
@@ -294,7 +294,7 @@ function renderPlayers(rows,tab){
 
   var list=$('div','player-list');
   rows.forEach(function(r,i){
-    var row=document.createElement('a');row.className='player-row'+(i<5&&r.homeBeams>0?' top':'');
+    var row=document.createElement('a');row.className='player-row'+(i<5&&r.wins>0?' top':'');
     row.href='/player?id='+r.id;
     row.dataset.pid=r.id;
     row.appendChild($('div','rank',String(i+1)));
@@ -308,19 +308,19 @@ function renderPlayers(rows,tab){
     info.appendChild(nameLine);
     info.appendChild($('div','pos',r.pos||''));
     row.appendChild(info);
-    row.appendChild($('div','beams',String(r.homeBeams)));
+    row.appendChild($('div','beams',String(r.wins)));
     row.appendChild($('div','games',r.games+'g'));
     var rateClass=r.games>=15?'':'low';
-    row.appendChild($('div','rate '+rateClass,pct(r.homeBeams,r.homeGames)));
+    row.appendChild($('div','rate '+rateClass,pct(r.wins,r.games)));
     row.appendChild($('div','seasons',String(r.seasonCount)));
     list.appendChild(row);
   });
   sec.appendChild(list);
   var noteText;
   if(tab==='beam'){
-    noteText='"Beams" = Sacramento Kings home wins the player was on the floor for, since the beam was first lit on Oct 29, 2022. "Games" = all games (home + road) they played for the Kings during that window. Pre-beam stints are tracked on the other tab.';
+    noteText='"Beams" = Sacramento Kings wins — home OR road — the player was on the floor for, since the beam was first lit on Oct 29, 2022. Every win lights the beam, not just home wins. "Games" = all games they played for the Kings during that window. "Win %" is across all those games. Pre-beam stints are tracked on the other tab.';
   }else{
-    noteText='"Home Wins" = Sacramento Kings home wins the player was on the floor for, BEFORE the beam tradition started. These are not "beams" — the beam didn\'t exist yet. Data spans 2001-02 through October 28, 2022. The 2001-02 team\'s historic home dominance dominates this list.';
+    noteText='"Wins" = Sacramento Kings wins (home or road) the player was on the floor for, BEFORE the beam tradition started. These are not "beams" — the beam didn\'t exist yet. Data spans 2001-02 through October 28, 2022.';
   }
   sec.appendChild($('div','note',noteText));
   app.appendChild(sec);

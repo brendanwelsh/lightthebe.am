@@ -208,10 +208,11 @@ async function loadAll(){
       totalWins+=rec.wins;totalLosses+=rec.losses;totalGames+=rec.games;
       var others=coachIds.filter(function(o){return o!==cid&&activity[o]&&activity[o][yr]});
       var seasonGames=allGames.filter(function(g){return seasonOfDate(g.date)===yr});
-      var seasonHomeWins=seasonGames.filter(function(g){return g.home&&g.won}).length;
+      // A beam = ANY win (home or road) in the beam era. Not home wins.
+      var seasonBeamWins=seasonGames.filter(function(g){return g.won&&!isPreBeam(g)}).length;
       var seasonTotalWins=seasonGames.filter(function(g){return g.won}).length;
-      if(others.length===0){homeBeams+=seasonHomeWins}
-      else{approx=true;if(seasonTotalWins>0)homeBeams+=Math.round(seasonHomeWins*(rec.wins/seasonTotalWins))}
+      if(others.length===0){homeBeams+=seasonBeamWins}
+      else{approx=true;if(seasonTotalWins>0)homeBeams+=Math.round(seasonBeamWins*(rec.wins/seasonTotalWins))}
     });
     coaches.push({id:cid,firstName:bio.firstName||'',lastName:bio.lastName||'',
       teamRef:bio.team?.['$ref']||'',seasons:seasons,wins:totalWins,losses:totalLosses,games:totalGames,

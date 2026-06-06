@@ -171,9 +171,9 @@ function render(bio,gamelog,schedule){
   });
   attribution.rows.sort(function(a,b){return new Date(b.date)-new Date(a.date)});
 
-  // Beam metric card
+  // Beam metric card — a beam = ANY Kings win (home or road) while on the floor
   var metric=$('div','beam-metric');
-  metric.appendChild($('div','big',String(attribution.homeBeams)));
+  metric.appendChild($('div','big',String(attribution.beams)));
   metric.appendChild($('div','label','beams lit while on the floor'));
   var subText=attribution.games>0?(attribution.beams+' wins · '+attribution.games+' games · '+pct(attribution.beams,attribution.games)+' win rate'):'no Kings games this season';
   metric.appendChild($('div','sub',subText));
@@ -218,7 +218,7 @@ function render(bio,gamelog,schedule){
     gSec.appendChild($('div','section-title','Kings Games Played'));
     var list=$('div','game-list');
     attribution.rows.forEach(function(r){
-      var row=document.createElement('a');row.className='game-row '+(r.won&&r.home?'lit':(r.won?'':'dark'));
+      var row=document.createElement('a');row.className='game-row '+(r.won?'lit':'dark');
       row.href='/game.html?id='+r.eventId;
       row.appendChild($('div','date',fs(r.date)));
       row.appendChild($('div','opp',(r.home?'vs ':'@ ')+r.opp));
@@ -227,7 +227,7 @@ function render(bio,gamelog,schedule){
       list.appendChild(row);
     });
     gSec.appendChild(list);
-    gSec.appendChild($('div','note','Beam credit applies only to home wins. Road wins are counted toward win rate but the beam stays dark.'));
+    gSec.appendChild($('div','note','Every Kings win lights the beam — home or road. Each win here counts as a beam.'));
     app.appendChild(gSec);
   }else{
     var noteSec=$('div','section');

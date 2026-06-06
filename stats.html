@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Stats — Light the Beam</title>
-<meta name="description" content="Beam stats and records since Oct 29, 2022. Charts, big numbers, and pre-beam Kings home-win history for context.">
+<meta name="description" content="Beam stats and records since Oct 29, 2022 — every Kings win, home or road. Charts, big numbers, and pre-beam Kings win history for context.">
 <meta name="theme-color" content="#5b2d8e">
 <link rel="canonical" href="https://lightthebe.am/stats">
 <link rel="icon" type="image/png" href="/kings-logo.png">
@@ -255,10 +255,10 @@ function biggestDeficit(g){
 }
 
 // Generic record computation. Caller filters games to beam-era OR pre-beam first.
+// A beam = ANY Kings win, home OR road. Records span all wins, not just home wins.
 function computeRecords(games){
-  var sorted=games.slice().sort(function(a,b){return new Date(a.date)-new Date(b.date)});
-  var homeGames=sorted.filter(function(g){return g.home});
-  var homeWins=homeGames.filter(function(g){return g.won});
+  var allGames=games.slice().sort(function(a,b){return new Date(a.date)-new Date(b.date)});
+  var wins=allGames.filter(function(g){return g.won});
 
   function best(arr,score){
     var top=null,topScore=-Infinity;
@@ -271,16 +271,16 @@ function computeRecords(games){
     return top?{game:top,score:topScore}:null;
   }
 
-  var brightest=best(homeWins,function(g){return g.kScore-g.oScore});
-  var almostDark=worst(homeWins,function(g){return g.kScore-g.oScore});
-  var brink=best(homeWins,biggestDeficit);
-  var arch=best(homeWins,function(g){return nz(g.sacStats?.assists)});
-  var heist=best(homeWins,function(g){return nz(g.sacStats?.steals)});
-  var highScore=best(homeWins,function(g){return g.kScore});
+  var brightest=best(wins,function(g){return g.kScore-g.oScore});
+  var almostDark=worst(wins,function(g){return g.kScore-g.oScore});
+  var brink=best(wins,biggestDeficit);
+  var arch=best(wins,function(g){return nz(g.sacStats?.assists)});
+  var heist=best(wins,function(g){return nz(g.sacStats?.steals)});
+  var highScore=best(wins,function(g){return g.kScore});
 
   function longestStreak(filter){
     var max={count:0,games:[]},cur=[];
-    homeGames.forEach(function(g){
+    allGames.forEach(function(g){
       if(filter(g)){cur.push(g)}
       else{if(cur.length>max.count)max={count:cur.length,games:cur.slice()};cur=[]}
     });
@@ -290,19 +290,19 @@ function computeRecords(games){
   var inferno=longestStreak(function(g){return g.won});
   var dark=longestStreak(function(g){return!g.won});
 
-  var fortress={wins:homeWins.length,losses:homeGames.length-homeWins.length,games:homeGames.length};
-  var firstBeam=homeWins[0]||null;
-  var latestBeam=homeWins[homeWins.length-1]||null;
+  var fortress={wins:wins.length,losses:allGames.length-wins.length,games:allGames.length};
+  var firstBeam=wins[0]||null;
+  var latestBeam=wins[wins.length-1]||null;
 
-  var oppCount={};homeWins.forEach(function(g){oppCount[g.opp]=(oppCount[g.opp]||0)+1});
+  var oppCount={};wins.forEach(function(g){oppCount[g.opp]=(oppCount[g.opp]||0)+1});
   var mostBeamedOpp=null;Object.keys(oppCount).forEach(function(opp){if(!mostBeamedOpp||oppCount[opp]>mostBeamedOpp.count)mostBeamedOpp={opp:opp,count:oppCount[opp]}});
 
-  // Cadence — average days between consecutive home wins in this dataset
+  // Cadence — average days between consecutive wins (beams) in this dataset
   var cadence=null;
-  if(homeWins.length>=2){
+  if(wins.length>=2){
     var gaps=[];
-    for(var i=1;i<homeWins.length;i++){
-      gaps.push((new Date(homeWins[i].date)-new Date(homeWins[i-1].date))/86400000);
+    for(var i=1;i<wins.length;i++){
+      gaps.push((new Date(wins[i].date)-new Date(wins[i-1].date))/86400000);
     }
     cadence=gaps.reduce(function(a,b){return a+b},0)/gaps.length;
   }
@@ -310,7 +310,7 @@ function computeRecords(games){
   return{brightest:brightest,almostDark:almostDark,brink:brink,arch:arch,heist:heist,
     highScore:highScore,inferno:inferno,dark:dark,fortress:fortress,
     firstBeam:firstBeam,latestBeam:latestBeam,cadence:cadence,
-    mostBeamedOpp:mostBeamedOpp,homeWins:homeWins};
+    mostBeamedOpp:mostBeamedOpp,wins:wins};
 }
 
 // ===== Render =====
@@ -361,7 +361,7 @@ function renderAll(games,partial){
     var preR=computeRecords(preGames);
     var hdr2=$('div','section-header');
     hdr2.appendChild($('span','','Pre-Beam Highlights'));
-    hdr2.appendChild($('span','sub','home wins, not beams · 2001-02 → Oct 28, 2022'));
+    hdr2.appendChild($('span','sub','wins, not beams · 2001-02 → Oct 28, 2022'));
     app.appendChild(hdr2);
     var grid2=$('div','records-grid');
     renderPreBeamCards(grid2,preR);
@@ -374,7 +374,7 @@ function renderBigStats(app,r,games){
   var beams=r.fortress.wins;
   var beamMinutes=beams*60;
   var winRate=r.fortress.games>0?Math.round(beams/r.fortress.games*100):0;
-  var avgMargin=beams>0?(games.filter(function(g){return g.home&&g.won}).reduce(function(s,g){return s+(g.kScore-g.oScore)},0)/beams).toFixed(1):'—';
+  var avgMargin=beams>0?(games.filter(function(g){return g.won}).reduce(function(s,g){return s+(g.kScore-g.oScore)},0)/beams).toFixed(1):'—';
 
   function card(v,l,sub,accent){
     var c=document.createElement('div');c.className='big-stat'+(accent?' accent':'');
@@ -386,20 +386,20 @@ function renderBigStats(app,r,games){
   sec.appendChild(card(beams,'Beams','since Oct 29, 2022',true));
   sec.appendChild(card(beamMinutes.toLocaleString(),'Minutes Lit','~60 min per beam'));
   sec.appendChild(card('+'+avgMargin,'Avg Margin','per beam win'));
-  sec.appendChild(card(winRate+'%','Home Win Rate',r.fortress.wins+'-'+r.fortress.losses+' at home'));
+  sec.appendChild(card(winRate+'%','Win Rate',r.fortress.wins+'-'+r.fortress.losses+' · beam era'));
   app.appendChild(sec);
 }
 
 function renderSeasonBars(app,games){
   var bySeason={};
-  games.forEach(function(g){if(g.home&&g.won){var yr=seasonYrOf(g);bySeason[yr]=(bySeason[yr]||0)+1}});
+  games.forEach(function(g){if(g.won){var yr=seasonYrOf(g);bySeason[yr]=(bySeason[yr]||0)+1}});
   var years=Object.keys(bySeason).map(Number).sort();
   if(years.length===0)return;
   var max=Math.max.apply(null,Object.values(bySeason));
 
   var hdr=$('div','section-header');
   hdr.appendChild($('span','','Beams by Season'));
-  hdr.appendChild($('span','sub','home wins per season'));
+  hdr.appendChild($('span','sub','beams (wins) per season'));
   app.appendChild(hdr);
 
   var bars=document.createElement('div');bars.className='season-bars';
@@ -421,7 +421,7 @@ function renderMonthHeatmap(app,games){
   var months=['OCT','NOV','DEC','JAN','FEB','MAR','APR'];
   var bySeasonMonth={};
   games.forEach(function(g){
-    if(!(g.home&&g.won))return;
+    if(!g.won)return;
     var dt=new Date(g.date);
     var yr=dt.getMonth()>=9?dt.getFullYear()+1:dt.getFullYear();
     var monthIdx=dt.getMonth();
@@ -467,12 +467,12 @@ function renderMonthHeatmap(app,games){
 function renderBeamCards(grid,r){
   if(r.brightest){
     var g=r.brightest.game;
-    grid.appendChild(recordCard('Brightest Beam','Largest home-win margin','+'+r.brightest.score,g,
+    grid.appendChild(recordCard('Brightest Beam','Largest win margin','+'+r.brightest.score,g,
       'SAC '+g.kScore+'-'+g.oScore+' '+tn(g.opp)+' · '+fmtDate(g.date)));
   }
   if(r.brink&&r.brink.score>0){
     var g=r.brink.game;
-    grid.appendChild(recordCard('Beam from the Brink','Largest deficit overcome at home','down '+r.brink.score,g,
+    grid.appendChild(recordCard('Beam from the Brink','Largest deficit overcome','down '+r.brink.score,g,
       'Came back to beat '+tn(g.opp)+' '+g.kScore+'-'+g.oScore+' · '+fmtDate(g.date)));
   }
   if(r.arch){
@@ -501,11 +501,11 @@ function renderBeamCards(grid,r){
   }
   if(r.dark.count>0){
     var range=r.dark.games.length?fmtDate(r.dark.games[0].date)+' → '+fmtDate(r.dark.games[r.dark.games.length-1].date):'';
-    grid.appendChild(recordCard('The Long Dark','Longest beam-off streak (home losses)',r.dark.count+' straight',null,range));
+    grid.appendChild(recordCard('The Long Dark','Longest beam-off streak (losses)',r.dark.count+' straight',null,range));
   }
-  grid.appendChild(recordCard('Beam Fortress','Home record · beam era',
+  grid.appendChild(recordCard('Beam Record','Win-loss · beam era',
     r.fortress.wins+'-'+r.fortress.losses,null,
-    Math.round(r.fortress.wins/r.fortress.games*100)+'% home win rate across '+r.fortress.games+' games'));
+    Math.round(r.fortress.wins/r.fortress.games*100)+'% win rate across '+r.fortress.games+' games'));
   if(r.mostBeamedOpp){
     grid.appendChild(recordCard('Frequent Flyer','Opponent SAC has beamed most',tn(r.mostBeamedOpp.opp),null,
       r.mostBeamedOpp.count+' beams lit against them'));
@@ -531,51 +531,51 @@ function renderBeamCards(grid,r){
 }
 
 function renderPreBeamCards(grid,r){
-  // Same metrics, neutral language ("home win" not "beam")
+  // Same metrics, neutral language ("win" not "beam")
   if(r.brightest){
     var g=r.brightest.game;
-    grid.appendChild(recordCard('Biggest Blowout','Largest pre-beam home-win margin','+'+r.brightest.score,g,
+    grid.appendChild(recordCard('Biggest Blowout','Largest pre-beam win margin','+'+r.brightest.score,g,
       'SAC '+g.kScore+'-'+g.oScore+' '+tn(g.opp)+' · '+fmtDate(g.date)));
   }
   if(r.brink&&r.brink.score>0){
     var g=r.brink.game;
-    grid.appendChild(recordCard('Biggest Comeback','Largest deficit overcome at home','down '+r.brink.score,g,
+    grid.appendChild(recordCard('Biggest Comeback','Largest deficit overcome','down '+r.brink.score,g,
       'Came back to beat '+tn(g.opp)+' '+g.kScore+'-'+g.oScore+' · '+fmtDate(g.date)));
   }
   if(r.arch){
     var g=r.arch.game;
-    grid.appendChild(recordCard('Most Assists','In a pre-beam home win',r.arch.score+' AST',g,
+    grid.appendChild(recordCard('Most Assists','In a pre-beam win',r.arch.score+' AST',g,
       'vs '+tn(g.opp)+' '+g.kScore+'-'+g.oScore+' · '+fmtDate(g.date)));
   }
   if(r.heist){
     var g=r.heist.game;
-    grid.appendChild(recordCard('Most Steals','In a pre-beam home win',r.heist.score+' STL',g,
+    grid.appendChild(recordCard('Most Steals','In a pre-beam win',r.heist.score+' STL',g,
       'vs '+tn(g.opp)+' '+g.kScore+'-'+g.oScore+' · '+fmtDate(g.date)));
   }
   if(r.highScore){
     var g=r.highScore.game;
-    grid.appendChild(recordCard('Highest Scoring','Most Kings points in a pre-beam home win',String(r.highScore.score),g,
+    grid.appendChild(recordCard('Highest Scoring','Most Kings points in a pre-beam win',String(r.highScore.score),g,
       'vs '+tn(g.opp)+' · '+fmtDate(g.date)));
   }
   if(r.almostDark){
     var g=r.almostDark.game;
-    grid.appendChild(recordCard('Closest Win','Smallest margin pre-beam home win','+'+r.almostDark.score,g,
+    grid.appendChild(recordCard('Closest Win','Smallest margin pre-beam win','+'+r.almostDark.score,g,
       'SAC '+g.kScore+'-'+g.oScore+' '+tn(g.opp)+' · '+fmtDate(g.date)));
   }
   if(r.inferno.count>0){
     var range=r.inferno.games.length?fmtDate(r.inferno.games[0].date)+' → '+fmtDate(r.inferno.games[r.inferno.games.length-1].date):'';
-    grid.appendChild(recordCard('Longest Home Win Streak','Pre-beam consecutive home wins',r.inferno.count+' in a row',null,range));
+    grid.appendChild(recordCard('Longest Win Streak','Pre-beam consecutive wins',r.inferno.count+' in a row',null,range));
   }
   if(r.dark.count>0){
     var range=r.dark.games.length?fmtDate(r.dark.games[0].date)+' → '+fmtDate(r.dark.games[r.dark.games.length-1].date):'';
-    grid.appendChild(recordCard('Longest Home Loss Streak','Pre-beam consecutive home losses',r.dark.count+' straight',null,range));
+    grid.appendChild(recordCard('Longest Loss Streak','Pre-beam consecutive losses',r.dark.count+' straight',null,range));
   }
-  grid.appendChild(recordCard('Pre-Beam Home Record','2001-02 → Oct 28, 2022',
+  grid.appendChild(recordCard('Pre-Beam Record','2001-02 → Oct 28, 2022',
     r.fortress.wins+'-'+r.fortress.losses,null,
-    Math.round(r.fortress.wins/r.fortress.games*100)+'% home win rate across '+r.fortress.games+' games'));
+    Math.round(r.fortress.wins/r.fortress.games*100)+'% win rate across '+r.fortress.games+' games'));
   if(r.firstBeam){
     var g=r.firstBeam;
-    grid.appendChild(recordCard('First Tracked Home Win','Oldest in our dataset',fmtDate(g.date),g,
+    grid.appendChild(recordCard('First Tracked Win','Oldest in our dataset',fmtDate(g.date),g,
       'SAC '+g.kScore+'-'+g.oScore+' '+tn(g.opp)));
   }
 }

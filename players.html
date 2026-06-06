@@ -71,7 +71,7 @@ body.beam-dormant::before{content:'';position:fixed;bottom:0;left:50%;transform:
 </nav>
 <div class="hero">
   <div class="page-title">Current Roster</div>
-  <div class="page-sub">Today's Sacramento Kings ranked by career beams (home wins they were on the floor for since the beam first lit on Oct 29, 2022).</div>
+  <div class="page-sub">Today's Sacramento Kings ranked by career beams (wins — home or road — they were on the floor for since the beam first lit on Oct 29, 2022).</div>
   <div class="status-bar" id="statusBar"><span class="status-dot"></span><span id="statusText">Loading…</span></div>
 </div>
 <div id="app"></div>
@@ -238,14 +238,13 @@ function renderRoster(rosterMap,careerMap){
     return r;
   });
   rows.sort(function(a,b){
-    if(b.homeBeams!==a.homeBeams)return b.homeBeams-a.homeBeams;
     if(b.wins!==a.wins)return b.wins-a.wins;
     return b.games-a.games;
   });
 
   var list=$('div','player-list');
   rows.forEach(function(r,i){
-    var row=document.createElement('a');row.className='player-row'+(i<3&&r.homeBeams>0?' top':'');
+    var row=document.createElement('a');row.className='player-row'+(i<3&&r.wins>0?' top':'');
     row.href='/player?id='+r.id;
     row.appendChild($('div','rank',String(i+1)));
     var img=document.createElement('img');img.className='ph';img.src=r.headshot;img.alt=r.name;
@@ -256,15 +255,15 @@ function renderRoster(rosterMap,careerMap){
     var posTxt=(r.pos||'')+(r.jersey?' · #'+r.jersey:'');
     info.appendChild($('div','pos',posTxt));
     row.appendChild(info);
-    row.appendChild($('div','beams',String(r.homeBeams)));
+    row.appendChild($('div','beams',String(r.wins)));
     row.appendChild($('div','games',r.games+'g'));
-    var rateClass=r.homeGames>=15?'':'low';
-    row.appendChild($('div','rate '+rateClass,pct(r.homeBeams,r.homeGames)));
+    var rateClass=r.games>=15?'':'low';
+    row.appendChild($('div','rate '+rateClass,pct(r.wins,r.games)));
     row.appendChild($('div','seasons',String(r.seasonCount||0)));
     list.appendChild(row);
   });
   sec.appendChild(list);
-  sec.appendChild($('div','note','"Beams" = Sacramento Kings home wins this current-roster player has been on the floor for since the beam first lit on Oct 29, 2022. "Games" = all games (home + road) they played as a King during that window. "Sns" = seasons. Rookies start with their current-season count.'));
+  sec.appendChild($('div','note','"Beams" = Sacramento Kings wins — home OR road — this current-roster player has been on the floor for since the beam first lit on Oct 29, 2022. Every win lights the beam, not just home wins. "Games" = all games they played as a King during that window. "Win %" is across all those games. "Sns" = seasons. Rookies start with their current-season count.'));
   app.appendChild(sec);
 }
 
