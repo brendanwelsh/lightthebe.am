@@ -29,6 +29,11 @@ body.beam-dormant::before{content:'';position:fixed;bottom:0;left:50%;transform:
 .status-bar.done .status-dot{animation:none;opacity:.3;box-shadow:none}
 @keyframes dotPulse{0%,100%{opacity:.4;transform:scale(.85)}50%{opacity:1;transform:scale(1.1)}}
 
+.season-bar{display:flex;justify-content:center;gap:.4rem;flex-wrap:wrap;margin:.9rem 0 .2rem}
+.season-pill{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:.28rem .8rem;font-size:.65rem;font-weight:800;color:rgba(255,255,255,.45);cursor:pointer;white-space:nowrap;transition:all .15s;text-transform:uppercase;letter-spacing:.08em}
+.season-pill:hover{background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+.season-pill.active{background:var(--beam);border-color:var(--beam);color:#fff}
+
 .list-section{width:100%;max-width:840px;padding:0 1rem;margin-top:1rem;position:relative;z-index:1}
 .player-list{display:flex;flex-direction:column;gap:.4rem}
 .player-row{display:grid;grid-template-columns:2rem auto 1fr auto auto auto auto;align-items:center;padding:.6rem .85rem;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.04);border-radius:10px;text-decoration:none;color:inherit;transition:all .15s;gap:.7rem;border-left:3px solid transparent}
@@ -69,8 +74,9 @@ body.beam-dormant::before{content:'';position:fixed;bottom:0;left:50%;transform:
   <a href="/stats">Stats</a>
 </nav>
 <div class="hero">
-  <div class="page-title">Current Roster</div>
-  <div class="page-sub">Today's Sacramento Kings ranked by career beams (wins — home or road — they were on the floor for since the beam first lit on Oct 29, 2022).</div>
+  <div class="page-title" id="pageTitle">Current Roster</div>
+  <div class="page-sub" id="pageSub">Today's Sacramento Kings ranked by career beams (wins — home or road — they were on the floor for since the beam first lit on Oct 29, 2022).</div>
+  <div class="season-bar" id="seasonBar"></div>
   <div class="status-bar" id="statusBar"><span class="status-dot"></span><span id="statusText">Loading…</span></div>
 </div>
 <div id="app"></div>
@@ -82,6 +88,23 @@ function isPreBeam(g){return g.preBeam!==undefined?g.preBeam:(g.date<BEAM_START_
 
 var ROSTER_MAP={};
 var ALL_GAMES=[];
+// Year-aware roster: 'current' = today's live roster; a year = that season's roster from history.
+var viewSeason='current';
+// Past beam seasons that have archived rosters (current season shows the live roster instead).
+var PAST_BEAM_SEASONS=[];for(var py=CURRENT_SEASON-1;py>=2023;py--)PAST_BEAM_SEASONS.push(py);
+function seasonLabel(yr){return(yr-1)+'-'+String(yr).slice(2)}
+
+function buildSeasonBar(){
+  var bar=document.getElementById('seasonBar');if(!bar)return;
+  bar.textContent='';
+  function pill(label,val){
+    var p=$('div','season-pill'+(viewSeason===val?' active':''),label);
+    p.addEventListener('click',function(){if(viewSeason===val)return;viewSeason=val;buildSeasonBar();rerender();});
+    bar.appendChild(p);
+  }
+  pill('Current','current');
+  PAST_BEAM_SEASONS.forEach(function(yr){pill(seasonLabel(yr),yr)});
+}
 
 function $(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e}
 function pl(id){return'https://a.espncdn.com/i/headshots/nba/players/full/'+id+'.png'}
@@ -206,13 +229,35 @@ async function loadAll(){
 }
 
 function rerender(){
-  var currentSet=new Set(Object.keys(ROSTER_MAP));
-  var beamGames=ALL_GAMES.filter(function(g){return!isPreBeam(g)});
-  var careerMap=aggregate(beamGames,currentSet);
-  renderRoster(ROSTER_MAP,careerMap);
+  var title=document.getElementById('pageTitle'),sub=document.getElementById('pageSub');
+  if(viewSeason==='current'){
+    if(title)title.textContent='Current Roster';
+    if(sub)sub.textContent="Today's Sacramento Kings ranked by career beams (wins — home or road — they were on the floor for since the beam first lit on Oct 29, 2022).";
+    var currentSet=new Set(Object.keys(ROSTER_MAP));
+    var beamGames=ALL_GAMES.filter(function(g){return!isPreBeam(g)});
+    var careerMap=aggregate(beamGames,currentSet);
+    var rows=Object.keys(ROSTER_MAP).map(function(id){
+      var r=careerMap[id]||{id:id,wins:0,games:0,seasonCount:0};
+      r.headshot=ROSTER_MAP[id].headshot;
+      r.name=ROSTER_MAP[id].name||r.name;
+      r.pos=ROSTER_MAP[id].pos||r.pos;
+      r.jersey=ROSTER_MAP[id].jersey;
+      return r;
+    });
+    renderList(rows,'current');
+  }else{
+    var yr=viewSeason;
+    if(title)title.textContent=seasonLabel(yr)+' Roster';
+    if(sub)sub.textContent='Sacramento Kings who took the floor in '+seasonLabel(yr)+', ranked by beams (wins — home or road — they were on the floor for).';
+    var seasonGames=ALL_GAMES.filter(function(g){return seasonOfDate(g.date)===yr&&!isPreBeam(g)});
+    var map=aggregate(seasonGames,null);
+    var rows=Object.keys(map).map(function(k){var r=map[k];r.headshot=pl(r.id);return r;});
+    renderList(rows,'season');
+  }
 }
 
-function renderRoster(rosterMap,careerMap){
+function renderList(rows,mode){
+  rows.sort(function(a,b){if(b.wins!==a.wins)return b.wins-a.wins;return b.games-a.games;});
   var app=document.getElementById('app');
   var oldSec=document.getElementById('rosterListSec');if(oldSec)oldSec.remove();
   var sec=$('div','list-section');sec.id='rosterListSec';
@@ -224,48 +269,44 @@ function renderRoster(rosterMap,careerMap){
   hdr.appendChild($('div','col-label','Beams'));
   hdr.appendChild($('div','col-label','Games'));
   hdr.appendChild($('div','col-label col-rate','Win %'));
-  hdr.appendChild($('div','col-label col-seasons','Sns'));
+  hdr.appendChild($('div','col-label col-seasons',mode==='current'?'Sns':'Pos'));
   sec.appendChild(hdr);
 
-  // Build rows for each current roster player. Use career map if exists, else zeroes.
-  var rows=Object.keys(rosterMap).map(function(id){
-    var r=careerMap[id]||{id:id,homeBeams:0,homeGames:0,wins:0,games:0,seasonCount:0};
-    r.headshot=rosterMap[id].headshot;
-    r.name=rosterMap[id].name||r.name;
-    r.pos=rosterMap[id].pos||r.pos;
-    r.jersey=rosterMap[id].jersey;
-    return r;
-  });
-  rows.sort(function(a,b){
-    if(b.wins!==a.wins)return b.wins-a.wins;
-    return b.games-a.games;
-  });
+  if(rows.length===0){
+    sec.appendChild($('p','err','No roster data for this season yet.'));
+    app.appendChild(sec);return;
+  }
 
   var list=$('div','player-list');
   rows.forEach(function(r,i){
     var row=document.createElement('a');row.className='player-row'+(i<3&&r.wins>0?' top':'');
     row.href='/player?id='+r.id;
     row.appendChild($('div','rank',String(i+1)));
-    var img=document.createElement('img');img.className='ph';img.src=r.headshot;img.alt=r.name;
+    var img=document.createElement('img');img.className='ph';img.src=r.headshot||pl(r.id);img.alt=r.name;
     img.onerror=function(){this.style.opacity='0.2';this.src='/kings-logo.png'};
     row.appendChild(img);
     var info=$('div','info');
     info.appendChild($('div','name',r.name));
-    var posTxt=(r.pos||'')+(r.jersey?' · #'+r.jersey:'');
+    var posTxt=(r.pos||'')+(mode==='current'&&r.jersey?' · #'+r.jersey:'');
     info.appendChild($('div','pos',posTxt));
     row.appendChild(info);
     row.appendChild($('div','beams',String(r.wins)));
     row.appendChild($('div','games',r.games+'g'));
     var rateClass=r.games>=15?'':'low';
     row.appendChild($('div','rate '+rateClass,pct(r.wins,r.games)));
-    row.appendChild($('div','seasons',String(r.seasonCount||0)));
+    // Last column: seasons count (career view) or position (season view)
+    row.appendChild($('div','seasons',mode==='current'?String(r.seasonCount||0):(r.pos||'—')));
     list.appendChild(row);
   });
   sec.appendChild(list);
-  sec.appendChild($('div','note','"Beams" = Sacramento Kings wins — home OR road — this current-roster player has been on the floor for since the beam first lit on Oct 29, 2022. Every win lights the beam, not just home wins. "Games" = all games they played as a King during that window. "Win %" is across all those games. "Sns" = seasons. Rookies start with their current-season count.'));
+  var note=mode==='current'
+    ? '"Beams" = Sacramento Kings wins — home OR road — this current-roster player has been on the floor for since the beam first lit on Oct 29, 2022. Every win lights the beam, not just home wins. "Games" = all games they played as a King during that window. "Win %" is across all those games. "Sns" = seasons. Rookies start with their current-season count.'
+    : '"Beams" = '+seasonLabel(viewSeason)+' Sacramento Kings wins — home OR road — this player was on the floor for. Every win lights the beam, not just home wins. "Games" = all games they played that season. "Win %" is across those games.';
+  sec.appendChild($('div','note',note));
   app.appendChild(sec);
 }
 
+buildSeasonBar();
 loadAll().catch(function(e){console.error(e);setStatus('Couldn\'t load',true)});
 </script>
 </body>
