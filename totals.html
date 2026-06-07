@@ -88,7 +88,6 @@ body.beam-dormant::before{content:'';position:fixed;bottom:0;left:50%;transform:
 <nav class="page-nav">
   <a href="/">Home</a>
   <a href="/players">Roster</a>
-  <a href="/coaches">Coaches</a>
   <a href="/totals" class="active">Totals</a>
   <a href="/stats">Stats</a>
 </nav>
@@ -108,8 +107,13 @@ var HISTORICAL_SEASONS=[];for(var y=2002;y<=CURRENT_SEASON;y++)HISTORICAL_SEASON
 function isPreBeam(g){return g.preBeam!==undefined?g.preBeam:(g.date<BEAM_START_DATE)}
 
 // State: which tab is active
-var ACTIVE_TAB='beam'; // 'beam' or 'historical'
+var ACTIVE_TAB='beam'; // 'beam' | 'historical' | 'coaches'
 var ALL_GAMES=[]; // accumulated games (history + current season)
+
+// Coaches (folded in from the former /coaches page) — lazy-loaded on first tab view.
+var BEAM_SEASONS=[];for(var by=2023;by<=CURRENT_SEASON;by++)BEAM_SEASONS.push(by);
+var COACH_PHOTOS={'147':'/coaches/doug-christie.jpg','3612':'/coaches/mike-brown.jpg'};
+var COACHES=null,coachesLoading=false;
 
 function $(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e}
 function pl(id){return'https://a.espncdn.com/i/headshots/nba/players/full/'+id+'.png'}
@@ -243,19 +247,22 @@ function renderTabs(){
   var beamGames=ALL_GAMES.filter(function(g){return!isPreBeam(g)}).length;
   var histGames=ALL_GAMES.filter(function(g){return isPreBeam(g)}).length;
   var tabs=[
-    {key:'beam',label:'Beam Era',sub:'since Oct 29, 2022',count:beamGames},
-    {key:'historical',label:'Pre-Beam History',sub:'2001-02 → Oct 2022',count:histGames}
+    {key:'beam',label:'Beam Era',sub:'since Oct 29, 2022',count:beamGames+' games'},
+    {key:'historical',label:'Pre-Beam History',sub:'2001-02 → Oct 2022',count:histGames+' games'},
+    {key:'coaches',label:'Coaches',count:COACHES?COACHES.length+' HCs':null}
   ];
   tabs.forEach(function(t){
     var el=document.createElement('a');el.className='tab'+(ACTIVE_TAB===t.key?' active':'');
     el.href='#';el.textContent=t.label;
-    var c=$('span','count','('+t.count+' games)');el.appendChild(c);
+    if(t.count!=null){var c=$('span','count','('+t.count+')');el.appendChild(c);}
     el.addEventListener('click',function(e){e.preventDefault();ACTIVE_TAB=t.key;renderTabs();rerenderActiveTab()});
     bar.appendChild(el);
   });
 }
 
 function rerenderActiveTab(){
+  if(ACTIVE_TAB==='coaches'){renderCoachesTab();return;}
+  var oldC=document.getElementById('coachListSec');if(oldC)oldC.remove();
   var players=aggregateForTab(ALL_GAMES,ACTIVE_TAB);
   renderPlayers(players,ACTIVE_TAB);
   // Re-enrich badges for newly visible players
@@ -326,6 +333,129 @@ function renderPlayers(rows,tab){
   app.appendChild(sec);
 }
 
+// ===== Coaches tab (folded in from the former /coaches page) =====
+function renderCoachesTab(){
+  var oldP=document.getElementById('playerListSec');if(oldP)oldP.remove();
+  if(COACHES){renderCoaches(COACHES);return;}
+  var app=document.getElementById('app');
+  var oldC=document.getElementById('coachListSec');if(oldC)oldC.remove();
+  var sec=$('div','list-section');sec.id='coachListSec';
+  sec.appendChild($('div','note','Loading head coaches…'));
+  app.appendChild(sec);
+  if(coachesLoading)return;
+  coachesLoading=true;
+  loadCoaches().then(function(cs){COACHES=cs;coachesLoading=false;renderTabs();if(ACTIVE_TAB==='coaches')renderCoaches(cs);})
+    .catch(function(){coachesLoading=false;var s=document.getElementById('coachListSec');if(s&&ACTIVE_TAB==='coaches'){s.textContent='';s.appendChild($('p','err',"Couldn't load coaches."));}});
+}
+
+// Discover beam-era Kings head coaches via ESPN, attribute beams (any win, home or road).
+async function loadCoaches(){
+  // Candidate coach IDs from the per-season head-coach endpoint
+  var candidateIds=new Set();
+  await Promise.all(BEAM_SEASONS.map(function(yr){
+    return fj('https://sports.core.api.espn.com/v2/sports/basketball/leagues/nba/seasons/'+yr+'/teams/'+KID+'/coaches')
+      .then(function(d){(d.items||[]).forEach(function(it){var m=(it['$ref']||'').match(/\/coaches\/(\d+)/);if(m)candidateIds.add(m[1]);});})
+      .catch(function(){});
+  }));
+  var coachIds=Array.from(candidateIds);
+  // Probe per-season records to find each coach's Kings tenure
+  var activity={},probes=[];
+  coachIds.forEach(function(cid){
+    BEAM_SEASONS.forEach(function(yr){
+      probes.push(
+        fj('https://sports.core.api.espn.com/v2/sports/basketball/leagues/nba/seasons/'+yr+'/coaches/'+cid)
+          .then(function(bio){var m=(bio.team?.['$ref']||'').match(/\/teams\/(\d+)/);if(!m||m[1]!==KID)return null;
+            return fj('https://sports.core.api.espn.com/v2/sports/basketball/leagues/nba/seasons/'+yr+'/types/2/coaches/'+cid+'/record');})
+          .then(function(rec){if(!rec)return;var stats=rec.stats||[];
+            var wins=(stats.find(function(s){return s.name==='wins'})||{}).value||0;
+            var losses=(stats.find(function(s){return s.name==='losses'})||{}).value||0;
+            if(wins+losses>0){activity[cid]=activity[cid]||{};activity[cid][yr]={wins:wins,losses:losses,games:wins+losses}}})
+          .catch(function(){})
+      );
+    });
+  });
+  await Promise.all(probes);
+  // Bios for name + current team
+  var bios={};
+  await Promise.all(coachIds.map(function(cid){
+    return fj('https://sports.core.api.espn.com/v2/sports/basketball/leagues/nba/seasons/'+CURRENT_SEASON+'/coaches/'+cid)
+      .then(function(b){bios[cid]=b})
+      .catch(function(){return fj('https://sports.core.api.espn.com/v2/sports/basketball/leagues/nba/coaches/'+cid).then(function(b){bios[cid]=b}).catch(function(){})});
+  }));
+  // Build records — a beam = any beam-era win (home or road) under that coach
+  var coaches=[];
+  coachIds.forEach(function(cid){
+    var act=activity[cid];if(!act)return;
+    var bio=bios[cid]||{};
+    var seasons=Object.keys(act).map(Number).sort();
+    var totalWins=0,totalLosses=0,totalGames=0,beams=0,approx=false;
+    seasons.forEach(function(yr){
+      var rec=act[yr];
+      totalWins+=rec.wins;totalLosses+=rec.losses;totalGames+=rec.games;
+      var others=coachIds.filter(function(o){return o!==cid&&activity[o]&&activity[o][yr]});
+      var seasonGames=ALL_GAMES.filter(function(g){return seasonOfDate(g.date)===yr});
+      var seasonBeamWins=seasonGames.filter(function(g){return g.won&&!isPreBeam(g)}).length;
+      var seasonTotalWins=seasonGames.filter(function(g){return g.won}).length;
+      if(others.length===0){beams+=seasonBeamWins}
+      else{approx=true;if(seasonTotalWins>0)beams+=Math.round(seasonBeamWins*(rec.wins/seasonTotalWins))}
+    });
+    coaches.push({id:cid,firstName:bio.firstName||'',lastName:bio.lastName||'',
+      teamRef:bio.team?.['$ref']||'',seasons:seasons,wins:totalWins,losses:totalLosses,games:totalGames,beams:beams,approx:approx});
+  });
+  // Current team per coach
+  await Promise.all(coaches.map(function(c){
+    if(!c.teamRef)return Promise.resolve();
+    return fj(c.teamRef).then(function(t){c.currentTeamAbbr=t.abbreviation||''}).catch(function(){});
+  }));
+  coaches.sort(function(a,b){return b.beams-a.beams});
+  return coaches;
+}
+
+function renderCoaches(coaches){
+  var app=document.getElementById('app');
+  var oldP=document.getElementById('playerListSec');if(oldP)oldP.remove();
+  var oldC=document.getElementById('coachListSec');if(oldC)oldC.remove();
+  var sec=$('div','list-section');sec.id='coachListSec';
+  if(!coaches||coaches.length===0){sec.appendChild($('p','err','No coaches found.'));app.appendChild(sec);return;}
+  var hdr=$('div','header-row');
+  hdr.appendChild($('div','col-label','#'));
+  hdr.appendChild($('div','ph'));
+  var nameLbl=$('div','col-label','Coach');nameLbl.style.textAlign='left';hdr.appendChild(nameLbl);
+  hdr.appendChild($('div','col-label','Beams'));
+  hdr.appendChild($('div','col-label','Games'));
+  hdr.appendChild($('div','col-label col-rate','Win %'));
+  hdr.appendChild($('div','col-label col-seasons','Sns'));
+  sec.appendChild(hdr);
+  var list=$('div','coach-list');
+  coaches.forEach(function(c,i){
+    var row=$('div','coach-row'+(c.currentTeamAbbr==='SAC'?' current':''));
+    row.appendChild($('div','rank',String(i+1)));
+    var photo=COACH_PHOTOS[c.id],initials=(c.firstName?.[0]||'')+(c.lastName?.[0]||'');
+    if(photo){
+      var img=document.createElement('img');img.className='ph';img.src=photo;img.alt=(c.firstName+' '+c.lastName).trim();
+      img.onerror=function(){this.replaceWith($('div','ph-blank',initials))};
+      row.appendChild(img);
+    }else{row.appendChild($('div','ph-blank',initials));}
+    var info=$('div','info');
+    var nameLine=$('div','name-line');
+    nameLine.appendChild($('div','name',(c.firstName+' '+c.lastName).trim()));
+    if(c.currentTeamAbbr==='SAC'){nameLine.appendChild($('span','team-badge left','Current HC'));}
+    else if(c.currentTeamAbbr){nameLine.appendChild($('span','team-badge','Now: '+c.currentTeamAbbr));}
+    info.appendChild(nameLine);
+    var first=c.seasons[0],last=c.seasons[c.seasons.length-1];
+    info.appendChild($('div','pos',seasonName(first)+(last!==first?' → '+seasonName(last):'')));
+    row.appendChild(info);
+    row.appendChild($('div','beams',(c.approx?'~':'')+c.beams));
+    row.appendChild($('div','games',c.games+'g'));
+    row.appendChild($('div','rate',c.games>0?Math.round(c.wins/c.games*100)+'%':'—'));
+    row.appendChild($('div','seasons',String(c.seasons.length)));
+    list.appendChild(row);
+  });
+  sec.appendChild(list);
+  sec.appendChild($('div','note','"Beams" = beam-era Kings wins (home or road) under that coach since Oct 29, 2022 — every win lights the beam. "~" approximates beams by win share for mid-season coaching changes. Coaches discovered via ESPN\'s per-season head-coach endpoint.'));
+  app.appendChild(sec);
+}
+
 // Progressive bio fetch for current-team badges (top N players to avoid 230 calls)
 async function enrichTopPlayerTeams(rows){
   var BATCH=10;
@@ -373,7 +503,7 @@ function renderBadge(r){
   }
 }
 
-// Coaches moved to dedicated /coaches page.
+// Coaches are now a tab on this page (see loadCoaches / renderCoaches above).
 
 loadAll().catch(function(e){console.error(e);setStatus('Couldn\'t load',true)});
 </script>
