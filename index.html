@@ -1004,6 +1004,11 @@ function render(d){
       calLabel.textContent=isMobile()?'Tap a game to light the beam':'Hover over games to light the beam';
       pastTiles.appendChild(calLabel);
     }
+    // Season roster — players who took the floor that season, ranked by beams.
+    var rosterWrap=$('div','');rosterWrap.id='seasonRoster';
+    rosterWrap.style.cssText='width:100%;max-width:640px;margin:1.5rem auto 0;position:relative;z-index:2';
+    pastTiles.appendChild(rosterWrap);
+    renderSeasonRoster(currentSeason,rosterWrap);
     tilesEl.appendChild(pastTiles);
     document.body.className='beam-off';origBeam=false;
   }
@@ -1187,6 +1192,65 @@ document.getElementById('app').addEventListener('click',function(e){
     render(lastData);
   }
 });
+
+// ===== Per-season roster (shown on recap views) =====
+var HISTORY_GAMES=null,historyLoading=null;
+function loadHistoryGames(){
+  if(HISTORY_GAMES)return Promise.resolve(HISTORY_GAMES);
+  if(historyLoading)return historyLoading;
+  historyLoading=fetch('/games-history.json').then(function(r){return r.ok?r.json():{games:[]}})
+    .then(function(d){HISTORY_GAMES=d.games||[];return HISTORY_GAMES})
+    .catch(function(){HISTORY_GAMES=[];return HISTORY_GAMES});
+  return historyLoading;
+}
+function seasonOf(dstr){var dt=new Date(dstr);return dt.getMonth()>=9?dt.getFullYear()+1:dt.getFullYear()}
+
+function renderSeasonRoster(yr,container){
+  container.textContent='Loading roster…';
+  container.style.cssText='width:100%;max-width:640px;margin:1.5rem auto 0;font-size:.7rem;opacity:.45;text-align:center';
+  loadHistoryGames().then(function(games){
+    var seasonGames=games.filter(function(g){return seasonOf(g.date)===yr&&g.sacPlayers});
+    if(seasonGames.length===0){
+      // Current season isn't archived yet — fall back to the cache /totals leaves behind.
+      try{var raw=localStorage.getItem('lthe-games-v2-'+yr);if(raw){var c=JSON.parse(raw);if(c&&c.games)seasonGames=c.games.filter(function(g){return g.sacPlayers&&g.sacPlayers.length})}}catch(e){}
+    }
+    buildRoster(seasonGames,yr,container);
+  });
+}
+function buildRoster(seasonGames,yr,container){
+  container.textContent='';
+  container.style.cssText='width:100%;max-width:640px;margin:1.5rem auto 0;position:relative;z-index:2';
+  var h=document.createElement('div');h.textContent=(yr-1)+'-'+String(yr).slice(2)+' Roster';
+  h.style.cssText='font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.18em;opacity:.55;margin:0 0 .7rem';
+  container.appendChild(h);
+  if(!seasonGames.length){
+    var note=document.createElement('a');note.href='/players';
+    note.textContent='Season roster archives soon — view current roster →';
+    note.style.cssText='display:inline-block;font-size:.72rem;color:var(--beam);opacity:.85;text-decoration:none';
+    container.appendChild(note);return;
+  }
+  var map={};
+  seasonGames.forEach(function(g){(g.sacPlayers||[]).forEach(function(p){if(!p.id)return;
+    if(!map[p.id])map[p.id]={id:p.id,name:p.name,games:0,beams:0};
+    map[p.id].games++;if(g.won)map[p.id].beams++;if(p.name)map[p.id].name=p.name;})});
+  var arr=Object.keys(map).map(function(k){return map[k]});
+  arr.sort(function(a,b){return b.beams-a.beams||b.games-a.games});
+  var grid=document.createElement('div');grid.style.cssText='display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center';
+  arr.forEach(function(p){
+    var chip=document.createElement('a');chip.href='/player?id='+p.id;
+    chip.style.cssText='display:flex;align-items:center;gap:.4rem;padding:.3rem .65rem .3rem .35rem;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:20px;text-decoration:none;color:#fff;font-size:.72rem;font-weight:700;transition:all .15s';
+    chip.onmouseover=function(){this.style.borderColor='var(--beam)';this.style.background='rgba(91,45,142,.14)'};
+    chip.onmouseout=function(){this.style.borderColor='rgba(255,255,255,.07)';this.style.background='rgba(255,255,255,.03)'};
+    var img=document.createElement('img');img.src='https://a.espncdn.com/i/headshots/nba/players/full/'+p.id+'.png';img.alt=p.name;
+    img.style.cssText='width:22px;height:22px;border-radius:50%;object-fit:cover;object-position:top center;background:rgba(255,255,255,.06);flex-shrink:0';
+    img.onerror=function(){this.style.display='none'};
+    chip.appendChild(img);
+    chip.appendChild($('span','',p.name));
+    var bm=$('span','',String(p.beams));bm.style.cssText='color:var(--beam);font-weight:900';chip.appendChild(bm);
+    grid.appendChild(chip);
+  });
+  container.appendChild(grid);
+}
 
 // Switch the homepage to a given season. recap=true forces the completed-season recap
 // view (only meaningful for the auto season; past seasons are always a recap).
