@@ -372,7 +372,10 @@ SCBD='https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard',
 STAND='https://site.api.espn.com/apis/v2/sports/basketball/nba/standings',
 STATS_URL='https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/{id}/statistics',
 KLOGO='https://a.espncdn.com/i/teamlogos/nba/500/sac.png',
-ref=null,live=false,lastData=null,mockLive=false,mockWp=0.67,mockKs=89,mockOs=78,mockOpp='ATL',mockQtr='3rd Qtr',mockTime='4:23',BEAM_REST='beam-off',COUNTDOWN_EVENTS=null;
+ref=null,live=false,lastData=null,mockLive=false,mockWp=0.67,mockKs=89,mockOs=78,mockOpp='ATL',mockQtr='3rd Qtr',mockTime='4:23',BEAM_REST='beam-off',COUNTDOWN_EVENTS=null,
+// recapMode: when the auto (current) season is between seasons, the season bar splits into a "Countdown"
+// pill and a "{season} Recap" pill. recapMode=true forces the completed-season recap view for the auto season.
+recapMode=false,autoPhase=null;
 
 function schedUrl(yr){return 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/'+KID+'/schedule?season='+yr}
 
@@ -507,7 +510,7 @@ function buildBeamCal(games,origBeam){
       var c=g.competitions[0],k=fk(c.competitors),o=fo(c.competitors);
       var won=sc(k)>sc(o);var oa=o.team?.abbreviation||'???';
       var gh=k?.homeAway==='home';
-      var dot=document.createElement('a');dot.className='beam-dot'+(won?' lit':'');dot.href=gu(g.id);dot.target='_blank';dot.rel='noopener';
+      var dot=document.createElement('a');dot.className='beam-dot'+(won?' lit':'');dot.href='/game?id='+g.id;
       dot.dataset.gameIdx=String(idx);
       dot.title=(won?'W':'L')+' vs '+oa+' '+sc(k)+'-'+sc(o)+' ('+fs(g.date)+')';
       (function(oaC,ghC,ksC,osC,dateC,wonC,gameIdx){
@@ -743,6 +746,8 @@ async function getData(){
   var phase='inseason';
   if(sched.length===0&&done.length>0&&!lg)phase='offseason';
   else if(done.length===0&&sched.length>0&&!lg)phase='preseason';
+  // Remember the auto season's phase so the season bar knows whether to split into Countdown + Recap.
+  if(currentSeason===autoCurrentSeason)autoPhase=phase;
 
   return{rec:rec,stSum:stSum,last:last,live:lg,next:next,done:done,sched:sched,str:str,stt:stt,bStr:bStr,bStt:bStt,bWin:bWin,wp:wp,beams:beams,divT:divT,allT:allT,kSt:kSt,gLeft:sched.length,teamRanks:teamRanks,phase:phase}
 }
@@ -764,7 +769,7 @@ function render(d){
   stopCountdown();
   BEAM_REST='beam-off';COUNTDOWN_EVENTS=null;
 
-  if(isCurrent&&d.phase==='offseason'&&!mockLive){
+  if(isCurrent&&!recapMode&&d.phase==='offseason'&&!mockLive){
     // ---- OFFSEASON: season is over, next schedule not yet released ----
     var qOff=$('p','question',"How long 'til the beam?");
     qOff.addEventListener('click',function(){this.classList.remove('shake');void this.offsetWidth;this.classList.add('shake')});
@@ -785,22 +790,22 @@ function render(d){
 
     var tiles=$('div','game-tiles');
 
-    // Recap CTA button right below the countdown
+    // Recap CTA button right below the countdown — switches to the just-completed season's recap.
     if(d.done.length>0){
       var recapBtn=document.createElement('a');
       recapBtn.href='#';
       var lastSeasonLabel=(currentSeason-1)+'-'+String(currentSeason).slice(2);
-      recapBtn.textContent='View '+lastSeasonLabel+' Recap →';
-      recapBtn.style.cssText='display:inline-flex;align-items:center;justify-content:center;margin:0 auto 1rem;padding:.55rem 1.2rem;background:rgba(91,45,142,.1);border:1px solid rgba(155,77,202,.35);border-radius:8px;color:var(--beam);font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.12em;text-decoration:none;transition:all .15s;align-self:center';
-      recapBtn.onmouseover=function(){this.style.background='rgba(91,45,142,.18)';this.style.borderColor='var(--beam)';};
-      recapBtn.onmouseout=function(){this.style.background='rgba(91,45,142,.1)';this.style.borderColor='rgba(155,77,202,.35)';};
+      recapBtn.innerHTML='View '+lastSeasonLabel+' Recap <span style="font-size:1.1em">→</span>';
+      recapBtn.style.cssText='display:inline-flex;align-items:center;justify-content:center;gap:.5rem;margin:.25rem auto 1.5rem;padding:.95rem 2rem;background:rgba(91,45,142,.16);border:1.5px solid var(--beam);border-radius:12px;color:#fff;font-size:.95rem;font-weight:900;text-transform:uppercase;letter-spacing:.1em;text-decoration:none;transition:all .15s;align-self:center;box-shadow:0 0 28px rgba(155,77,202,.22)';
+      recapBtn.onmouseover=function(){this.style.background='var(--beam)';this.style.boxShadow='0 0 38px rgba(155,77,202,.45)';this.style.transform='translateY(-1px)';};
+      recapBtn.onmouseout=function(){this.style.background='rgba(91,45,142,.16)';this.style.boxShadow='0 0 28px rgba(155,77,202,.22)';this.style.transform='';};
       recapBtn.onclick=function(e){
         e.preventDefault();
-        // Trigger the last-season pill — find pill by year (autoCurrentSeason)
-        var pills=document.querySelectorAll('.season-pill');
-        for(var i=0;i<pills.length;i++){
-          if(pills[i].dataset.year===String(autoCurrentSeason)){pills[i].click();return}
-        }
+        // Show the auto season's completed-season recap.
+        recapMode=true;currentSeason=autoCurrentSeason;
+        buildSeasonBar();
+        if(lastData){render(lastData)}else{getData().then(function(d){lastData=d;render(d)}).catch(function(){render(null)})}
+        window.scrollTo({top:0,behavior:'smooth'});
       };
       tiles.appendChild(recapBtn);
     }
@@ -823,7 +828,7 @@ function render(d){
 
     tilesEl.appendChild(tiles);
 
-  }else if(isCurrent&&d.phase==='preseason'&&!mockLive){
+  }else if(isCurrent&&!recapMode&&d.phase==='preseason'&&!mockLive){
     BEAM_REST='beam-dormant';
     // ---- PRESEASON: next schedule released, no games played yet ----
     var qPre=$('p','question',"How long 'til the beam?");
@@ -866,7 +871,7 @@ function render(d){
     }
     tilesEl.appendChild(tiles);
 
-  }else if(isCurrent){
+  }else if(isCurrent&&!recapMode){
     var questionEl=$('p','question','Is the beam lit?');
     questionEl.addEventListener('click',function(e){
       this.classList.remove('shake');void this.offsetWidth;this.classList.add('shake');
@@ -1007,7 +1012,7 @@ function render(d){
   var bc=$('div','big-cards');
 
   // Skip big-cards on offseason/preseason — those views are about the future, not recap content.
-  var skipBigCards=isCurrent&&(d.phase==='offseason'||d.phase==='preseason')&&!mockLive;
+  var skipBigCards=isCurrent&&!recapMode&&(d.phase==='offseason'||d.phase==='preseason')&&!mockLive;
 
   if(!skipBigCards&&isCurrent&&d.allT.length>0){
     var c1=$('div','big-card');c1.appendChild($('div','big-card-title','NBA Standings'));
@@ -1025,7 +1030,7 @@ function render(d){
   var c2=$('div','big-card');c2.appendChild($('div','big-card-title','All Games'));
   d.done.slice().reverse().forEach(function(g,idx){
     var gc=g.competitions[0],gk=fk(gc.competitors),go=fo(gc.competitors),gks=sc(gk),gos=sc(go),gw=gks>gos,gh=gk?.homeAway==='home',oa=go?.team?.abbreviation||'???';
-    var row=document.createElement('a');row.className='gm-row '+(gw?'w':'l');row.href=gu(g.id);row.target='_blank';row.rel='noopener';
+    var row=document.createElement('a');row.className='gm-row '+(gw?'w':'l');row.href='/game?id='+g.id;
     row.dataset.gameIdx=String(d.done.length-1-idx);
     row.appendChild($('span','gm-date',fs(g.date)));
     row.appendChild($('span','gm-opp',(gh?'vs ':'@ ')+oa));
@@ -1184,6 +1189,22 @@ document.getElementById('app').addEventListener('click',function(e){
   }
 });
 
+// Switch the homepage to a given season. recap=true forces the completed-season recap
+// view (only meaningful for the auto season; past seasons are always a recap).
+function showSeason(yr,recap){
+  document.getElementById('app').style.display='';
+  document.getElementById('tilesSection').style.display='';
+  document.getElementById('cards').style.display='';
+  document.getElementById('aboutSection').style.display='none';
+  var sameSeason=(yr===currentSeason);
+  currentSeason=yr;
+  recapMode=!!recap;
+  buildSeasonBar();
+  if(sameSeason&&lastData){render(lastData);}            // countdown↔recap toggle reuses loaded data
+  else{getData().then(function(d){lastData=d;render(d)}).catch(function(){render(null)});}
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
 function buildSeasonBar(){
   var bar=document.getElementById('seasonBar');
   bar.textContent='';
@@ -1191,23 +1212,26 @@ function buildSeasonBar(){
   var nextPill=$('div','season-pill');nextPill.textContent=nextYr-1+'-'+String(nextYr).slice(2);
   nextPill.style.opacity='.25';nextPill.style.cursor='default';nextPill.title='Coming October '+(nextYr-1);
   bar.appendChild(nextPill);
-  for(var y=autoCurrentSeason;y>=2023;y--){
-    var pill=$('div','season-pill'+(y===currentSeason?' active':''));
-    pill.textContent=y===autoCurrentSeason?'Current':((y-1)+'-'+String(y).slice(2));
-    pill.dataset.year=y;
-    pill.addEventListener('click',function(){
-      var yr=parseInt(this.dataset.year);
-      // Always restore homepage view (in case user was on About)
-      document.getElementById('app').style.display='';
-      document.getElementById('tilesSection').style.display='';
-      document.getElementById('cards').style.display='';
-      document.getElementById('aboutSection').style.display='none';
-      if(yr===currentSeason){buildSeasonBar();return}
-      currentSeason=yr;
-      buildSeasonBar();
-      getData().then(function(d){lastData=d;render(d)}).catch(function(){render(null)});
-    });
+
+  function mkPill(label,yr,recap,active){
+    var pill=$('div','season-pill'+(active?' active':''));
+    pill.textContent=label;pill.dataset.year=yr;
+    pill.addEventListener('click',function(){showSeason(yr,recap)});
     bar.appendChild(pill);
+  }
+
+  // Auto (current) season: between seasons it splits into a Countdown pill and a Recap pill
+  // sitting beside it; default lands on Countdown. In-season it's a single "Current" pill.
+  var splitAuto=(autoPhase==='offseason'||autoPhase==='preseason');
+  if(splitAuto){
+    mkPill('Countdown',autoCurrentSeason,false,currentSeason===autoCurrentSeason&&!recapMode);
+    mkPill((autoCurrentSeason-1)+'-'+String(autoCurrentSeason).slice(2),autoCurrentSeason,true,currentSeason===autoCurrentSeason&&recapMode);
+  }else{
+    mkPill('Current',autoCurrentSeason,false,currentSeason===autoCurrentSeason&&!recapMode);
+  }
+  // Prior seasons (always recap views)
+  for(var y=autoCurrentSeason-1;y>=2023;y--){
+    mkPill((y-1)+'-'+String(y).slice(2),y,false,currentSeason===y);
   }
 }
 buildSeasonBar();
@@ -1288,7 +1312,7 @@ document.getElementById('aboutLogo').addEventListener('click',function(){
     document.getElementById('tilesSection').style.display='';
     document.getElementById('cards').style.display='';
     document.getElementById('aboutSection').style.display='none';
-    buildSeasonBar();currentSeason=autoCurrentSeason;
+    currentSeason=autoCurrentSeason;recapMode=false;buildSeasonBar();
     render(lastData);
   }
 });
