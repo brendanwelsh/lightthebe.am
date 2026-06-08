@@ -11,13 +11,13 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://lightthebe.am/stats</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://lightthebe.am/totals</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://lightthebe.am/facts</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
   </url>
 </urlset>
