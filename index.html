@@ -47,10 +47,10 @@
 
 <!-- JSON-LD structured data -->
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebSite","name":"Light the Beam","alternateName":["lightthebeam","Sacramento Kings Beam Tracker","Light the Beam · lightthebe.am"],"url":"https://lightthebe.am/","description":"Real-time tracker for the Sacramento Kings beam — live game results, season recap, and beam counts since the beam tradition began in 2022-23.","inLanguage":"en-US","keywords":"lightthebeam, Sacramento Kings beam, NBA Kings, Kings tracker","publisher":{"@type":"Person","name":"Brendan Welsh","url":"https://x.com/BrendanWelsh"},"potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://lightthebe.am/?q={search_term_string}"},"query-input":"required name=search_term_string"}}
+{"@context":"https://schema.org","@type":"WebSite","name":"Light the Beam","alternateName":["lightthebeam","Sacramento Kings Beam Tracker","Light the Beam · lightthebe.am"],"url":"https://lightthebe.am/","description":"Real-time tracker for the Sacramento Kings beam — live game results, season recap, and beam counts since the beam tradition began in 2022-23.","inLanguage":"en-US","keywords":"lightthebeam, Sacramento Kings beam, NBA Kings, Kings tracker","publisher":{"@type":"Person","name":"Brendan Welsh","url":"https://github.com/brendanwelsh"},"potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://lightthebe.am/?q={search_term_string}"},"query-input":"required name=search_term_string"}}
 </script>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Organization","name":"Light the Beam","alternateName":"lightthebeam","url":"https://lightthebe.am/","logo":"https://lightthebe.am/kings-logo.png","sameAs":["https://x.com/BrendanWelsh"],"founder":{"@type":"Person","name":"Brendan Welsh"},"areaServed":{"@type":"Country","name":"United States"}}
+{"@context":"https://schema.org","@type":"Organization","name":"Light the Beam","alternateName":"lightthebeam","url":"https://lightthebe.am/","logo":"https://lightthebe.am/kings-logo.png","sameAs":["https://github.com/brendanwelsh"],"founder":{"@type":"Person","name":"Brendan Welsh"},"areaServed":{"@type":"Country","name":"United States"}}
 </script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"SportsTeam","name":"Sacramento Kings","sport":"Basketball","memberOf":{"@type":"SportsOrganization","name":"NBA"},"location":{"@type":"Place","name":"Golden 1 Center","address":{"@type":"PostalAddress","addressLocality":"Sacramento","addressRegion":"CA","postalCode":"95814","addressCountry":"US"}},"url":"https://www.nba.com/kings"}
@@ -207,8 +207,8 @@ a.gm-row:hover{background:rgba(255,255,255,.03)}
 .cs-rank{font-size:.8rem;font-weight:800;color:var(--beam);text-align:right}
 .cs-divider{margin:.4rem 0;border-top:1px solid rgba(255,255,255,.04)}
 
-.footer{position:relative;z-index:1;width:100%;padding:.75rem 1rem 1rem;display:flex;flex-direction:column;align-items:center;gap:.25rem}
-.footer-links{display:flex;gap:1rem;align-items:center}
+.footer{position:relative;z-index:2;width:100%;padding:1.25rem 1rem 3.25rem;display:flex;flex-direction:column;align-items:center;gap:.4rem}
+.footer-links{display:flex;flex-wrap:wrap;gap:.7rem 1rem;align-items:center;justify-content:center}
 .footer a{color:rgba(255,255,255,.18);text-decoration:none;font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;transition:color .2s}
 .footer a:hover{color:rgba(255,255,255,.45)}
 .footer .dot{color:rgba(255,255,255,.08);font-size:.5rem}
@@ -225,7 +225,7 @@ a.gm-row:hover{background:rgba(255,255,255,.03)}
 .donate-btn.bmc:hover{background:#fff;transform:translateY(-1px)}
 .donate-btn.pp{background:rgba(0,112,186,.1);color:#3b9eea;border:1px solid rgba(59,158,234,.4)}
 .donate-btn.pp:hover{background:rgba(0,112,186,.2);transform:translateY(-1px)}
-.page-nav{position:relative;z-index:2;width:100%;display:flex;justify-content:center;gap:.4rem;padding:.55rem 1rem .25rem;overflow-x:auto;-webkit-overflow-scrolling:touch;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.04)}
+.page-nav{position:relative;z-index:2;width:100%;display:flex;flex-wrap:wrap;justify-content:center;gap:.4rem;padding:.55rem 1rem .25rem;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.04)}
 .page-nav a{background:transparent;border:none;border-radius:0;padding:.2rem .5rem;font-size:.7rem;font-weight:800;color:rgba(255,255,255,.5);cursor:pointer;white-space:nowrap;text-decoration:none;text-transform:uppercase;letter-spacing:.1em;transition:color .15s;border-bottom:2px solid transparent;line-height:1.6}
 .page-nav a:hover{color:#fff}
 .page-nav a.active{color:#fff;border-bottom-color:var(--beam)}
@@ -250,7 +250,8 @@ a.gm-row:hover{background:rgba(255,255,255,.03)}
   <a href="/players">Roster</a>
   <a href="/totals">Totals</a>
   <a href="/stats">Stats</a>
-  <a href="#" id="aboutLink">About</a>
+  <a href="/beam">Beam</a>
+  <a href="/about">About</a>
 </nav>
 <div class="season-bar" id="seasonBar"></div>
 <div class="hero" id="app"><p class="loading">LOADING...</p></div>
@@ -267,84 +268,6 @@ a.gm-row:hover{background:rgba(255,255,255,.03)}
 </div>
 -->
 
-<div class="about-section" id="aboutSection" style="display:none;position:relative;z-index:1;padding:1rem">
-  <div style="max-width:520px;margin:0 auto;text-align:center">
-    <img src="kings-classic.png" alt="Classic Sacramento Kings Logo" id="aboutLogo" style="width:180px;margin:0 auto .75rem;display:block;opacity:.8;cursor:pointer;transition:transform .15s">
-    <div style="display:flex;gap:.75rem;justify-content:center;margin-bottom:1rem;opacity:.35">
-      <a href="https://www.nba.com/kings" target="_blank" rel="noopener" style="color:inherit"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M4 8a4 4 0 0 1 8 0" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="1" x2="8" y2="15" stroke="currentColor" stroke-width="1.2"/><line x1="1" y1="8" x2="15" y2="8" stroke="currentColor" stroke-width="1.2"/></svg></a>
-      <a href="https://twitter.com/SacramentoKings" target="_blank" rel="noopener" style="color:inherit"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M9.5 6.7L14.2 1.2h-1.1L9 5.9 5.8 1.2H1.5l4.9 7.1L1.5 14.2h1.1l4.3-5 3.4 5h4.3L9.5 6.7zm-1.5 1.8l-.5-.7L3.2 2.1h1.7l3.2 4.6.5.7 4.2 5.9h-1.7L8 8.5z"/></svg></a>
-      <a href="https://www.instagram.com/sacramentokings" target="_blank" rel="noopener" style="color:inherit"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="1.5" y="1.5" width="13" height="13" rx="3.5" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="12" cy="4" r=".9"/></svg></a>
-      <a href="https://shop.kings.com" target="_blank" rel="noopener" style="color:inherit"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3 5h10l-1 9H4L3 5z" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 5V4a2.5 2.5 0 0 1 5 0v1" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a>
-    </div>
-    <button id="beamButton" class="beam-btn" style="display:block;margin:0 auto 2rem;padding:1rem 3rem;font-size:1rem;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:#fff;background:var(--beam);border:none;border-radius:12px;cursor:pointer;box-shadow:0 4px 0 var(--purple),0 8px 20px rgba(0,0,0,.3);transition:all .1s;position:relative">Light the Beam</button>
-
-    <!-- The Beam — the actual subject of this site -->
-    <div style="text-align:left">
-      <h3 style="font-size:.7rem;text-transform:uppercase;letter-spacing:.2em;opacity:.3;margin-bottom:.75rem">The Beam</h3>
-
-      <!-- Big-stat callouts: tech specs at a glance -->
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.6rem;margin-bottom:1.5rem">
-        <div style="background:rgba(91,45,142,.08);border:1px solid rgba(155,77,202,.2);border-radius:10px;padding:.85rem .65rem;text-align:center">
-          <div style="font-size:1.5rem;font-weight:900;color:var(--beam);line-height:1">1.5M</div>
-          <div style="font-size:.5rem;font-weight:800;opacity:.6;text-transform:uppercase;letter-spacing:.15em;margin-top:.2rem">Candlepower</div>
-        </div>
-        <div style="background:rgba(91,45,142,.08);border:1px solid rgba(155,77,202,.2);border-radius:10px;padding:.85rem .65rem;text-align:center">
-          <div style="font-size:1.5rem;font-weight:900;color:var(--beam);line-height:1">~60</div>
-          <div style="font-size:.5rem;font-weight:800;opacity:.6;text-transform:uppercase;letter-spacing:.15em;margin-top:.2rem">Min Per Beam</div>
-        </div>
-        <div style="background:rgba(91,45,142,.08);border:1px solid rgba(155,77,202,.2);border-radius:10px;padding:.85rem .65rem;text-align:center">
-          <div style="font-size:1.5rem;font-weight:900;color:var(--beam);line-height:1">Oct 29</div>
-          <div style="font-size:.5rem;font-weight:800;opacity:.6;text-transform:uppercase;letter-spacing:.15em;margin-top:.2rem">First Lit · 2022</div>
-        </div>
-      </div>
-
-      <p style="font-size:.85rem;line-height:1.7;opacity:.7;margin-bottom:1rem">A <strong style="color:#fff">1.5 million candlepower</strong> searchlight on the roof of Golden 1 Center. Fires after <strong style="color:#fff">every Kings win</strong> — home or road. Stays lit about an hour. Visible from miles across the valley.</p>
-      <p style="font-size:.85rem;line-height:1.7;opacity:.7;margin-bottom:1rem">Started <strong style="color:#fff">October 29, 2022</strong> — the night the Kings beat the Heat 119-113 at home, kicking off the season they'd end a <strong style="color:#fff">16-year playoff drought</strong>. The beam became the rallying cry.</p>
-      <p style="font-size:.85rem;line-height:1.7;opacity:.7;margin-bottom:1rem">"Light the beam" outgrew basketball. Got a promotion? Light the beam. Kid took their first steps? Light the beam. It's a Sacramento thing.</p>
-      <p style="font-size:.7rem;opacity:.45;margin-bottom:1.5rem">This site tracks every beam. Data via ESPN's public API. Scores update every 30 seconds during live games. Season archives back to 2022-23.</p>
-    </div>
-
-    <p style="font-size:.6rem;opacity:.25;margin:1.5rem 0;text-align:center">Not affiliated with the Sacramento Kings. Made by a fan, for fans.</p>
-
-    <!-- The Maker — small, at the end -->
-    <div style="text-align:left;margin-top:2rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.06)">
-      <h3 style="font-size:.7rem;text-transform:uppercase;letter-spacing:.2em;opacity:.3;margin-bottom:.75rem">The Maker</h3>
-      <p style="font-size:.75rem;line-height:1.6;opacity:.55;margin-bottom:1rem">
-        Built by <a href="https://x.com/BrendanWelsh" target="_blank" rel="noopener" style="color:var(--beam);text-decoration:none;font-weight:700">@BrendanWelsh</a>, Sacramento-born fan. Watched Webber, Peja, Vlade, Bibby, Doug Christie from the nosebleeds. Bibby's autograph at Food Source 2002. $15 tickets, $16 hot dogs, worth every penny.
-      </p>
-      <p style="font-size:.65rem;line-height:1.5;opacity:.4;margin-bottom:.5rem">If the beam's lit something up for you, throw a tip to keep the lights on.</p>
-      <div class="donate-row">
-        <a href="https://buymeacoffee.com/brendanwelsh" target="_blank" rel="noopener" class="donate-btn bmc">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" x2="6" y1="2" y2="4"/><line x1="10" x2="10" y1="2" y2="4"/><line x1="14" x2="14" y1="2" y2="4"/></svg>
-          Buy Me a Coffee
-        </a>
-        <a href="https://paypal.me/BrendanWelsh" target="_blank" rel="noopener" class="donate-btn pp">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11A4.5 4.5 0 0 1 11.5 7h1A4.5 4.5 0 0 1 17 11.5a4 4 0 0 1-4 3.5H9.5L8 21H4l3-10Z"/><path d="M15 7a4.5 4.5 0 0 1 4 4.5 4 4 0 0 1-4 3.5h-1"/></svg>
-          PayPal
-        </a>
-      </div>
-
-      <!-- Maker photos — compact -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:1.5rem">
-        <img src="bibby-full.png" alt="Getting Bibby's autograph 2002" style="width:100%;border-radius:8px;border:1px solid rgba(255,255,255,.08);object-fit:cover;aspect-ratio:4/3;box-shadow:0 4px 16px rgba(0,0,0,.3)">
-        <img src="beam-house.png" alt="The beam at home" style="width:100%;border-radius:8px;border:1px solid rgba(255,255,255,.08);object-fit:cover;aspect-ratio:4/3;box-shadow:0 4px 16px rgba(0,0,0,.3)">
-      </div>
-      <p style="font-size:.55rem;opacity:.3;margin:.4rem 0 0;text-align:center">Bibby's autograph · Food Source 2002. The beam at home, every game night.</p>
-    </div>
-
-    <!-- Manual AdSense slot: About page. Auto Ads may place ads here automatically.
-         For a fixed unit, paste a data-ad-slot from AdSense console below, uncomment, and delete the placeholder. -->
-    <div class="ad-slot rectangle" id="adAbout" style="display:none">Ad space</div>
-    <!--
-    <div class="ad-slot rectangle">
-      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4193227775621187" data-ad-slot="XXXXXXXXXX" data-ad-format="auto" data-full-width-responsive="true"></ins>
-      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    </div>
-    -->
-
-    <p style="font-size:1.1rem;font-weight:900;font-style:italic;opacity:.6;letter-spacing:.05em">Hoop Dreams, Baby.</p>
-  </div>
-</div>
 <div class="footer">
   <div class="footer-links">
     <a href="https://www.nba.com/kings" target="_blank" rel="noopener" title="NBA.com/Kings"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M4 8a4 4 0 0 1 8 0" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="1" x2="8" y2="15" stroke="currentColor" stroke-width="1.2"/><line x1="1" y1="8" x2="15" y2="8" stroke="currentColor" stroke-width="1.2"/></svg></a>
@@ -352,13 +275,13 @@ a.gm-row:hover{background:rgba(255,255,255,.03)}
     <a href="https://www.instagram.com/sacramentokings" target="_blank" rel="noopener" title="Instagram"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="1.5" y="1.5" width="13" height="13" rx="3.5" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="12" cy="4" r=".9"/></svg></a>
     <a href="https://shop.kings.com" target="_blank" rel="noopener" title="Kings Store"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3 5h10l-1 9H4L3 5z" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 5V4a2.5 2.5 0 0 1 5 0v1" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a>
     <span class="dot">|</span>
-    <a href="https://x.com/BrendanWelsh" target="_blank" rel="noopener">@BrendanWelsh</a>
+    <a href="https://github.com/brendanwelsh" target="_blank" rel="noopener">GitHub</a>
     <span class="dot">·</span>
-    <a href="https://buymeacoffee.com/brendanwelsh" target="_blank" rel="noopener">Support</a>
+    <a href="https://paypal.me/BrendanWelsh" target="_blank" rel="noopener">Support</a>
   </div>
   <span class="credit">Light the Beam · <a href="https://lightthebe.am/" style="color:inherit;text-decoration:none">lightthebe.am</a> · Data via ESPN. Not affiliated with the Sacramento Kings.</span>
 </div>
-<div style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);z-index:1;display:flex;flex-direction:column;align-items:center">
+<div style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);z-index:0;display:flex;flex-direction:column;align-items:center;pointer-events:none">
   <div class="beam-ray"></div>
   <div class="beam-emitter">
     <div class="beam-emitter-lens"></div>
@@ -632,6 +555,7 @@ function startCountdown(events,aEl,subEl){
   stopCountdown();
   if(!events.length||!aEl)return;
   var idx=0;
+  function subText(ev){return ev.sub||('days until '+ev.name)}
   function tick(){
     var ev=events[idx];
     var days=daysTo(ev.date);
@@ -639,7 +563,7 @@ function startCountdown(events,aEl,subEl){
     if(subEl)subEl.classList.add('fade');
     setTimeout(function(){
       aEl.textContent=String(days);
-      if(subEl)subEl.textContent='days until '+ev.name;
+      if(subEl)subEl.textContent=subText(ev);
       aEl.classList.remove('fade');
       if(subEl)subEl.classList.remove('fade');
     },350);
@@ -647,9 +571,9 @@ function startCountdown(events,aEl,subEl){
   }
   // show first immediately without fade
   var ev0=events[0];aEl.textContent=String(daysTo(ev0.date));
-  if(subEl)subEl.textContent='days until '+ev0.name;
+  if(subEl)subEl.textContent=subText(ev0);
   idx=events.length>1?1:0;
-  if(events.length>1)COUNTDOWN_INT=setInterval(tick,3800);
+  if(events.length>1)COUNTDOWN_INT=setInterval(tick,2800);
 }
 
 async function getData(){
@@ -776,12 +700,11 @@ function render(d){
     var aOff=$('p','answer cd-num','...');app.appendChild(aOff);
     var subOff=$('p','cd-sub','');app.appendChild(subOff);
     var msOff=offseasonMilestones();
-    // Hero is always Opening Night — the headline countdown. The milestone list below shows the others.
-    var opener=msOff.filter(function(m){return m.name==='Opening Night'})[0]||msOff[msOff.length-1];
+    // Hero flashes/cycles through every upcoming milestone date (Draft → Free Agency → … → Opening Night).
     BEAM_REST='beam-dormant';
-    if(opener){
-      aOff.textContent=String(daysTo(opener.date));
-      subOff.textContent='days until opening night';
+    if(msOff.length){
+      COUNTDOWN_EVENTS=msOff.map(function(m){return{date:m.date,name:m.name,sub:'days until '+m.name}});
+      startCountdown(COUNTDOWN_EVENTS,aOff,subOff);
     }else{
       aOff.textContent='soon';subOff.textContent='season is coming';
     }
@@ -835,12 +758,21 @@ function render(d){
     app.appendChild(qPre);
     var aPre=$('p','answer cd-num','...');app.appendChild(aPre);
     var subPre=$('p','cd-sub','');app.appendChild(subPre);
+    // Hero flashes/cycles through the upcoming game dates — opening night first, then the next few tip-offs.
+    var preEvents=[];
     if(d.next){
-      var openerDate=new Date(d.next.date);
       var ncP=d.next.competitions[0],noP=fo(ncP.competitors);
       var noAP=noP?.team?.abbreviation||'???';
-      aPre.textContent=String(daysTo(openerDate));
-      subPre.textContent='days until opening night · vs '+noAP;
+      preEvents.push({date:new Date(d.next.date),sub:'days until opening night · vs '+noAP});
+    }
+    d.sched.slice(1,6).forEach(function(g){
+      var gc=g.competitions[0],go=fo(gc.competitors);
+      var gA=go?.team?.abbreviation||'???';
+      preEvents.push({date:new Date(g.date),sub:'days until Kings vs '+gA});
+    });
+    if(preEvents.length){
+      COUNTDOWN_EVENTS=preEvents;
+      startCountdown(COUNTDOWN_EVENTS,aPre,subPre);
     }else{
       aPre.textContent='soon';
       subPre.textContent='season is coming';
@@ -1125,61 +1057,6 @@ function render(d){
 
 function schedRefresh(){if(ref)clearInterval(ref);ref=setInterval(function(){getData().then(function(d){lastData=d;buildSeasonBar();render(d)}).catch(function(){})},live?30000:120000)}
 
-function explode(){
-  playCowbell();
-  var canvas=document.createElement('canvas');canvas.id='explosionCanvas';
-  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
-  document.body.appendChild(canvas);
-  var ctx=canvas.getContext('2d');
-  var particles=[];
-  var colors=['#5b2d8e','#9b4dca','#FDB927','#fff','#7B3FA0'];
-  for(var i=0;i<150;i++){
-    var angle=Math.random()*Math.PI*2;
-    var speed=2+Math.random()*8;
-    particles.push({
-      x:canvas.width/2,y:canvas.height/2,
-      vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,
-      size:2+Math.random()*4,
-      color:colors[Math.floor(Math.random()*colors.length)],
-      life:1,decay:0.008+Math.random()*0.015,
-      gravity:0.05+Math.random()*0.05
-    });
-  }
-  var flash=document.createElement('div');
-  flash.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:#fff;z-index:399;opacity:0;transition:opacity .1s';
-  document.body.appendChild(flash);
-  requestAnimationFrame(function(){flash.style.opacity='1'});
-  setTimeout(function(){flash.style.opacity='0';setTimeout(function(){flash.remove()},300)},150);
-
-  function animate(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    var alive=false;
-    for(var i=0;i<particles.length;i++){
-      var p=particles[i];
-      if(p.life<=0)continue;
-      alive=true;
-      p.x+=p.vx;p.y+=p.vy;p.vy+=p.gravity;
-      p.life-=p.decay;
-      ctx.globalAlpha=p.life;
-      ctx.fillStyle=p.color;
-      ctx.beginPath();
-      ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
-      ctx.fill();
-    }
-    if(alive)requestAnimationFrame(animate);
-    else{canvas.remove()}
-  }
-  animate();
-  document.body.style.transition='transform 0.05s';
-  var shakeCount=0;
-  var shakeInt=setInterval(function(){
-    var x=(Math.random()-0.5)*20;var y=(Math.random()-0.5)*20;
-    document.body.style.transform='translate('+x+'px,'+y+'px)';
-    shakeCount++;
-    if(shakeCount>30){clearInterval(shakeInt);document.body.style.transform=''}
-  },50);
-}
-
 var tc=0,tt=null;
 document.getElementById('app').addEventListener('click',function(e){
   var l=e.target.closest('.logo');if(!l)return;
@@ -1258,7 +1135,6 @@ function showSeason(yr,recap){
   document.getElementById('app').style.display='';
   document.getElementById('tilesSection').style.display='';
   document.getElementById('cards').style.display='';
-  document.getElementById('aboutSection').style.display='none';
   var sameSeason=(yr===currentSeason);
   currentSeason=yr;
   recapMode=!!recap;
@@ -1299,86 +1175,10 @@ function buildSeasonBar(){
 }
 buildSeasonBar();
 
-// About link (in page nav) toggles the about section.
-document.getElementById('aboutLink').addEventListener('click',function(e){
-  e.preventDefault();
-  var aboutVisible=document.getElementById('aboutSection').style.display==='block';
-  if(aboutVisible){
-    document.getElementById('app').style.display='';
-    document.getElementById('tilesSection').style.display='';
-    document.getElementById('cards').style.display='';
-    document.getElementById('aboutSection').style.display='none';
-    this.classList.remove('active');
-    document.querySelector('.page-nav a[href="/"]').classList.add('active');
-  }else{
-    document.getElementById('app').style.display='none';
-    document.getElementById('tilesSection').style.display='none';
-    document.getElementById('cards').style.display='none';
-    document.getElementById('aboutSection').style.display='block';
-    document.querySelectorAll('.page-nav a').forEach(function(a){a.classList.remove('active')});
-    this.classList.add('active');
-  }
-});
-
+// Demo (live-game) mode can be deep-linked from the About page's logo easter egg.
+if(/[?&]demo/i.test(location.search))mockLive=true;
 getData().then(function(d){lastData=d;buildSeasonBar();render(d)}).catch(function(){render(null)});
 
-var chargeTimer=null,chargeStart=0,chargeInterval=null;
-var bb=document.getElementById('beamButton');
-function startCharge(e){
-  e.preventDefault();
-  chargeStart=Date.now();
-  document.body.classList.add('beam-on');
-  bb.style.filter='brightness(1)';
-  chargeInterval=setInterval(function(){
-    var elapsed=(Date.now()-chargeStart)/1000;
-    var brightness=1+elapsed*0.15;
-    bb.style.filter='brightness('+brightness+')';
-    bb.style.transform='scale('+(1+elapsed*0.01)+')';
-    if(elapsed>5){
-      var x=(Math.random()-0.5)*elapsed*0.5;
-      var y=(Math.random()-0.5)*elapsed*0.5;
-      document.body.style.transform='translate('+x+'px,'+y+'px)';
-    }
-    if(elapsed>=10){
-      clearInterval(chargeInterval);chargeInterval=null;
-      bb.style.filter='';bb.style.transform='';
-      document.body.style.transform='';
-      explode();
-      setTimeout(function(){document.body.classList.remove('beam-on')},3000);
-    }
-  },50);
-}
-function stopCharge(){
-  if(chargeInterval){clearInterval(chargeInterval);chargeInterval=null}
-  bb.style.filter='';bb.style.transform='';
-  document.body.style.transform='';
-  if((Date.now()-chargeStart)<500){
-    var f=$('div','beam-flash');document.body.appendChild(f);setTimeout(function(){f.remove()},500);
-    document.body.classList.add('beam-on');
-    setTimeout(function(){document.body.classList.remove('beam-on')},1500);
-  }else{
-    document.body.classList.remove('beam-on');
-  }
-}
-bb.addEventListener('mousedown',startCharge);
-bb.addEventListener('mouseup',stopCharge);
-bb.addEventListener('mouseleave',stopCharge);
-bb.addEventListener('touchstart',startCharge,{passive:false});
-bb.addEventListener('touchend',stopCharge);
-
-var atc=0,att=null;
-document.getElementById('aboutLogo').addEventListener('click',function(){
-  atc++;this.style.transform='scale(.9)';var self=this;setTimeout(function(){self.style.transform='scale(1)'},150);
-  clearTimeout(att);att=setTimeout(function(){atc=0},1500);
-  if(atc>=5){atc=0;clearTimeout(att);mockLive=!mockLive;playCowbell();
-    document.getElementById('app').style.display='';
-    document.getElementById('tilesSection').style.display='';
-    document.getElementById('cards').style.display='';
-    document.getElementById('aboutSection').style.display='none';
-    currentSeason=autoCurrentSeason;recapMode=false;buildSeasonBar();
-    render(lastData);
-  }
-});
 </script>
 </body>
 </html>

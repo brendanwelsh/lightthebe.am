@@ -1,0 +1,182 @@
+<!-- v34 --><!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — Light the Beam</title>
+<meta name="description" content="The fan behind lightthebe.am — a Sacramento-born Kings fan who grew up in the nosebleeds watching Webber, Peja, Vlade and Bibby. Built the beam tracker for fans.">
+<meta name="theme-color" content="#5b2d8e">
+<meta name="author" content="Brendan Welsh">
+<link rel="canonical" href="https://lightthebe.am/about">
+<link rel="icon" type="image/png" href="/kings-logo.png">
+<link rel="apple-touch-icon" href="/kings-logo.png">
+<meta property="og:title" content="About — Light the Beam">
+<meta property="og:description" content="The Sacramento-born Kings fan behind the beam tracker.">
+<meta property="og:url" content="https://lightthebe.am/about">
+<meta property="og:type" content="profile">
+<meta property="og:image" content="https://lightthebe.am/preview.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"AboutPage","name":"About — Light the Beam","url":"https://lightthebe.am/about","mainEntity":{"@type":"Person","name":"Brendan Welsh","url":"https://github.com/brendanwelsh","sameAs":["https://github.com/brendanwelsh"]}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--purple:#5b2d8e;--black:#0a0a0a;--beam:#9b4dca}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--black);color:#fff;min-height:100dvh;display:flex;flex-direction:column;align-items:center;text-align:center;overflow-x:hidden;padding-bottom:4rem}
+
+body.beam-dormant::before{content:'';position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:3px;height:40vh;background:linear-gradient(0deg,rgba(155,77,202,.18) 0%,rgba(155,77,202,.06) 60%,transparent 100%);pointer-events:none;z-index:0;animation:beamPulse 3s ease-in-out infinite}
+@keyframes beamPulse{0%,100%{opacity:.5}50%{opacity:1}}
+body.beam-on::before{content:'';position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:6px;height:100vh;background:linear-gradient(0deg,var(--beam) 0%,rgba(155,77,202,.8) 30%,rgba(155,77,202,.4) 70%,rgba(155,77,202,.1) 100%);box-shadow:0 0 40px 12px rgba(155,77,202,.4),0 0 100px 40px rgba(91,45,142,.2);pointer-events:none;z-index:0;opacity:0;animation:beamOn .6s ease-out forwards}
+@keyframes beamOn{0%{opacity:0}100%{opacity:1}}
+
+.page-nav{position:relative;z-index:2;width:100%;display:flex;flex-wrap:wrap;justify-content:center;gap:.4rem;padding:.55rem 1rem .25rem;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.04)}
+.page-nav a{background:transparent;border:none;border-radius:0;padding:.2rem .5rem;font-size:.7rem;font-weight:800;color:rgba(255,255,255,.5);cursor:pointer;white-space:nowrap;text-decoration:none;text-transform:uppercase;letter-spacing:.1em;transition:color .15s;border-bottom:2px solid transparent;line-height:1.6}
+.page-nav a:hover{color:#fff}
+.page-nav a.active{color:#fff;border-bottom-color:var(--beam)}
+
+.hero{display:flex;flex-direction:column;align-items:center;position:relative;z-index:1;max-width:600px;width:100%;padding:1.75rem 1rem .5rem;text-align:center}
+.page-title{font-size:clamp(1.7rem,5.5vw,2.6rem);font-weight:900;letter-spacing:.04em;text-transform:uppercase;line-height:1.05}
+.page-sub{font-size:.8rem;font-weight:600;opacity:.5;margin-top:.5rem;letter-spacing:.04em;max-width:460px;line-height:1.5}
+
+main{width:100%;max-width:520px;margin:0 auto;padding:0 1rem;position:relative;z-index:1;text-align:center}
+#aboutLogo{width:170px;margin:1rem auto .75rem;display:block;opacity:.8;cursor:pointer;transition:transform .15s;-webkit-tap-highlight-color:transparent}
+.socials{display:flex;gap:.75rem;justify-content:center;margin-bottom:1rem;opacity:.35}
+.socials a{color:inherit}
+
+.beam-btn{display:block;margin:0 auto 2rem;padding:1rem 3rem;font-size:1rem;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:#fff;background:var(--beam);border:none;border-radius:12px;cursor:pointer;box-shadow:0 4px 0 var(--purple),0 8px 20px rgba(0,0,0,.3);transition:all .1s;position:relative}
+.beam-btn:hover{transform:translateY(-2px);box-shadow:0 6px 0 var(--purple),0 12px 24px rgba(0,0,0,.3)}
+.beam-btn:active{transform:translateY(2px);box-shadow:0 2px 0 var(--purple),0 4px 12px rgba(0,0,0,.3)}
+
+.sec-title{font-size:.7rem;text-transform:uppercase;letter-spacing:.2em;opacity:.3;margin-bottom:.75rem;font-weight:800;text-align:left}
+.bio{font-size:.88rem;line-height:1.7;opacity:.65;margin-bottom:1.25rem;text-align:left}
+.bio a{color:var(--beam);text-decoration:none;font-weight:700}
+.cap{font-size:.6rem;opacity:.25;margin-bottom:1.25rem}
+.accent{font-size:1rem;font-weight:800;color:var(--beam);margin-bottom:1.5rem}
+
+.donate-row{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;margin:1.25rem 0}
+.donate-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 1.4rem;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;text-decoration:none;border-radius:8px;transition:all .15s}
+.donate-btn.pp{background:#0070ba;color:#fff}
+.donate-btn.pp:hover{background:#005ea6;transform:translateY(-1px)}
+.tip-note{font-size:.65rem;line-height:1.5;opacity:.4;margin-bottom:.25rem;text-align:left}
+
+.sign{font-size:1.1rem;font-weight:900;font-style:italic;opacity:.6;letter-spacing:.05em;margin-top:2rem}
+.fine{font-size:.6rem;opacity:.25;margin:1.5rem 0}
+
+.footer{position:relative;z-index:1;width:100%;padding:2rem 1rem 2.5rem;display:flex;flex-direction:column;align-items:center;gap:.4rem;margin-top:2rem}
+.footer-links{display:flex;flex-wrap:wrap;gap:.7rem 1rem;align-items:center;justify-content:center}
+.footer a{color:rgba(255,255,255,.22);text-decoration:none;font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;transition:color .2s}
+.footer a:hover{color:rgba(255,255,255,.5)}
+.footer .dot{color:rgba(255,255,255,.1);font-size:.5rem}
+.footer .credit{font-size:.5rem;color:rgba(255,255,255,.12);letter-spacing:.06em;text-align:center;line-height:1.5}
+</style>
+</head>
+<body class="beam-dormant">
+<nav class="page-nav">
+  <a href="/">Home</a>
+  <a href="/players">Roster</a>
+  <a href="/totals">Totals</a>
+  <a href="/stats">Stats</a>
+  <a href="/beam">Beam</a>
+  <a href="/about" class="active">About</a>
+</nav>
+
+<div class="hero">
+  <div class="page-title">About</div>
+  <div class="page-sub">The fan behind the beam tracker.</div>
+</div>
+
+<main>
+  <img src="kings-classic.png" alt="Classic Sacramento Kings Logo" id="aboutLogo">
+  <div class="socials">
+    <a href="https://www.nba.com/kings" target="_blank" rel="noopener" title="NBA.com/Kings"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M4 8a4 4 0 0 1 8 0" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="1" x2="8" y2="15" stroke="currentColor" stroke-width="1.2"/><line x1="1" y1="8" x2="15" y2="8" stroke="currentColor" stroke-width="1.2"/></svg></a>
+    <a href="https://twitter.com/SacramentoKings" target="_blank" rel="noopener" title="@SacramentoKings"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M9.5 6.7L14.2 1.2h-1.1L9 5.9 5.8 1.2H1.5l4.9 7.1L1.5 14.2h1.1l4.3-5 3.4 5h4.3L9.5 6.7zm-1.5 1.8l-.5-.7L3.2 2.1h1.7l3.2 4.6.5.7 4.2 5.9h-1.7L8 8.5z"/></svg></a>
+    <a href="https://www.instagram.com/sacramentokings" target="_blank" rel="noopener" title="Instagram"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="1.5" y="1.5" width="13" height="13" rx="3.5" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="12" cy="4" r=".9"/></svg></a>
+    <a href="https://shop.kings.com" target="_blank" rel="noopener" title="Kings Store"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3 5h10l-1 9H4L3 5z" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 5V4a2.5 2.5 0 0 1 5 0v1" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a>
+  </div>
+
+  <button id="beamButton" class="beam-btn">Light the Beam</button>
+
+  <h3 class="sec-title">About the Author</h3>
+  <p class="bio">
+    Built by <a href="https://github.com/brendanwelsh" target="_blank" rel="noopener">Brendan Welsh</a>, FYBA Legend. Hoop dreams. Known as BulldogsRock25 on AIM. Born and raised in Sacramento. Grew up playing youth basketball, played on the court at Arco Arena. Sat in the nosebleeds watching Webber, Peja, Vlade, Doug Christie, and the greatest team to never win a championship. Skipped school in 4th grade to get Carl's Jr Kings bobbleheads. Recently got $15 tickets to a game and $16 hot dogs.
+  </p>
+
+  <img src="bibby-full.png" alt="Getting Bibby's autograph" style="width:100%;max-width:440px;border-radius:12px;margin:0 auto .4rem;display:block;border:1px solid rgba(255,255,255,.08);box-shadow:0 4px 20px rgba(0,0,0,.4)">
+  <p class="cap">Getting Bibby's autograph at Food Source, 2002</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.4rem">
+    <img src="beam-house.png" alt="The beam at home" style="width:100%;border-radius:10px;border:1px solid rgba(255,255,255,.08);object-fit:cover;aspect-ratio:4/3;box-shadow:0 4px 16px rgba(0,0,0,.3)">
+    <img src="beam-tv.png" alt="Game night" style="width:100%;border-radius:10px;border:1px solid rgba(255,255,255,.08);object-fit:cover;aspect-ratio:4/3;box-shadow:0 4px 16px rgba(0,0,0,.3)">
+  </div>
+  <p class="cap">The beam doesn't just stay at the arena.</p>
+  <img src="hotdog.jpg" alt="$15 seats, $16 hot dogs" style="width:100%;max-width:440px;border-radius:12px;margin:0 auto .4rem;display:block;border:1px solid rgba(255,255,255,.08);box-shadow:0 4px 20px rgba(0,0,0,.4)">
+  <p class="cap" style="margin-bottom:1.5rem">$15 seats. $16 hot dogs. Worth every penny.</p>
+  <p class="accent">Light the beam.</p>
+
+  <h3 class="sec-title">Keep the Lights On</h3>
+  <p class="tip-note">If the beam's lit something up for you, throw a tip — it keeps the site ad-light and the lights on.</p>
+  <div class="donate-row">
+    <a href="https://paypal.me/BrendanWelsh" target="_blank" rel="noopener" class="donate-btn pp">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11A4.5 4.5 0 0 1 11.5 7h1A4.5 4.5 0 0 1 17 11.5a4 4 0 0 1-4 3.5H9.5L8 21H4l3-10Z"/><path d="M15 7a4.5 4.5 0 0 1 4 4.5 4 4 0 0 1-4 3.5h-1"/></svg>
+      Tip via PayPal
+    </a>
+  </div>
+
+  <p class="fine">Not affiliated with the Sacramento Kings. Made by a fan, for fans.</p>
+  <p class="sign">Hoop Dreams, Baby.</p>
+</main>
+
+<div class="footer">
+  <div class="footer-links">
+    <a href="https://www.nba.com/kings" target="_blank" rel="noopener" title="NBA.com/Kings"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M4 8a4 4 0 0 1 8 0" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="1" x2="8" y2="15" stroke="currentColor" stroke-width="1.2"/><line x1="1" y1="8" x2="15" y2="8" stroke="currentColor" stroke-width="1.2"/></svg></a>
+    <a href="https://twitter.com/SacramentoKings" target="_blank" rel="noopener" title="@SacramentoKings"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M9.5 6.7L14.2 1.2h-1.1L9 5.9 5.8 1.2H1.5l4.9 7.1L1.5 14.2h1.1l4.3-5 3.4 5h4.3L9.5 6.7zm-1.5 1.8l-.5-.7L3.2 2.1h1.7l3.2 4.6.5.7 4.2 5.9h-1.7L8 8.5z"/></svg></a>
+    <a href="https://www.instagram.com/sacramentokings" target="_blank" rel="noopener" title="Instagram"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="1.5" y="1.5" width="13" height="13" rx="3.5" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="12" cy="4" r=".9"/></svg></a>
+    <span class="dot">|</span>
+    <a href="https://github.com/brendanwelsh" target="_blank" rel="noopener">GitHub</a>
+    <span class="dot">·</span>
+    <a href="https://paypal.me/BrendanWelsh" target="_blank" rel="noopener">Support</a>
+  </div>
+  <span class="credit">Light the Beam · <a href="https://lightthebe.am/" style="color:inherit;text-decoration:none">lightthebe.am</a> · Data via ESPN. Not affiliated with the Sacramento Kings.</span>
+</div>
+
+<script>
+var cowbellAudio=new Audio('cowbell.mp3');
+cowbellAudio.onerror=function(){cowbellAudio=new Audio()};
+function playCowbell(){try{cowbellAudio.currentTime=0;cowbellAudio.play().catch(function(){})}catch(e){}}
+
+// Hold-to-charge beam button (mirror of the homepage easter egg).
+var chargeStart=0,chargeInterval=null;
+var bb=document.getElementById('beamButton');
+function startCharge(e){
+  e.preventDefault();
+  chargeStart=Date.now();
+  document.body.classList.remove('beam-dormant');document.body.classList.add('beam-on');
+  bb.style.filter='brightness(1)';
+  chargeInterval=setInterval(function(){
+    var elapsed=(Date.now()-chargeStart)/1000;
+    bb.style.filter='brightness('+(1+elapsed*0.15)+')';
+    bb.style.transform='scale('+(1+elapsed*0.01)+')';
+    if(elapsed>5){document.body.style.transform='translate('+((Math.random()-0.5)*elapsed*0.5)+'px,'+((Math.random()-0.5)*elapsed*0.5)+'px)';}
+    if(elapsed>=10){clearInterval(chargeInterval);chargeInterval=null;bb.style.filter='';bb.style.transform='';document.body.style.transform='';playCowbell();setTimeout(function(){document.body.classList.remove('beam-on');document.body.classList.add('beam-dormant')},2500);}
+  },50);
+}
+function stopCharge(){
+  if(chargeInterval){clearInterval(chargeInterval);chargeInterval=null}
+  bb.style.filter='';bb.style.transform='';document.body.style.transform='';
+  if((Date.now()-chargeStart)>=500){document.body.classList.remove('beam-on');document.body.classList.add('beam-dormant');}
+  else{document.body.classList.remove('beam-on');document.body.classList.add('beam-dormant');}
+}
+bb.addEventListener('mousedown',startCharge);
+bb.addEventListener('mouseup',stopCharge);
+bb.addEventListener('mouseleave',stopCharge);
+bb.addEventListener('touchstart',startCharge,{passive:false});
+bb.addEventListener('touchend',stopCharge);
+
+// Easter egg: tap the classic logo 5x to jump to the homepage in demo (live-game) mode.
+var atc=0,att=null;
+document.getElementById('aboutLogo').addEventListener('click',function(){
+  atc++;this.style.transform='scale(.9)';var self=this;setTimeout(function(){self.style.transform='scale(1)'},150);
+  clearTimeout(att);att=setTimeout(function(){atc=0},1500);
+  if(atc>=5){atc=0;clearTimeout(att);playCowbell();window.location.href='/?demo=1';}
+});
+</script>
+</body>
+</html>

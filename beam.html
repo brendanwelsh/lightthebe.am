@@ -1,0 +1,232 @@
+<!-- v34 --><!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About the Beam — Light the Beam</title>
+<meta name="description" content="What is the Sacramento Kings beam? A 1.5 million candlepower searchlight on Golden 1 Center that fires after every Kings win. Its history, specs, and the tradition since Oct 29, 2022.">
+<meta name="keywords" content="what is the Kings beam, light the beam meaning, Sacramento Kings beam, Golden 1 Center searchlight, beam tradition">
+<meta name="theme-color" content="#5b2d8e">
+<meta name="author" content="Brendan Welsh">
+<link rel="canonical" href="https://lightthebe.am/beam">
+<link rel="icon" type="image/png" href="/kings-logo.png">
+<link rel="apple-touch-icon" href="/kings-logo.png">
+<meta property="og:title" content="About the Beam — Light the Beam">
+<meta property="og:description" content="A 1.5 million candlepower searchlight that fires after every Sacramento Kings win. Here's the story.">
+<meta property="og:url" content="https://lightthebe.am/beam">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lightthebe.am/preview.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"About the Beam — what is the Sacramento Kings beam?","about":"Sacramento Kings beam","author":{"@type":"Person","name":"Brendan Welsh","url":"https://github.com/brendanwelsh"},"publisher":{"@type":"Organization","name":"Light the Beam","logo":{"@type":"ImageObject","url":"https://lightthebe.am/kings-logo.png"}},"mainEntityOfPage":"https://lightthebe.am/beam"}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--purple:#5b2d8e;--black:#0a0a0a;--beam:#9b4dca}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--black);color:#fff;min-height:100dvh;display:flex;flex-direction:column;align-items:center;text-align:center;overflow-x:hidden;padding-bottom:4rem}
+
+body.beam-dormant::before{content:'';position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:3px;height:40vh;background:linear-gradient(0deg,rgba(155,77,202,.18) 0%,rgba(155,77,202,.06) 60%,transparent 100%);pointer-events:none;z-index:0;animation:beamPulse 3s ease-in-out infinite}
+@keyframes beamPulse{0%,100%{opacity:.5}50%{opacity:1}}
+body.beam-on::before{content:'';position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:6px;height:100vh;background:linear-gradient(0deg,var(--beam) 0%,rgba(155,77,202,.8) 30%,rgba(155,77,202,.4) 70%,rgba(155,77,202,.1) 100%);box-shadow:0 0 40px 12px rgba(155,77,202,.4),0 0 100px 40px rgba(91,45,142,.2);pointer-events:none;z-index:0;opacity:0;animation:beamOn .6s ease-out forwards}
+body.beam-on::after{content:'';position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:250px;height:100vh;background:radial-gradient(ellipse at center bottom,rgba(155,77,202,.5) 0%,rgba(91,45,142,.3) 30%,rgba(91,45,142,.1) 60%,transparent 80%);filter:blur(30px);pointer-events:none;z-index:0;opacity:0;animation:beamOn .6s ease-out .15s forwards}
+@keyframes beamOn{0%{opacity:0}100%{opacity:1}}
+.beam-flash{position:fixed;inset:0;background:radial-gradient(ellipse at center bottom,rgba(155,77,202,.9) 0%,rgba(91,45,142,.5) 30%,transparent 70%);pointer-events:none;z-index:100;animation:fi .5s ease-out forwards}
+@keyframes fi{0%{opacity:0}40%{opacity:1}100%{opacity:0}}
+#explosionCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:400;pointer-events:none}
+
+.page-nav{position:relative;z-index:2;width:100%;display:flex;flex-wrap:wrap;justify-content:center;gap:.4rem;padding:.55rem 1rem .25rem;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.04)}
+.page-nav a{background:transparent;border:none;border-radius:0;padding:.2rem .5rem;font-size:.7rem;font-weight:800;color:rgba(255,255,255,.5);cursor:pointer;white-space:nowrap;text-decoration:none;text-transform:uppercase;letter-spacing:.1em;transition:color .15s;border-bottom:2px solid transparent;line-height:1.6}
+.page-nav a:hover{color:#fff}
+.page-nav a.active{color:#fff;border-bottom-color:var(--beam)}
+
+.hero{display:flex;flex-direction:column;align-items:center;position:relative;z-index:1;max-width:600px;width:100%;padding:1.75rem 1rem 1rem;text-align:center}
+.page-title{font-size:clamp(1.7rem,5.5vw,2.6rem);font-weight:900;letter-spacing:.04em;text-transform:uppercase;line-height:1.05}
+.page-sub{font-size:.8rem;font-weight:600;opacity:.5;margin-top:.5rem;letter-spacing:.04em;max-width:460px;line-height:1.5}
+
+main{width:100%;max-width:560px;padding:0 1rem;position:relative;z-index:1;text-align:left}
+
+.beam-btn{display:block;margin:1.5rem auto 2rem;padding:1rem 3rem;font-size:1rem;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:#fff;background:var(--beam);border:none;border-radius:12px;cursor:pointer;box-shadow:0 4px 0 var(--purple),0 8px 20px rgba(0,0,0,.3);transition:all .1s;position:relative}
+.beam-btn:hover{transform:translateY(-2px);box-shadow:0 6px 0 var(--purple),0 12px 24px rgba(0,0,0,.3)}
+.beam-btn:active{transform:translateY(2px);box-shadow:0 2px 0 var(--purple),0 4px 12px rgba(0,0,0,.3)}
+.btn-hint{font-size:.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.15em;opacity:.3;text-align:center;margin:-1.25rem 0 2rem}
+
+.specs{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.6rem;margin:0 0 1.75rem}
+.spec{background:linear-gradient(135deg,rgba(91,45,142,.1),rgba(155,77,202,.04));border:1px solid rgba(155,77,202,.2);border-radius:12px;padding:.95rem .65rem;text-align:center}
+.spec .v{font-size:1.5rem;font-weight:900;color:var(--beam);line-height:1}
+.spec .l{font-size:.5rem;font-weight:800;opacity:.6;text-transform:uppercase;letter-spacing:.15em;margin-top:.25rem}
+
+.sec-title{font-size:.7rem;text-transform:uppercase;letter-spacing:.2em;opacity:.35;margin:2rem 0 .85rem;font-weight:800}
+.prose p{font-size:.9rem;line-height:1.7;opacity:.7;margin-bottom:1rem}
+.prose strong{color:#fff;font-weight:700}
+.prose p.fine{font-size:.72rem;opacity:.45}
+
+.facts{display:flex;flex-direction:column;gap:.4rem;margin:.25rem 0 .5rem}
+.fact{display:grid;grid-template-columns:5.5rem 1fr;gap:.75rem;align-items:start;padding:.55rem .2rem;border-top:1px solid rgba(255,255,255,.05)}
+.fact:first-child{border-top:none}
+.fact .k{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--beam);opacity:.85}
+.fact .d{font-size:.82rem;line-height:1.55;opacity:.75}
+
+.xlink{display:inline-flex;align-items:center;gap:.4rem;margin:1.5rem auto 0;padding:.7rem 1.3rem;border:1.5px solid var(--beam);border-radius:10px;color:#fff;font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;text-decoration:none;background:rgba(91,45,142,.12);transition:all .15s}
+.xlink:hover{background:var(--beam)}
+.sign{font-size:1.1rem;font-weight:900;font-style:italic;opacity:.6;letter-spacing:.05em;text-align:center;margin-top:2.25rem}
+
+.footer{position:relative;z-index:1;width:100%;padding:2rem 1rem 2.5rem;display:flex;flex-direction:column;align-items:center;gap:.4rem;margin-top:2rem}
+.footer-links{display:flex;flex-wrap:wrap;gap:.7rem 1rem;align-items:center;justify-content:center}
+.footer a{color:rgba(255,255,255,.22);text-decoration:none;font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;transition:color .2s}
+.footer a:hover{color:rgba(255,255,255,.5)}
+.footer .dot{color:rgba(255,255,255,.1);font-size:.5rem}
+.footer .credit{font-size:.5rem;color:rgba(255,255,255,.12);letter-spacing:.06em;text-align:center;line-height:1.5}
+.beam-emitter{width:40px;height:22px;background:linear-gradient(180deg,#888 0%,#555 40%,#333 100%);border-radius:4px 4px 6px 6px;position:relative;box-shadow:0 2px 8px rgba(0,0,0,.5)}
+.beam-emitter-lens{width:10px;height:10px;background:rgba(155,77,202,.15);border:2px solid #666;border-radius:50%;position:absolute;top:3px;left:50%;transform:translateX(-50%);transition:all .3s}
+body.beam-on .beam-emitter-lens{background:var(--beam);border-color:var(--beam);box-shadow:0 0 12px var(--beam)}
+</style>
+</head>
+<body class="beam-dormant">
+<nav class="page-nav">
+  <a href="/">Home</a>
+  <a href="/players">Roster</a>
+  <a href="/totals">Totals</a>
+  <a href="/stats">Stats</a>
+  <a href="/beam" class="active">Beam</a>
+  <a href="/about">About</a>
+</nav>
+
+<div class="hero">
+  <div class="page-title">About the Beam</div>
+  <div class="page-sub">The purple searchlight that paints Sacramento's skyline after every Kings win.</div>
+</div>
+
+<main>
+  <div class="specs">
+    <div class="spec"><div class="v">1.5M</div><div class="l">Candlepower</div></div>
+    <div class="spec"><div class="v">~60</div><div class="l">Min Per Beam</div></div>
+    <div class="spec"><div class="v">Oct 29</div><div class="l">First Lit · 2022</div></div>
+  </div>
+
+  <button id="beamButton" class="beam-btn">Light the Beam</button>
+  <p class="btn-hint">Hold it down…</p>
+
+  <h3 class="sec-title">What It Is</h3>
+  <div class="prose">
+    <p>After every Sacramento Kings win, a purple beam shoots from the crown of <strong>Golden 1 Center</strong> into the Sacramento sky. It's powered by a <strong>1.5 million candlepower</strong> searchlight mounted on the arena roof — visible for miles across the valley. It fires after <strong>every win, home or road</strong>, and stays lit for about an hour after the final buzzer, painting the downtown skyline purple.</p>
+  </div>
+
+  <h3 class="sec-title">Where It Came From</h3>
+  <div class="prose">
+    <p>The tradition started <strong>October 29, 2022</strong> — the night the Kings beat the Heat 119-113 at home. That was the season Sacramento finally ended a <strong>16-year playoff drought</strong>, the longest in the NBA at the time. The beam became the rallying cry of the whole run.</p>
+    <p>But "light the beam" outgrew basketball. Got a promotion? Light the beam. Aced the exam? Light the beam. Kid took their first steps? Light the beam. It's a Sacramento thing. It's a celebration.</p>
+  </div>
+
+  <h3 class="sec-title">The Facts</h3>
+  <div class="facts">
+    <div class="fact"><div class="k">Location</div><div class="d">Rooftop of Golden 1 Center, downtown Sacramento.</div></div>
+    <div class="fact"><div class="k">Power</div><div class="d">A 1.5 million candlepower searchlight, beaming straight up.</div></div>
+    <div class="fact"><div class="k">Trigger</div><div class="d">Every Kings win — home or away. A loss means no beam.</div></div>
+    <div class="fact"><div class="k">Duration</div><div class="d">Roughly an hour after the game ends.</div></div>
+    <div class="fact"><div class="k">First lit</div><div class="d">Oct 29, 2022 vs. the Miami Heat (119-113).</div></div>
+    <div class="fact"><div class="k">Color</div><div class="d">Kings purple, of course.</div></div>
+  </div>
+
+  <h3 class="sec-title">About This Site</h3>
+  <div class="prose">
+    <p>This site tracks every beam. During live games, the answer shifts — <strong>YES, LIKELY, PROBABLY, MAYBE, DOUBTFUL, UNLIKELY, NOPE</strong> — based on real-time win probability from ESPN. All data is pulled from ESPN's public API. Scores update every 30 seconds during live games, and season archives go back to 2022-23.</p>
+    <p class="fine">Not affiliated with the Sacramento Kings. Made by a fan, for fans.</p>
+  </div>
+
+  <div style="text-align:center">
+    <a href="/about" class="xlink">About the maker →</a>
+  </div>
+
+  <p class="sign">Hoop Dreams, Baby.</p>
+</main>
+
+<div class="footer">
+  <div class="footer-links">
+    <a href="https://www.nba.com/kings" target="_blank" rel="noopener" title="NBA.com/Kings"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M4 8a4 4 0 0 1 8 0" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="1" x2="8" y2="15" stroke="currentColor" stroke-width="1.2"/><line x1="1" y1="8" x2="15" y2="8" stroke="currentColor" stroke-width="1.2"/></svg></a>
+    <a href="https://www.instagram.com/sacramentokings" target="_blank" rel="noopener" title="Instagram"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="1.5" y="1.5" width="13" height="13" rx="3.5" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="12" cy="4" r=".9"/></svg></a>
+    <a href="https://twitter.com/SacramentoKings" target="_blank" rel="noopener" title="@SacramentoKings"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M9.5 6.7L14.2 1.2h-1.1L9 5.9 5.8 1.2H1.5l4.9 7.1L1.5 14.2h1.1l4.3-5 3.4 5h4.3L9.5 6.7zm-1.5 1.8l-.5-.7L3.2 2.1h1.7l3.2 4.6.5.7 4.2 5.9h-1.7L8 8.5z"/></svg></a>
+    <a href="https://shop.kings.com" target="_blank" rel="noopener" title="Kings Store"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3 5h10l-1 9H4L3 5z" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 5V4a2.5 2.5 0 0 1 5 0v1" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a>
+    <span class="dot">|</span>
+    <a href="https://github.com/brendanwelsh" target="_blank" rel="noopener">GitHub</a>
+    <span class="dot">·</span>
+    <a href="https://paypal.me/BrendanWelsh" target="_blank" rel="noopener">Support</a>
+  </div>
+  <span class="credit">Light the Beam · <a href="https://lightthebe.am/" style="color:inherit;text-decoration:none">lightthebe.am</a> · Data via ESPN. Not affiliated with the Sacramento Kings.</span>
+</div>
+<div style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);z-index:0;display:flex;flex-direction:column;align-items:center;pointer-events:none">
+  <div class="beam-emitter"><div class="beam-emitter-lens"></div></div>
+</div>
+
+<script>
+var cowbellAudio=new Audio('cowbell.mp3');
+cowbellAudio.onerror=function(){cowbellAudio=new Audio()};
+function playCowbell(){try{cowbellAudio.currentTime=0;cowbellAudio.play().catch(function(){})}catch(e){}}
+
+function explode(){
+  playCowbell();
+  var canvas=document.createElement('canvas');canvas.id='explosionCanvas';
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+  document.body.appendChild(canvas);
+  var ctx=canvas.getContext('2d');
+  var particles=[];
+  var colors=['#5b2d8e','#9b4dca','#FDB927','#fff','#7B3FA0'];
+  for(var i=0;i<150;i++){
+    var angle=Math.random()*Math.PI*2;
+    var speed=2+Math.random()*8;
+    particles.push({x:canvas.width/2,y:canvas.height/2,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,size:2+Math.random()*4,color:colors[Math.floor(Math.random()*colors.length)],life:1,decay:0.008+Math.random()*0.015,gravity:0.05+Math.random()*0.05});
+  }
+  var flash=document.createElement('div');
+  flash.style.cssText='position:fixed;inset:0;background:#fff;z-index:399;opacity:0;transition:opacity .1s';
+  document.body.appendChild(flash);
+  requestAnimationFrame(function(){flash.style.opacity='1'});
+  setTimeout(function(){flash.style.opacity='0';setTimeout(function(){flash.remove()},300)},150);
+  function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    var alive=false;
+    for(var i=0;i<particles.length;i++){var p=particles[i];if(p.life<=0)continue;alive=true;p.x+=p.vx;p.y+=p.vy;p.vy+=p.gravity;p.life-=p.decay;ctx.globalAlpha=p.life;ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fill();}
+    if(alive)requestAnimationFrame(animate);else canvas.remove();
+  }
+  animate();
+  document.body.style.transition='transform 0.05s';
+  var shakeCount=0;
+  var shakeInt=setInterval(function(){document.body.style.transform='translate('+((Math.random()-0.5)*20)+'px,'+((Math.random()-0.5)*20)+'px)';shakeCount++;if(shakeCount>30){clearInterval(shakeInt);document.body.style.transform=''}},50);
+}
+
+var chargeStart=0,chargeInterval=null;
+var bb=document.getElementById('beamButton');
+function startCharge(e){
+  e.preventDefault();
+  chargeStart=Date.now();
+  document.body.classList.remove('beam-dormant');document.body.classList.add('beam-on');
+  bb.style.filter='brightness(1)';
+  chargeInterval=setInterval(function(){
+    var elapsed=(Date.now()-chargeStart)/1000;
+    bb.style.filter='brightness('+(1+elapsed*0.15)+')';
+    bb.style.transform='scale('+(1+elapsed*0.01)+')';
+    if(elapsed>5){document.body.style.transform='translate('+((Math.random()-0.5)*elapsed*0.5)+'px,'+((Math.random()-0.5)*elapsed*0.5)+'px)';}
+    if(elapsed>=10){
+      clearInterval(chargeInterval);chargeInterval=null;
+      bb.style.filter='';bb.style.transform='';document.body.style.transform='';
+      explode();
+      setTimeout(function(){document.body.classList.remove('beam-on');document.body.classList.add('beam-dormant')},3000);
+    }
+  },50);
+}
+function stopCharge(){
+  if(chargeInterval){clearInterval(chargeInterval);chargeInterval=null}
+  bb.style.filter='';bb.style.transform='';document.body.style.transform='';
+  if((Date.now()-chargeStart)<500){
+    var f=document.createElement('div');f.className='beam-flash';document.body.appendChild(f);setTimeout(function(){f.remove()},500);
+    document.body.classList.remove('beam-dormant');document.body.classList.add('beam-on');
+    setTimeout(function(){document.body.classList.remove('beam-on');document.body.classList.add('beam-dormant')},1500);
+  }else{
+    document.body.classList.remove('beam-on');document.body.classList.add('beam-dormant');
+  }
+}
+bb.addEventListener('mousedown',startCharge);
+bb.addEventListener('mouseup',stopCharge);
+bb.addEventListener('mouseleave',stopCharge);
+bb.addEventListener('touchstart',startCharge,{passive:false});
+bb.addEventListener('touchend',stopCharge);
+</script>
+</body>
+</html>
